@@ -1,0 +1,43 @@
+.container {
+  height: calc(100vh - 7rem);
+  width: 5rem;
+  background: #c0d7ed;
+
+  .list-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5rem;
+    list-style: none;
+    gap: 0.3rem;
+
+    .list-item {
+      height: 3.5rem;
+      width: 3.5rem;
+      background-color: #c0d7ed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 0.8rem;
+
+      &:hover {
+        background-color: #87b3df;
+        .menu-icon {
+            color: rgb(225, 224, 224);
+        }
+      }
+
+      .menu-icon {
+        color: #707070;
+        font-size: 1.8rem;
+      }
+
+      &.active {
+        background-color: #678fb5;
+        .menu-icon {
+            color: rgb(255, 255, 255);
+        }
+      }
+    }
+  }
+}

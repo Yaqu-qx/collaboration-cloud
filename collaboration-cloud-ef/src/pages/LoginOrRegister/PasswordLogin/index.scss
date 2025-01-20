@@ -1,0 +1,53 @@
+.intera-block {
+  padding: 0.5rem;
+  flex-grow: 1; // 占满剩余空间
+
+  .login-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+
+    .identity-selection {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0.5rem;
+    }
+
+    .login-help {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 1.1rem;
+
+      .remember-me {
+        margin-bottom: 0.1rem;
+        color: #666565;
+      }
+
+      .forget-password-link {
+        margin-left: auto;
+      }
+    }
+
+    .login-btn {
+      font-size: 1.1rem;
+    }
+
+    .goto-register {
+      margin-top: auto; // 自动占据父元素剩余空间 位于底部
+      margin-left: auto; // 同理如上
+
+      .register-link {
+        text-decoration: none;
+        color: #fa8900;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+.register-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+
+  .register-title {
+    color: #520105;
+    font-weight: 530;
+  }
+
+  // 验证码公共样式
+  .common-vblock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.3rem;
+    gap: 0.5rem;
+  }
+  .vcode-block {
+    @extend .common-vblock;
+  }
+  .phone-vcode-block {
+    @extend .common-vblock;
+  }
+
+  .identity-selection {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+    padding: 0.8rem 0.2rem 0.5rem 0.5rem;
+
+    .identity-radio {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2.5rem;
+    }
+  }
+
+  .login-button {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .goto-register {
+    margin-top: auto; // 自动占据父元素剩余空间 位于底部
+    margin-left: auto; // 同理如上
+  }
+
+  .register-link {
+    text-decoration: none;
+    color: #fa8900;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

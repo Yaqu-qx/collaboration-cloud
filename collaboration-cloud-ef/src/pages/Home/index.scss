@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 包括内边距和边框在内 */
+}
+
+.ant-layout-sider {
+  background-color: #a3bacf;
+  color: #001D36;
+
+  .ant-menu-inline-collapsed {
+    .ant-menu-item-icon,
+    .ant-menu-submenu-title .ant-menu-item-icon,
+    .ant-menu-item .anticon,
+    .ant-menu-submenu-title .anticon {
+      margin-left: -0.2rem; /* 图标向左移动 8px，可以根据需要调整这个值 */
+    }
+  }
+  .ant-menu {
+    background-color: #a3bacf;
+    font-family: "PingFang SC";
+    font-weight: 600;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .ant-menu-title-content {
+    font-size: 1rem;
+    margin-left: 2rem !important;
+  }
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    margin-top: 1rem;
+  }
+  .ant-menu-item-icon {
+    font-size: 1.4rem !important; /* 调整图标大小 */
+  }
+
+  .ant-layout-sider-trigger {
+    background-color: #31679a;
+  }
+}
+
+.layout-header {
+  padding: 0;
+  background-color: #c0d7ed;
+  height: 7rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-bottom: 2px solid #31679a;
+
+  .left-top-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 2rem;
+    gap: 1.5rem;
+  }
+
+  .avatar {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .logout-btn {
+    font-weight: 700;
+  }
+
+  .logo-vertical {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 600;
+    color: rgb(22, 43, 69);
+
+    .logo {
+      width: 4.5rem;
+      height: 4.5rem;
+      margin-left: 5rem;
+    }
+
+    .logo-name {
+      margin-left: 3rem;
+      display: inline-block;
+    }
+  }
+}
+
+.inner-layout {
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+
+.layout-footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-content {
+  padding: 24;
+  min-height: 45rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+}
