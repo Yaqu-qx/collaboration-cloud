@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import "./index.scss";
-import ItemCenter from "../../component/ItemCenter";
-import { Avatar, Button, Breadcrumb, Layout, Menu, theme, message } from "antd";
+import { Avatar, Button, Breadcrumb, Layout, Menu, message } from "antd";
 import Logo from "../../assets/logo.png";
 import { getGlobalUserInfo } from "../../utils/globalState";
 import LeftBar from "../../component/LeftBar";

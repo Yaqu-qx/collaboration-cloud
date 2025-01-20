@@ -9,6 +9,7 @@ export interface ProjectInfo {
   teacher: string;
   tags: string[];
   create_time: string;
+  description: string;
 }
 
 function generateRandomProjects(): ProjectInfo[] {
@@ -23,13 +24,67 @@ function generateRandomProjects(): ProjectInfo[] {
       teacher: `Teacher ${Math.floor(Math.random() * 10)}`,
       tags: tags.slice(0, Math.floor(Math.random() * 5)),
       create_time: new Date().toISOString().split("T")[0],
+      description: "该项目负责人很懒没有写描述！",
     });
   }
   return projects;
 }
 
 const getProjects = async (req: Request, res: Response) => {
-  // console.log("?????????", req.query.project_name, req.query?.isRecommend);
+  console.log("?????????", req.query.project_name, req.query?.isRecommend, req.query?.tags);
+  // 按标签筛选
+  if (req.query?.tags) {
+    const mytags: string[] = (req.query.tags as string).split(",");
+    // const projects = await connection.query(
+    //   "SELECT * FROM projects WHERE tags && $1",
+    //   [mytags]
+    // );
+    res.status(200).json([
+      {
+        project_id: "00000001",
+        project_name: "Project 1",
+        team_name: "Team 1",
+        member_count: 3,
+        teacher: "John Doe",
+        tags: ["课程设计", "工程项目", "跨学科协作"],
+        create_time: "2021-09-01",
+        description: "这是一段描述",
+      },
+      {
+        project_id: "00000002",
+        project_name: "Project 2",
+        team_name: "Team 2",
+        member_count: 8,
+        teacher: "Julie Smith",
+        tags: ["课程设计", "跨学科协作"],
+        create_time: "2024-09-01",
+        description: "项目介绍",
+      },
+      {
+        project_id: "00000003",
+        project_name: "Project 3",
+        team_name: "Team 3",
+        member_count: 8,
+        teacher: "John Doe",
+        tags: ["课程设计", "科研创新"],
+        create_time: "2024-03-01",
+        description: "项目介绍",
+      },
+      {
+        project_id: "00000004",
+        project_name: "Project 4",
+        team_name: "Team 4",
+        member_count: 3,
+        teacher: "John Doe",
+        tags: ["课程设计", "工程项目", "跨学科协作"],
+        create_time: "2025-02-01",
+        description: "该项目负责人很懒没有写描述！",
+      },
+    ]);
+    return;
+  }
+
+  // 随机获取20条
   if (req.query?.project_name === "") {
     if (req.query?.isRecommend === 'true') {
       const resData: ProjectInfo[] = generateRandomProjects();
@@ -40,7 +95,8 @@ const getProjects = async (req: Request, res: Response) => {
     res.status(200).json([]);
     return;
   }
-
+  
+  // 按name获取
   res.status(200).json([
     {
       project_id: "00000001",
@@ -50,6 +106,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
+      description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
     },
     {
       project_id: "00000002",
@@ -59,6 +116,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "Julie Smith",
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
+      description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
     },
     {
       project_id: "00000003",
@@ -68,6 +126,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
+      description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
     },
     {
       project_id: "00000004",
@@ -77,6 +136,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000005",
@@ -86,6 +146,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000006",
@@ -95,6 +156,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "Julie Smith",
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000007",
@@ -104,6 +166,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000008",
@@ -113,6 +176,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000009",
@@ -122,6 +186,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000010",
@@ -131,6 +196,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "Julie Smith",
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000011",
@@ -140,6 +206,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
+      description: "该项目负责人很懒没有写描述！",
     },
     {
       project_id: "00000012",
@@ -149,6 +216,7 @@ const getProjects = async (req: Request, res: Response) => {
       teacher: "John Doe",
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
+      description: "该项目负责人很懒没有写描述！",
     },
   ]);
 };

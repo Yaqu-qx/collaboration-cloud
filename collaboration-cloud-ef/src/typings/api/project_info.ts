@@ -6,4 +6,5 @@ export interface ProjectInfo {
   teacher: string;
   tags: string[];
   create_time: string;
+  description: string;
 }
