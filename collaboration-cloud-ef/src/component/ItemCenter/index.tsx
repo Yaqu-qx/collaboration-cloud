@@ -28,7 +28,7 @@ import {
 import { ProjectInfo } from "../../typings/api/project_info";
 import { fetchProjects, fetchProjectsByTags } from "../../utils/server";
 import type { FilterDropdownProps } from "antd/es/table/interface";
-import CreatePanel from "component/CreatePanel";
+import CreatePanel from "../CreatePanel";
 
 type SearchProps = GetProps<typeof Input.Search>;
 
@@ -327,7 +327,12 @@ export default function ItemCenter() {
       <div className="ic-header">
         <span className="ic-title"> 项目中心 </span>
         <div>
-          <Button color="primary" variant="solid" className="create-btn">
+          <Button
+            color="primary"
+            variant="solid"
+            className="create-btn"
+            onClick={() => setCreatePanelVisible(true)}
+          >
             创建项目
           </Button>
           <Button
@@ -378,7 +383,9 @@ export default function ItemCenter() {
       {createPanelVisible && (
         <div className="create-panel-mask">
           <div className="create-panel">
-            <CreatePanel onPanelVisible={(visible) => setCreatePanelVisible(visible)}/>
+            <CreatePanel
+              onPanelVisible={(visible) => setCreatePanelVisible(visible)}
+            />
           </div>
         </div>
       )}

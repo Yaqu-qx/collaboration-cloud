@@ -1,0 +1,37 @@
+.select-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ant-select-outlined {
+  border-radius: 2px;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-select-single
+  .ant-select-selector,
+:where(.css-dev-only-do-not-override-161f05s).ant-select-multiple
+  .ant-select-selector {
+  border-radius: 2px;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-select-single.ant-select-lg
+  .ant-select-selector,
+:where(.css-dev-only-do-not-override-161f05s).ant-select-multiple.ant-select-lg
+  .ant-select-selector {
+  border-radius: 2px;
+}
+
+.faq {
+  color: #999;
+  font-size: 0.8rem;
+  width: 35rem;
+}
+
+.tea-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  .tea-avatar {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
