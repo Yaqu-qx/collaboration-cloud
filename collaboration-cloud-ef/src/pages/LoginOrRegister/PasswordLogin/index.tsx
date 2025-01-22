@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock, Person } from "@mui/icons-material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { setGlobalUserInfo, getGlobalUserInfo } from "../../../utils/globalState";
+import { setGlobalUserInfo, getGlobalUserInfo } from "@/utils/globalState";
 
 interface Props {
   onLorRChange: (newLorR: string) => void;

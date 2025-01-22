@@ -55,7 +55,7 @@
   justify-content: space-around;
 }
 
-.create-panel-mask {
+.create-panel-mask, .apply-panel-mask {
   position: fixed;
   top: 0;
   left: 0;
@@ -64,7 +64,7 @@
   z-index: 10;
   background-color: #00000080;
 
-  .create-panel {
+  .create-panel, .apply-to-join {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -75,4 +75,14 @@
     border-radius: 0.2rem;
     // padding: 1.5rem;
   }
+
+  .apply-to-join {
+    width: 45%;
+    height: 45%;
+  }
 }
+
+.project-btn {
+  font-weight: 500;
+  color: #4a77ff;
+} 

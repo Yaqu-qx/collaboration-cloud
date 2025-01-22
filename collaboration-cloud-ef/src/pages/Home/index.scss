@@ -4,9 +4,15 @@
   box-sizing: border-box;
   /* 包括内边距和边框在内 */
 }
+//颜色搞漂亮点 todo
+
+:where(.css-dev-only-do-not-override-161f05s).ant-layout, 
+:where(.css-dev-only-do-not-override-161f05s).ant-layout-footer {
+  background-color: #f2f5ffe3;
+}
 
 .ant-layout-sider {
-  background-color: #a3bacf;
+  background-color: #cbd4f8;
   color: #001D36;
 
   .ant-menu-inline-collapsed {
@@ -18,7 +24,7 @@
     }
   }
   .ant-menu {
-    background-color: #a3bacf;
+    background-color: #cbd4f8;
     font-family: "PingFang SC";
     font-weight: 600;
     padding-left: 1.5rem;
@@ -37,17 +43,17 @@
   }
 
   .ant-layout-sider-trigger {
-    background-color: #31679a;
+    background-color: #7795d2;
   }
 }
-
+//body:#f2f5ffe3  head:#c7d6f4  siderbar:#e3edff trigger:#7795d2
 .layout-header {
   padding: 0;
-  background-color: #c0d7ed;
-  height: 7rem;
+  background-color: #e3e7ff;
+  height: 4rem;
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   border-bottom: 2px solid #31679a;
 
@@ -57,34 +63,35 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: 2rem;
-    gap: 1.5rem;
+    right: 3rem;
+    gap: 1.2rem;
   }
 
   .avatar {
-    height: 3rem;
-    width: 3rem;
+    height: 2rem;
+    width: 2rem;
   }
 
   .logout-btn {
-    font-weight: 700;
+    height: 1.5rem;
+    width: 1.5rem;
   }
 
   .logo-vertical {
     display: flex;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: rgb(22, 43, 69);
 
     .logo {
-      width: 4.5rem;
-      height: 4.5rem;
-      margin-left: 5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-left: 4rem;
     }
 
     .logo-name {
-      margin-left: 3rem;
+      margin-left: 1.5rem;
       display: inline-block;
     }
   }
@@ -106,7 +113,7 @@
 
 .main-content {
   padding: 24;
-  min-height: 45rem;
+  min-height: 90%;
   background-color: #ffffff;
   border-radius: 1rem;
   padding: 2rem;

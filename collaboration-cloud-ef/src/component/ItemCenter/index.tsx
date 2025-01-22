@@ -1,76 +1,41 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
-import {
-  Button,
-  Input,
-  TreeSelect,
-  Table,
-  Dropdown,
-  Tag,
-  Space,
-  message,
-} from "antd";
-import type {
-  GetProps,
-  TableProps,
-  MenuProps,
-  InputRef,
-  TableColumnType,
-} from "antd";
-import { tagColor, projectTags } from "../../constant/const";
-import {
-  EllipsisOutlined,
-  StarTwoTone,
-  SearchOutlined,
-  MinusCircleTwoTone,
-  PushpinOutlined,
-} from "@ant-design/icons";
-import { ProjectInfo } from "../../typings/api/project_info";
-import { fetchProjects, fetchProjectsByTags } from "../../utils/server";
+import { Button, Input, TreeSelect, Table, Dropdown, Tag, Space, message, } from "antd";
+import type { GetProps, TableProps, MenuProps, InputRef, TableColumnType, } from "antd";
+import { tagColor, projectTags } from "@/constant/const";
+import { EllipsisOutlined, StarTwoTone, SearchOutlined, MinusCircleTwoTone, PushpinOutlined, } from "@ant-design/icons";
+import { ProjectInfo } from "@/typings/api/project_info";
+import { fetchProjects, fetchProjectsByTags } from "@/utils/server";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import CreatePanel from "../CreatePanel";
+import { DataType } from "@/typings/type";
 
 type SearchProps = GetProps<typeof Input.Search>;
 
 const { Search } = Input;
+const { TextArea } = Input;
 const { SHOW_PARENT } = TreeSelect;
 
-interface DataType {
-  key: string;
-  name: string;
-  group: string;
-  peopleNum: number;
-  teacher: string;
-  tags: string[];
-  create_time: string;
-  description: string;
-}
-
+// interface DataType {
+//   key: string;
+//   name: string;
+//   group: string;
+//   peopleNum: number;
+//   teacher: string;
+//   tags: string[];
+//   create_time: string;
+//   description: string;
+// }
 type DataIndex = keyof DataType;
-
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: (
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-      >
-        申请加入
-      </a>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <div className="dropdown">
-        <StarTwoTone />
-        <span>收藏</span>
-      </div>
-    ),
-  },
-];
+interface IProps {
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  projectData: DataType[];
+  setProjectData: (data: DataType[]) => void;
+  tagsValue: string[];
+  setTagsValue: (value: string[]) => void;
+}
 
 // 数据转换
 const transformProjectData = (item: ProjectInfo, index: number): DataType => {
@@ -86,16 +51,38 @@ const transformProjectData = (item: ProjectInfo, index: number): DataType => {
   };
 };
 
-export default function ItemCenter() {
-  const [tapsValue, setTapsValue] = useState([] as string[]);
-  const [projectData, setProjectData] = useState<DataType[]>([]);
+export default function ItemCenter(props: IProps) {
+  // const [tapsValue, setTapsValue] = useState([] as string[]);
+  // const [projectData, setProjectData] = useState<DataType[]>([]);
+  const { searchValue, setSearchValue, projectData, setProjectData, tagsValue, setTagsValue } = props;
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [applyPanelVisible, setApplyPanelVisible] = useState(false);
   const [createPanelVisible, setCreatePanelVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <span onClick={() => { setApplyPanelVisible(true); }} >
+          申请加入
+        </span>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div className="dropdown">
+          <StarTwoTone />
+          <span>收藏</span>
+        </div>
+      ),
+    },
+  ];
 
   // alert message
   const loadAlert = () => {
@@ -192,7 +179,7 @@ export default function ItemCenter() {
       title: "项目名",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      render: (text) => <Button type="text" className="project-btn" onClick={() => handleLinkClick(text)}>{text}</Button>,
     },
     {
       title: "所属小组",
@@ -255,24 +242,8 @@ export default function ItemCenter() {
     },
   ];
 
-  // const siftByTags = (tagsIndex: string[]) => {
-  //   if (tagsIndex.length === 0) {
-  //     return;
-  //   }
-  //   let targetTags = [] as string[];
-  //   for(let i = 0; i < tagsIndex.length; i++) {
-  //     targetTags.push(projectTags[parseInt(tagsIndex[i])].title);
-  //   }
-
-  //   const filteredData = projectData.filter((item) =>
-  //     item.tags.some((tag) => targetTags.includes(tag))
-  //   );
-  //   setProjectData(filteredData);
-  // }
-
-  const onTapsChange = (newValue: string[]) => {
+  const onTagsChange = (newValue: string[]) => {
     console.log("onChange ", newValue);
-    setTapsValue(newValue);
     fetchProjectsByTags(newValue)
       .then((response) => response.json())
       .then((data) => {
@@ -282,6 +253,8 @@ export default function ItemCenter() {
             transformProjectData(item, index)
           )
         );
+        setTagsValue(newValue);
+        setSearchValue("");
       })
       .catch((error) => {
         console.error(error);
@@ -290,8 +263,8 @@ export default function ItemCenter() {
 
   const tProps = {
     treeData: projectTags,
-    tapsValue,
-    onChange: onTapsChange,
+    value: tagsValue,
+    onChange: onTagsChange,
     treeCheckable: true,
     showCheckedStrategy: SHOW_PARENT,
     placeholder: "按标签搜索",
@@ -310,6 +283,7 @@ export default function ItemCenter() {
             transformProjectData(item, index)
           )
         );
+        setTagsValue([]);
       })
       .catch((error) => {
         console.error(error);
@@ -319,6 +293,27 @@ export default function ItemCenter() {
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
     console.log(info?.source, value);
     fetchProjectsByName(value, false);
+    setSearchValue(value);
+  };
+ 
+  // 跳转详情页
+  const handleLinkClick = (projectName: string) => {
+    console.log("link click");
+    // TODO: 获取对应项目数据
+    
+    // 获取到的项目数据
+    let projectData = {
+      name: projectName,
+      group: "团队名称",
+      peopleNum: 10,
+      teacher: "指导老师",
+      tags: ["标签1", "标签2"],
+      create_time: "2022-01-01",
+      description: "项目描述",
+    }
+
+    navigate("/home/project-detail", {state: projectData});
+    
   };
 
   return (
@@ -351,6 +346,8 @@ export default function ItemCenter() {
 
       <div className="search-block">
         <Search
+          value={searchValue}
+          onChange={(e)=>{setSearchValue(e.target.value);}}
           placeholder="搜索项目"
           onSearch={onSearch}
           allowClear
@@ -366,7 +363,7 @@ export default function ItemCenter() {
           dataSource={projectData}
           className="item-table"
           tableLayout="auto"
-          pagination={{ position: ["bottomCenter"], pageSize: 8 }}
+          pagination={{ position: ["bottomCenter"] }}
           expandable={{
             expandedRowRender: (record) => (
               <p style={{ margin: 0 }}>{record.description}</p>
@@ -388,6 +385,16 @@ export default function ItemCenter() {
             />
           </div>
         </div>
+      )}
+
+      {applyPanelVisible && (
+        <div className="apply-panel-mask">
+          <div className="apply-to-join">
+            <p>请输入申请理由*：</p>
+            <button className="submit-btn">提交</button>
+          </div>
+        </div>
+        
       )}
     </>
   );

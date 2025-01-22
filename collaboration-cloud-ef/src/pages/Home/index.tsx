@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import "./index.scss";
 import { Avatar, Button, Breadcrumb, Layout, Menu, message } from "antd";
-import Logo from "../../assets/logo.png";
-import { getGlobalUserInfo } from "../../utils/globalState";
-import LeftBar from "../../component/LeftBar";
-import { mainRoutes } from "../../constant/const";
+import Logo from "@/assets/logo.png";
+import { getGlobalUserInfo } from "@/utils/globalState";
+import LeftBar from "@/component/LeftBar";
+import { mainRoutes } from "@/constant/const";
 import {
   ProjectOutlined,
   UsergroupAddOutlined,
   MessageOutlined,
   IdcardOutlined,
 } from "@ant-design/icons";
+import logOutIcon from "@/assets/logout.png";
+import IconButton from '@mui/material/IconButton';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -117,14 +119,10 @@ export default function Home3() {
           <div className="left-top-block">
             <Avatar className="avatar" src={userInfo?.portrait} />
             <span className="hint-text"> Hello {userInfo?.name}! </span>
-            <Button
-              type="primary"
-              ghost
-              className="logout-btn"
-              onClick={() => navigate("/login")}
-            >
-              Log out
-            </Button>
+            <IconButton>
+              <img alt="logout" src={logOutIcon} className="logout-btn" onClick={() => navigate("/login")}/>
+            </IconButton>
+            
           </div>
         </Header>
 
@@ -134,7 +132,7 @@ export default function Home3() {
             collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            width={"15rem"}
+            width={"16rem"}
             collapsedWidth={"1rem"}
             className="layout-sider"
           >

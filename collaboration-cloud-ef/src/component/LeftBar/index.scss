@@ -1,7 +1,7 @@
 .container {
-  height: calc(100vh - 7rem);
-  width: 5rem;
-  background: #c0d7ed;
+  height: calc(100vh - 4rem);
+  width: 4rem;
+  background: #e3e7ff;
 
   .list-block {
     display: flex;
@@ -12,16 +12,16 @@
     gap: 0.3rem;
 
     .list-item {
-      height: 3.5rem;
-      width: 3.5rem;
-      background-color: #c0d7ed;
+      height: 2.8rem;
+      width: 2.8rem;
+      background-color: #e3e7ff;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 0.8rem;
 
       &:hover {
-        background-color: #87b3df;
+        background-color: #83a4e6;
         .menu-icon {
             color: rgb(225, 224, 224);
         }
@@ -29,11 +29,11 @@
 
       .menu-icon {
         color: #707070;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
       }
 
       &.active {
-        background-color: #678fb5;
+        background-color: #747ed7;
         .menu-icon {
             color: rgb(255, 255, 255);
         }

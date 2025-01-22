@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./index.scss";
-import { TextListData } from "../../constant/const";
+import { TextListData } from "@/constant/const";
 import { Box, Tab, Dialog, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { FiberManualRecord } from "@mui/icons-material";
 import PassageLogin from "./PasswordLogin";
 import PhoneLogin from "./PhoneLogin";
 import Register from "./Register";
-import Logo from "../../assets/logo.png";
+import Logo from "@/assets/logo.png";
 import VerificationInput from "react-verification-input";
 
 export default function Start() {

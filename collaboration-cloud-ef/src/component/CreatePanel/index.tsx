@@ -10,18 +10,20 @@ import {
 } from "@ant-design/icons";
 import "./index.scss";
 import RequiredInput from "../RequiredInput";
-import newItemIcon from "assets/newItemIcon.png";
-import teacherIcon from "assets/teacherIcon.png";
+import newItemIcon from "@/assets/newItemIcon.png";
+import teacherIcon from "@/assets/teacherIcon.png";
 import SelectInput from "../SelectInput";
-import defaultAvater from "../../assets/defaultAvater.png";
-import competitionsIcon from "../../assets/competitionsIcon.png";
-import curriculumDesignIcon from "../../assets/curriculumDesignIcon.png";
-import InterdisciplinaryIcon from "../../assets/InterdisciplinaryIcon.png";
-import projectItemIcon from "../../assets/projectItemIcon.png";
-import researchIcon from "../../assets/researchIcon.png";
-import teamIcon from "../../assets/teamIcon.png";
-import applicationSuccessImg from "../../assets/application_success.png";
-import successIcon from "../../assets/successIcon.png";
+import defaultAvater from "@/assets/defaultAvater.png";
+import competitionsIcon from "@/assets/competitionsIcon.png";
+import curriculumDesignIcon from "@/assets/curriculumDesignIcon.png";
+import InterdisciplinaryIcon from "@/assets/InterdisciplinaryIcon.png";
+import projectItemIcon from "@/assets/projectItemIcon.png";
+import researchIcon from "@/assets/researchIcon.png";
+import teamIcon from "@/assets/teamIcon.png";
+import applicationSuccessImg from "@/assets/application_success.png";
+import successIcon from "@/assets/successIcon.png";
+import teamWorkImg from "@/assets/teamWorkImg.png";
+import { tagColor } from "@/constant/const";
 const { TextArea } = Input;
 const { Dragger } = Upload;
 interface Iprops {
@@ -71,6 +73,12 @@ export default function CreatePanel(props: Iprops) {
     className: "upload-block",
   };
 
+  const handleWatchDetail = () => {
+    console.log("watch detail");
+    // todo 跳转到项目详情页面
+
+  };
+
   // 创建项目逻辑
   const handleProCreact = () => {
     console.log("create project");
@@ -78,6 +86,28 @@ export default function CreatePanel(props: Iprops) {
 
     setIsCreated(true);
   };
+
+  // 跳转创建团队页面
+  const HandleCreatNewTeam = () => {
+    console.log("create new team");
+    // todo 跳转创建团队页面
+
+  };
+
+  // todo 最小化保存编辑信息
+  // todo 附件上传逻辑
+  // todo 成功创建逻辑
+  // 查看详情逻辑
+
+  const notFoundNode = (
+    <div className="not-found-node">
+      <img src={teamWorkImg} alt="Team Work Img" className="teamwork-img" />
+      <p>还没有组建团队？创建一个新的项目小组吧！</p>
+      <Button type="primary" className="create-team-btn" onClick={HandleCreatNewTeam}>
+        创建项目组
+      </Button>
+    </div>
+  )
 
   return (
     <>
@@ -89,9 +119,9 @@ export default function CreatePanel(props: Iprops) {
               <IconButton aria-label="minus" size="small">
                 <MinusOutlined />
               </IconButton>
-              <IconButton aria-label="shrink" size="small">
+              {/* <IconButton aria-label="shrink" size="small">
                 <ShrinkOutlined />
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 aria-label="close"
                 size="small"
@@ -150,9 +180,11 @@ export default function CreatePanel(props: Iprops) {
               placeholder="请选择项目标签"
               width="23rem"
               options={tagOptions}
+              tagColor={tagColor}
             />
 
             <SelectInput
+              notFoundNode={notFoundNode}
               required={true}
               label="项目组"
               showSearch={true}
@@ -166,12 +198,13 @@ export default function CreatePanel(props: Iprops) {
               }
               options={teachers}
               width="23rem"
-              faq="绑定你的团队或新建一个项目组"
+              faq="绑定你的团队或新建一个项目组（输入空格显示新建入口）"
             />
 
             <Divider style={{ borderColor: "#ccc" }} />
 
             <SelectInput
+              maxCount={3}
               required={false}
               mode="multiple"
               label="更多导师"
@@ -179,7 +212,7 @@ export default function CreatePanel(props: Iprops) {
               placeholder="多选指导老师"
               width="23rem"
               options={teachers}
-              faq="如有多个指导老师，可在此处选择，最多可选择5人。"
+              faq="如有多个指导老师，可在此处选择，最多可选择3人。"
             />
 
             <div>
@@ -270,7 +303,7 @@ export default function CreatePanel(props: Iprops) {
           <div className="panel-footer">
             <Button
               type="text"
-              onClick={() => onPanelVisible(false)}
+              onClick={handleWatchDetail}
               className="detail-btn"
             >
               查看详情
