@@ -24,3 +24,11 @@ export const getGlobalUserInfo = (): UserInfo | null => {
 export const getUserPortrait = (): String | undefined => {
   return globalUserInfo?.portrait;
 };
+
+export const getUserAccount = (): String | undefined => {
+  return globalUserInfo?.account;
+};
+
+export const getUserName = (): String | undefined => {
+  return globalUserInfo?.name;
+};

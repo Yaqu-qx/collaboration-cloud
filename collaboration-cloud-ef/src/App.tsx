@@ -9,7 +9,8 @@ import Home from "./pages/Home";
 import Login from "./pages/LoginOrRegister";
 import "./App.scss";
 import ItemCenter from "./component/ItemCenter";
-import ProjectDetailPage from "./component/ProjectDetailPage";
+import ProjectDetails from "./pages/ProjectDetails";
+import MyProjectGroup from "./pages/MyProjectGroup";
 import { DataType } from "./typings/type";
 
 function App() {
@@ -38,11 +39,11 @@ function App() {
               />
             }
           />
-          <Route path="my-projects" element={<div>我的项目组</div>} />
+          <Route path="my-projects" element={<MyProjectGroup />} />
           <Route path="discussion-center" element={<div>交流中心</div>} />
           <Route path="personal-center" element={<div>个人中心</div>} />
 
-          <Route path="project-detail" element={<ProjectDetailPage />} />
+          <Route path="project-detail" element={<ProjectDetails />} />
         </Route>
       </Routes>
     </Router>

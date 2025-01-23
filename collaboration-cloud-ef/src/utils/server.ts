@@ -22,3 +22,14 @@ export const fetchProjectsByTags = async (tags: string[]) =>
       },
     }
   );
+
+  export const fetchGroups = async () =>
+  fetch(
+    `http://localhost:4000/groups`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );

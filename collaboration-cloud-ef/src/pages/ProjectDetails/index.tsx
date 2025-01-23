@@ -3,7 +3,7 @@ import './index.scss';
 import { Button } from 'antd';
 
 
-export default function ProjectDetailPage() {
+export default function ProjectDetails() {
 
   return (
     <div>
