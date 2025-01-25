@@ -1,0 +1,43 @@
+
+.project-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+
+  .project-icon {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    
+    .top-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+
+    p {
+      color: #999;
+    }
+  }
+
+  .create-time {
+    color: #666666;
+  }
+
+  .more-button {
+    margin-left: auto;
+  }
+}
+
+.divider {
+  border-color: #dddddd;
+}

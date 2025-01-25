@@ -1,0 +1,69 @@
+.group-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  width: 15rem;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  gap: 1rem;
+  box-shadow: 0 5px 8px -1px rgba(0, 0, 0, 0.1); /* 阴影 */
+  transition: box-shadow 0.3s ease; /* 平滑过渡 */
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 悬停时的底部阴影效果 */
+  }
+  // background-color: #fbfaff;
+  .group-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .group-avatar {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    .group-header-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      width: 8rem;
+
+      .leave-group-icon {
+        height: 1.2rem;
+        width: 1.2rem;
+        padding: 0.1rem;
+        border-radius: 20%;
+        
+        cursor: pointer;
+        margin-left: 5.5rem;
+        &:hover {
+          background-color: #ececec;
+        }
+      }
+    }
+  }
+
+  .group-description {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #666;
+    height: 2.1rem;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    white-space: normal; /* 允许换行 */
+    text-overflow: ellipsis;
+  }
+
+  .more-details-btn {
+    font-size: large;
+  }
+}

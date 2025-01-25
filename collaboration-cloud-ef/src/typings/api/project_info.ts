@@ -9,10 +9,15 @@ export interface projectInfo {
   description: string;
 }
 
+
 export interface groupInfo {
-  id: string;
-  name: string;
+  group_id: string;
+  group_name: string;
   member_count: number;
+  main_mentor: string;
+  other_mentors: string[];
   create_time: string;
   description: string;
+  members: string[];
+  group_avatar: string;
 }

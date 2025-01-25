@@ -60,6 +60,14 @@
   justify-content: space-around;
 }
 
+// 通用居中样式
+.center-posision {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .create-panel-mask,
 .apply-panel-mask {
   position: fixed;
@@ -70,16 +78,19 @@
   z-index: 10;
   background-color: #00000080;
 
-  .create-panel, .apply-to-join, .apply-success-popup{
+  .center-posision {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .create-panel{
+    @extend .center-posision;
     background-color: #fff;
     width: 45%;
     height: 85%;
     border-radius: 0.2rem;
-    // padding: 1.5rem;
   }
 
   .apply-close-btn {
@@ -88,16 +99,20 @@
     right: 1rem;
   }
 
-  .apply-success-popup {
+  // 申请面板通用样式
+  .apply-panel {
     width: 45%;
     height: 45%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     border-radius: 0.5rem;
     background-color: #f4f4ff;
+  }
 
-    
+  .apply-success-popup {
+    @extend .center-posision;
+    @extend .apply-panel;
+    align-items: center;
 
     .apply-success-img {
       width: 60%;
@@ -121,15 +136,11 @@
   }
 
   .apply-to-join {
-    width: 45%;
-    height: 45%;
+    @extend .center-posision;
+    @extend .apply-panel;
     padding: 1.8rem 3rem;
-    display: flex;
-    flex-direction: column;
     gap : 1rem;
-    border-radius: 0.5rem;
 
-    background-color: #f4f4ff;
     .title {
       font-size: 1.4rem;
       font-weight: 550;

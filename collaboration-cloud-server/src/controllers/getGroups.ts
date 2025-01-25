@@ -1,16 +1,6 @@
 import { Request, Response } from "express";
 import connection from "../database";
 
-export interface GroupInfo {
-  group_id: string;
-  group_name: string;
-  member_count: number;
-  main_mentor: string;
-  other_mentors: string[];
-  create_time: string;
-  description: string;
-  members: string[];
-}
 
 const getGroups = async (req: Request, res: Response) => {
   //   const groups: GroupInfo[] = [];
@@ -25,6 +15,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar2.png",
     },
     {
       group_id: "00000001",
@@ -35,6 +26,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar3.png",
     },
     {
       group_id: "00000001",
@@ -45,6 +37,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar4.png",
     },
     {
       group_id: "00000001",
@@ -55,6 +48,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar5.png",
     },
     {
       group_id: "00000001",
@@ -65,6 +59,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
     },
     {
       group_id: "00000001",
@@ -75,6 +70,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar2.png",
     },
     {
       group_id: "00000001",
@@ -85,6 +81,7 @@ const getGroups = async (req: Request, res: Response) => {
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
       members: ["Tom", "Jerry", "Alice"],
+      group_avatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar3.png",
     },
   ]);
 };

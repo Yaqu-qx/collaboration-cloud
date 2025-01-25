@@ -21,14 +21,14 @@ export const getGlobalUserInfo = (): UserInfo | null => {
   return globalUserInfo;
 };
 
-export const getUserPortrait = (): String | undefined => {
+export const getUserPortrait = (): string | undefined => {
   return globalUserInfo?.portrait;
 };
 
-export const getUserAccount = (): String | undefined => {
+export const getUserAccount = (): string | undefined => {
   return globalUserInfo?.account;
 };
 
-export const getUserName = (): String | undefined => {
+export const getUserName = (): string | undefined => {
   return globalUserInfo?.name;
 };
