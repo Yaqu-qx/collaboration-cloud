@@ -8,7 +8,6 @@ import {
   TreeSelect,
   Table,
   Dropdown,
-  Tag,
   Space,
   message,
 } from "antd";
@@ -19,7 +18,8 @@ import type {
   InputRef,
   TableColumnType,
 } from "antd";
-import { tagColor, projectTags } from "@/constant/const";
+import ColoredTags from "@/component/ColoredTags";
+import { projectTags } from "@/constant/const";
 import {
   EllipsisOutlined,
   StarTwoTone,
@@ -212,7 +212,7 @@ export default function ItemCenter(props: IProps) {
         <Button
           type="text"
           className="project-btn"
-          onClick={() => handleLinkClick(text)}
+          // onClick={() => handleLinkClick(text)}
         >
           {text}
         </Button>
@@ -247,14 +247,7 @@ export default function ItemCenter(props: IProps) {
       },
       render: (_, { tags }) => (
         <>
-          {tags.map((tag, index) => {
-            let color = tagColor[tag];
-            return (
-              <Tag color={color} key={`${tag}-${index}`}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
+          <ColoredTags tags={tags} />
         </>
       ),
     },
@@ -356,25 +349,6 @@ export default function ItemCenter(props: IProps) {
     console.log(info?.source, value);
     fetchProjectsByName(value, false);
     setSearchValue(value);
-  };
-
-  // 跳转详情页
-  const handleLinkClick = (projectName: string) => {
-    console.log("link click");
-    // TODO: 获取对应项目数据
-
-    // 获取到的项目数据
-    let projectData = {
-      name: projectName,
-      group: "团队名称",
-      peopleNum: 10,
-      teacher: "指导老师",
-      tags: ["标签1", "标签2"],
-      create_time: "2022-01-01",
-      description: "项目描述",
-    };
-
-    navigate("/home/project-detail", { state: projectData });
   };
 
   // 提交申请

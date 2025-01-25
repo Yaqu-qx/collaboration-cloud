@@ -53,7 +53,7 @@ const items: MenuItem[] = [
   ]),
 ];
 
-export default function Home3() {
+export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
@@ -146,7 +146,7 @@ export default function Home3() {
           </Sider>
 
           <Layout className="inner-layout">
-            <Content style={{ margin: "0 5rem", height: "auto" }}>
+            <Content style={{width: "90%", height: "auto" }}>
               <Breadcrumb style={{ margin: "1rem 0" }}>
                 {getBreadcrumb(items)}
               </Breadcrumb>

@@ -1,0 +1,33 @@
+
+.header {
+    display: flex;
+    flex-direction: row;
+    // gap: 2rem;?
+    .project-image {
+        height: 5rem;
+        width: 5rem;
+        border: 1px solid #ccc; 
+        border-radius: 0.5rem;
+    }
+
+    .project-title {
+        padding: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        align-self: flex-end;
+        margin-left: 2rem;
+    }
+
+    .more-icon {
+        align-self: flex-end;
+        font-size: 1.5rem;
+        padding: 1rem 0;
+        margin-left: 1.5rem;
+    }
+
+    .tags-container {
+        height: 2rem;
+        align-self: flex-end;
+        margin-left: 0.5rem;
+    }
+}

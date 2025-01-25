@@ -102,6 +102,7 @@
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .layout-footer {
@@ -114,7 +115,9 @@
 .main-content {
   padding: 24;
   min-height: 90%;
+  width: "100%";
   background-color: #ffffff;
   border-radius: 1rem;
   padding: 2rem;
+  position: relative;
 }
