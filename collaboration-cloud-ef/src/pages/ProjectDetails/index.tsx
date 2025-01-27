@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.scss";
-import { Button, Tabs } from "antd";
+import { Tabs } from "antd";
 import Header from "./Header";
 import {
   GlobalOutlined,
@@ -16,29 +16,29 @@ import ProjectCalendar from "./ProjectCalendar";
 
 export default function ProjectDetails() {
   const location = useLocation();
-  const { projectName, projectAvatar, tags } = location.state;
+  const { projectId, projectName, projectAvatar, tags } = location.state;
   const navigate = useNavigate();
 
   const tabsItem = [
     {
       title: "总览",
       icon: <GlobalOutlined />,
-      chilren: <ProjectSummery />,
+      chilren: <ProjectSummery projectId={projectId} />,
     },
     {
       title: "List",
       icon: <UnorderedListOutlined />,
-      chilren: <ProjectSummery />,
+      chilren: <ProjectSummery projectId={projectId} />,
     },
     {
       title: "频道",
       icon: <MessageOutlined />,
-      chilren: <ProjectSummery />,
+      chilren: <ProjectSummery projectId={projectId} />,
     },
     {
       title: "资料库",
       icon: <ProfileOutlined />,
-      chilren: <ProjectSummery />,
+      chilren: <ProjectSummery projectId={projectId} />,
     },
     {
       title: "日历",
