@@ -3,45 +3,53 @@ import "./index.scss";
 import { Progress } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { personalTasksInfo } from "@/typings/type";
+import type { ProgressProps } from 'antd';
 
+const twoColors: ProgressProps['strokeColor'] = {
+  '0%': '#108ee9',
+  '100%': '#87d068',
+};
 
 interface IProps {
   totalTasks: number;
   progressInfos: personalTasksInfo[]; 
 }
 
-const progressItem = (item: personalTasksInfo) => {
+const progressItem = (item: personalTasksInfo, totalTasks: number) => {
     const  { name, avatar, finishedNum, taskNum } = item;
-    const percentage = finishedNum / taskNum * 100;
+    const percentage = parseFloat((finishedNum / taskNum * 100).toFixed(1));
   return (
     <div className="progress-item">
-        <img src={avatar} alt={name} />
-        <span className="name">{name}</span>
-        <Progress percent={percentage} />
-        <span>{percentage.toFixed(2)}</span>
-        <span>{finishedNum}/{taskNum}</span>
+        <div className="member-name">
+          <img src={avatar} alt={name} className="avatar"/>
+          <span className="name">{name}</span>
+        </div>
+        
+        <Progress percent={percentage} className="progress" strokeColor={twoColors}/>
+        <span className="num-right num-finished">{finishedNum}</span>
+        <span className="num-right num-assigned">{taskNum}/{totalTasks}</span>
     </div>
 )};
 
 export default function ProgressPanel(props: IProps) {
-  
+  const { totalTasks, progressInfos } = props;
   return (
     <div className="progress-panel">
-      <p>任务分配与进展</p>
-      <p>项目组各成员任务分配与个人进度可视化</p>
-      <div>
-        <span>负责人</span>
-        <span>个人进度（n/m）</span>
-        <span>已完成（n）</span>
-        <span>任务分配（m/total）</span>
+      <p className="panel-title">任务分配与进展</p>
+      <p className="panel-desc">项目组各成员任务分配与个人进度可视化</p>
+      <div className="list-header">
+        <span style={{ width: '5.5rem' }}>负责人</span>
+        <span className="progress">个人进度（finished/assigned）</span>
+        <span className="num-right title-finished">已完成</span>
+        <span className="num-right title-assigned">分配量</span>
       </div>
       <div className="progress-list">
-        {props.progressInfos.map((item, index) => (
-            progressItem(item)
-        ))};
+        {progressInfos.map((item, index) => (
+            progressItem(item, totalTasks)
+        ))}
       </div>
-      <div>
-        <UserAddOutlined />
+      <div className="add-member">
+        <UserAddOutlined className="add-icon"/>
         <span>邀请新成员</span>
       </div>
     </div>

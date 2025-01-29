@@ -456,11 +456,11 @@ export default function ItemCenter(props: IProps) {
                 </IconButton>
                 <p className="title">申请加入</p>
                 <div className="apply-info">
-                  <div className="info-block">
+                  <div className="apply-info-block">
                     <p>申请人：{getUserName() ?? ""} </p>
                     <p>申请人学号：{getUserAccount() ?? ""} </p>
                   </div>
-                  <div className="info-block">
+                  <div className="apply-info-block">
                     <p>项目名称：{applyProject?.name ?? ""} </p>
                     <p>项目组：{applyProject?.group ?? ""} </p> 
                     <p>主指导老师：{applyProject?.teacher ?? ""} </p>

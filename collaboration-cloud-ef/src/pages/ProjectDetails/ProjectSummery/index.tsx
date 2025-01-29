@@ -5,6 +5,13 @@ import ProgressPanel from "@/component/ProgressPanel";
 import { personalTasksInfo } from "@/typings/type";
 import { getProjectSummery } from "./server";
 import Loading from "@/component/Loading";
+import robotIcon from "@/assets/robot.png";
+import wuguiIcon from "@/assets/wugui.png";
+import reportIcon from "@/assets/report.png";
+import ProjectIntroduce from "../ProjectIntroduce";
+import MembersIntroPanel from "../MembersIntroPanel";
+import { peopleInfoType } from "@/typings/type"
+
 
 const data = [
   { type: "计划中", value: 27 },
@@ -14,14 +21,7 @@ const data = [
   { type: "已完成", value: 10 },
 ];
 
-// const progressInfo: personalTasksInfo[] = [
-//   {
-//     name: '张三',
-//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-//     finishedNum: 10,
-//     taskNum: 20,
-//   }
-// ];
+// 细节 工具说明、实时记录后端实现和localstorage缓存、跳转（消息、list）
 type IProps = {
   projectId: string;
 };
@@ -29,18 +29,45 @@ type IProps = {
 export default function ProjectSummery(props: IProps) {
   const [taskStatus, setTaskStatus] = useState(null);
   const [totTaskNum, setTotTaskNum] = useState(-1);
+  const [projectState, setProjectState] = useState("进行中");
   const [loading, setLoading] = useState(true);
   const [progressInfo, setProgressInfo] = useState<personalTasksInfo[]>([]);
+
+  const [mainIntro, setMainIntro] = useState("");
+  const [feature, setFeature] = useState("");
+  const [goalsAndVision, setGoalsAndVision] = useState("");
+
+  const [teachers, setTeachers] = useState<peopleInfoType[]>([]);
+  const [members, setMembers] = useState<peopleInfoType[]>([]);
+  const [recordContent, setRecordContent] = useState("");
 
   useEffect(() => {
     getProjectSummery(props.projectId)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        const { taskStatus, totTaskNum, taskInfos } = res.data;
+        const {
+          taskStatus,
+          totTaskNum,
+          taskInfos,
+          projectState,
+          mainIntro,
+          feature,
+          goalsAndVision,
+          teachers,
+          members,
+          recordContent,
+        } = res.data;
         setTaskStatus(taskStatus);
         setTotTaskNum(totTaskNum);
         setProgressInfo(taskInfos);
+        setProjectState(projectState ?? "刚起步");
+        setMainIntro(mainIntro);
+        setFeature(feature);
+        setGoalsAndVision(goalsAndVision);
+        setTeachers(teachers);
+        setMembers(members);
+        setRecordContent(recordContent ?? "");
       })
       .finally(() => {
         setLoading(false);
@@ -50,31 +77,35 @@ export default function ProjectSummery(props: IProps) {
   return (
     <>
       {loading ? (
-        <Loading />
+        <div className="position-correction">
+          <Loading />
+        </div>
       ) : (
         <div className="summery-container">
           <div className="state-block">
-            <span>当前状态：</span>
-            <span>进行中</span>
+            <img src={robotIcon} alt="robot" className="top-icons" />
+            <div className="state-intro">
+              <span>项目当前阶段为：{projectState}</span>
+              <img src={wuguiIcon} alt="wugui" className="wugui-icons" />
+            </div>
+            <img
+              src={reportIcon}
+              alt="report"
+              className="top-icons report-icon"
+            />
           </div>
-          <div className="info-block">
-            <p>这个项目主要是干啥的？</p>
-            <text>xxxxxxx</text>
-            <div className="teacher-block">
-              <p>指导老师</p>
-              <div className="teacher-intro"></div>
-            </div>
-            <div className="member-block">
-              <div className="group-title">
-                <span>项目组</span>
-                <img /> {/* 跳转项目组 【教师侧添加人 减少人】*/}
-              </div>
-              <div className="members-intro">
-                {/* 项目组成员列表 每个成员都能发私信/查看个人信息 小卡片？列表？*/}
-              </div>
-            </div>
+
+          <div className="first-part"> 
+            <ProjectIntroduce mainIntro={mainIntro} feature={feature} goalsAndVision={goalsAndVision} />
+            <MembersIntroPanel recordContent={recordContent} teachers={teachers} members={members}/>
+          </div>
+          
+          <div className="chart-block">
             <PieChartPanel />
-            <ProgressPanel totalTasks={totTaskNum} progressInfos={progressInfo} />
+            <ProgressPanel
+              totalTasks={totTaskNum}
+              progressInfos={progressInfo}
+            />
           </div>
         </div>
       )}

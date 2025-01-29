@@ -1,0 +1,41 @@
+.info-block {
+  display: flex;
+  flex-direction: column;
+  width: 35rem;
+
+  .badge {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 550;
+    color: #535275;
+  }
+
+  .text-edit {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+}
+
+.badge {
+  font-size: 0.8rem;
+}
+
+div:where(.css-dev-only-do-not-override-161f05s).ant-typography,
+:where(.css-dev-only-do-not-override-161f05s).ant-typography p {
+  margin-bottom: 0;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-badge.ant-badge-status
+  .ant-badge-status-text {
+  color: #535275;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-typography {
+  color: #535275;
+}
+.title {
+  font-size: 1.2rem;
+  font-weight: 550;
+  color: #535275;
+}

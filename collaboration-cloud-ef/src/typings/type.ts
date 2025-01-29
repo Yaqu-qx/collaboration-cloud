@@ -24,6 +24,8 @@ export interface projectSummaryInfo {
   memberNum: number;
   totTaskNum: number;
   taskInfos: personalTasksInfo[];
+  teachers: peopleInfoType[];
+  members: peopleInfoType[];
 }
 
 export type personalTasksInfo = {
@@ -31,4 +33,9 @@ export type personalTasksInfo = {
   avatar: string;
   finishedNum: number;
   taskNum: number;
+};
+
+export type peopleInfoType = {
+  name: string;
+  avatar: string;
 };
