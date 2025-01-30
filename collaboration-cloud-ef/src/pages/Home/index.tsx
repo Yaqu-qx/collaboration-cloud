@@ -46,11 +46,7 @@ const items: MenuItem[] = [
     getItem("交流群", "2-1"),
     getItem("关注列表", "2-2"),
   ]),
-  getItem("个人中心", "3", <IdcardOutlined />, [
-    getItem("个人主页", "3-0"),
-    getItem("我的收藏", "3-1"),
-    getItem("账号管理", "3-2"),
-  ]),
+  getItem("个人中心", "3", <IdcardOutlined />),
 ];
 
 export default function Home() {

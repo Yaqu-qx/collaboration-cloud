@@ -1,0 +1,51 @@
+.personal-center {
+  display: flex;
+  flex-direction: column;
+  margin: -2rem;
+  height: 90%;
+}
+
+.avatar-block {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    position: absolute;
+    top: 10rem;
+    left: 5rem;
+  .personal-avatar {
+    height: 4.5rem;
+    width: 4.5rem;
+    border: 2px solid #6191c8;
+    border-radius: 0.5rem;
+    box-shadow: #6191c8 0px 0px 10px 0px;
+  }
+
+  .user-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    align-self: flex-end;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.top-background {
+  height: 12rem;
+  border: 1px solid #ccc;
+  // margin: -2rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: linear-gradient(
+    137.56deg,
+    rgb(167, 112, 239) 9.09%,
+    rgb(207, 139, 243) 46.04%,
+    rgb(253, 185, 155) 85.38%
+  );
+}
+
+.personal-center-content {
+  min-height: calc(90vh - 10rem);
+  width: 100%;
+  flex-grow: 1;
+  border-left: 2px solid #a6a6ba;
+  padding: 4rem;
+}
