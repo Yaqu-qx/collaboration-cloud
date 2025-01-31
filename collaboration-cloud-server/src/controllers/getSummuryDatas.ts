@@ -95,9 +95,9 @@ const getSummuryDatas = async (req: Request, res: Response) => {
               "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar5.png",
           },
         ],
-        mainIntro: "这是一段介绍",
-        feature: "项目特点",
-        goalsAndVision: "xxxxxx",
+        // mainIntro: "这是一段介绍",
+        // feature: "项目特点",
+        // goalsAndVision: "xxxxxx",
       },
     });
   }

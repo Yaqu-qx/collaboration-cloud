@@ -1,6 +1,42 @@
 .background-switcher {
-//   height: 12rem;
-//   border: 1px solid #ccc;
-//   margin: -2rem;
-//   border-radius: 0.5rem 0.5rem 0 0;
+  height: 12rem;
+  width: 31rem;
+  background-color: white;
+  box-shadow: 0.2rem 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 0rem;
+  right: 0rem;
+  border-radius: 0.2rem;
+  padding: 1rem;
+  overflow-y: scroll;
+
+  .background-colors-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    .background-color {
+      height: 2rem;
+      width: 2rem;
+      border-radius: 0.2rem;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .background-images-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .background-image {
+      height: 3.2rem;
+      width: 6.5rem;
+      border-radius: 0.2rem;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }

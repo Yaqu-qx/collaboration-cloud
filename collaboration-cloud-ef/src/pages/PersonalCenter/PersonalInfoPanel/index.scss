@@ -1,12 +1,17 @@
 .personal-info-panel {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  gap: 3rem;
+
+  .personal-info-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
 
   .personal-info-panel-left {
     height: 100%;
-    width: 47%;
-    padding-right: 2rem;
+    width: 46%;
+    margin-left: -2rem;
     
     .personal-info-top {
       font-size: 0.8rem;
@@ -21,11 +26,21 @@
     }
   }
 
+  .personal-info-panel-right {
+    width: 55%;
+    margin-right: -2rem;
+  }
+
   .personal-info-content {
     border: 1px solid #ccc;
     border-radius: 0.5rem;
     margin-top: 0.5rem;
     padding: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 1.5rem;
 
     .personal-info-item {
       display: flex;
@@ -34,19 +49,25 @@
       gap: 0.5rem;
       font-size: 1rem;
       color: #666666;
+      position: relative;
+
       .personal-info-item-icon {
         height: 1rem;
         width: 1rem;
+      }
+
+      .edit-btn {
+        position: absolute;
+        right: 6rem;
       }
     }
   }
 
   .personal-info-panel-left-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 2.5rem;
+    padding-right: 3rem;
   }
+
 }
 
 .check-icon {
@@ -56,4 +77,10 @@
     cursor: pointer;
     background-color: #ccc;
   }
+}
+
+.visiable-select {
+  margin-left: auto;
+  font-size: 0.8rem;
+  // color: #ccc;
 }

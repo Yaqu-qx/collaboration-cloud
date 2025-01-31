@@ -1,0 +1,25 @@
+
+.account-setting {
+  .account-info-top {
+    width: 25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #888;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+
+  .required {
+    color: red;
+  }
+
+  .password-input {
+    width: 20rem;
+    margin-top: 0.2rem;
+  }
+
+  .change-password-input {
+    margin-top: 1rem;
+  }
+}
