@@ -1,0 +1,20 @@
+.action-buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.task-list-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .task-list-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+  }
+}

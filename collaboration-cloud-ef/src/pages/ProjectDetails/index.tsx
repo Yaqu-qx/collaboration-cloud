@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import ProjectSummery from "./ProjectSummery";
 import ProjectCalendar from "./ProjectCalendar";
-
+import TaskList from "./TaskList";
 
 export default function ProjectDetails() {
   const location = useLocation();
@@ -28,7 +28,7 @@ export default function ProjectDetails() {
     {
       title: "List",
       icon: <UnorderedListOutlined />,
-      chilren: <ProjectSummery projectId={projectId} />,
+      chilren: <TaskList />,
     },
     {
       title: "频道",
@@ -63,7 +63,7 @@ export default function ProjectDetails() {
       <Header title={projectName} imageUrl={projectAvatar} tags={tags} />
       <Tabs
         className="tabs"
-        defaultActiveKey="2"
+        defaultActiveKey="1"
         onTabClick={handleTabClick}
         items={tabsItem.map((item, i) => {
           const id = String(i + 1);
