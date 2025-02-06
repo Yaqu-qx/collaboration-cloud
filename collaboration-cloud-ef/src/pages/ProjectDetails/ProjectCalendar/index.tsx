@@ -52,7 +52,7 @@ const getMonthData = (value: Dayjs) => {
 export default function ProjectCalendar() {
   const [listData, setListData] = useState( dateListData );
   const [newEventContent, setNewEventContent] = useState("");
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedLevel, setSelectedLevel] = useState<{label: string, value: string}>({label:"普通", value:"success"});
 
@@ -145,6 +145,7 @@ export default function ProjectCalendar() {
         open={modalVisible}
         centered={true}
         okText="添加"
+        cancelText="取消"
         onCancel={() => setModalVisible(false)}
         onOk={handleAddEvent}
         className="add-event-modal"

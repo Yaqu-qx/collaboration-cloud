@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 
 const getSummuryDatas = async (req: Request, res: Response) => {
   const query = req?.query;
-  //   console.log('1ok', query?.projectId);
+    // console.log('1ok', query?.projectId);
   if (query?.projectId) {
-    console.log("ok", query.projectId);
+    // console.log("ok", query.projectId);
     res.status(200).json({
       message: "Get summury data successfully",
       data: {

@@ -83,7 +83,6 @@ export default function ProjectList() {
       </div>
       <ProList<{ title: string }>
         metas={{
-          title: {},
           description: {
             render: () => {
               return "这是一个很特别的项目，项目主要做的是xxx，需要结合最新技术完成，该项目的核心方向是结合xxxx的方法，以xxx向转型完成一个具有难度的系统。";

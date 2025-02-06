@@ -55,7 +55,8 @@ export default function CreatePanel(props: Iprops) {
   const upLoadProps: UploadProps = {
     name: "file",
     multiple: true,
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    maxCount: 8,
+    action: "http://localhost:4000/filesUpLoad",
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {

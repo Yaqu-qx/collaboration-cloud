@@ -10,7 +10,7 @@ const app = express();
 
 // 添加中间件
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // 路由
 // 添加处理根路径的 GET 请求 

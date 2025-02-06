@@ -13,6 +13,7 @@ import {
 import ProjectSummery from "./ProjectSummery";
 import ProjectCalendar from "./ProjectCalendar";
 import TaskList from "./TaskList";
+import DataWareHouse from "./FilesWareHouse";
 
 export default function ProjectDetails() {
   const location = useLocation();
@@ -38,7 +39,7 @@ export default function ProjectDetails() {
     {
       title: "资料库",
       icon: <ProfileOutlined />,
-      chilren: <ProjectSummery projectId={projectId} />,
+      chilren: <DataWareHouse projectName={projectName} />,
     },
     {
       title: "日历",
@@ -50,10 +51,6 @@ export default function ProjectDetails() {
   const handleTabClick = (key: string, event: any) => {
     const selectedTab = tabsItem[parseInt(key) - 1];
     if (selectedTab.title === "频道") {
-      navigate("/home");
-    }
-
-    if (selectedTab.title === "资料库") {
       navigate("/home");
     }
   };

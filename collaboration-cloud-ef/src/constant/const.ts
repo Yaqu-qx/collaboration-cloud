@@ -54,4 +54,5 @@ export const projectTags = [
 ];
 
 
-const getProjectsUrl = "http://localhost:4000/projects";
+export const getProjectsUrl = "http://localhost:4000/projects";
+export const UPLOAD_URL = "http://localhost:4000/filesUpLoad";

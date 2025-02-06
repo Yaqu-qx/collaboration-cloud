@@ -39,3 +39,15 @@ export type peopleInfoType = {
   name: string;
   avatar: string;
 };
+
+export interface IFileType {
+  id: number;
+  filename: string;
+  size: number;
+  creater: string;
+  createrName: string;
+  createTime: string;
+  downloadUrl: string;
+  latestModifiedTime: string;
+  latestModifier: string;
+}
