@@ -1,0 +1,73 @@
+.message-input-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  box-shadow: #eee 0px -3px 4px;
+  padding: 0.5rem 1.5rem;
+
+  .file-previews {
+    height: 2.5rem;
+    width: 100%;
+    // background-color: antiquewhite;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: scroll;
+    white-space: nowrap;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    
+    &::-webkit-scrollbar {
+      display: none;  /* Safari and Chrome */
+    }
+
+    .file-item {
+      width: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.5rem;
+      background: #eee;
+      border-radius: 4px;
+      .image-preview {
+        max-height: 2rem;
+        object-fit: contain;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .input-container {
+    margin-top: 0.5rem;
+    .input-actions {
+      position: relative;
+      display: flex;
+      padding-top: 0.3rem;
+      justify-content: space-between;
+    }
+  }
+
+  .emoji-picker {
+    position: absolute;
+    bottom: 3rem;
+    left: 1rem;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .mention-list {
+    position: absolute;
+    width: 6rem;
+    bottom: 6rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    max-height: 8rem;
+    overflow-y: auto;
+  }
+}

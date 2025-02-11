@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { IconButton } from "@mui/material";
 import type { Key } from "react";
-import { UPLOAD_URL } from "@/constant/const";
+import { UPLOAD_URL, FILESVIEW_URL_PREFIX } from "@/constant/const";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
 import {
@@ -37,6 +37,7 @@ import {
   fetchProjectFiles,
   downloadFiles,
   downloadFileFolder,
+  getFilesPreview,
 } from "@/utils/server";
 import { getUserName } from "@/utils/globalState";
 import { formatSize } from "@/utils/utils";
@@ -48,6 +49,8 @@ interface IProps {
   projectName: string;
 }
 
+const fileTypes = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+
 export default function FilesWareHouse(props: IProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [files, setFiles] = useState<IFile[]>([]);
@@ -58,7 +61,7 @@ export default function FilesWareHouse(props: IProps) {
   ]);
   const [viewUrl, setViewUrl] = useState<string>("");
   const [viewType, setViewType] = useState<string>("");
-  const [showView, setShowView] = useState(true);
+  const [showView, setShowView] = useState(false);
   const { projectName } = props;
 
   useEffect(() => {
@@ -95,7 +98,14 @@ export default function FilesWareHouse(props: IProps) {
     if (index < 0) return;
     const newPath = breadcrumbItems.slice(0, index + 1).join("/");
     setBreadcrumbItems(breadcrumbItems.slice(0, index + 1));
-    // fetchFiles(newPath); // 获取返回路径中的文件数据
+    fetchProjectFiles(newPath)
+      .then((res) => res.json())
+      .then((res) => {
+        setFiles(res.data || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleMultipleClick = () => {
@@ -132,8 +142,9 @@ export default function FilesWareHouse(props: IProps) {
 
   const handleDownloadClick = (key: string, isFilefolder: boolean) => {
     console.log("key", key);
+    const downloadF = isFilefolder ? downloadFileFolder : downloadFiles;
     // (isFilefolder ? downloadFileFolder(key) : downloadFiles(key))
-    downloadFileFolder(key)
+    downloadF(key)
       .then((res) => res.json())
       .then((res) => {
         const downloadUrl = res.downloadUrl;
@@ -156,6 +167,27 @@ export default function FilesWareHouse(props: IProps) {
         });
     } else {
       // todo 打开文件
+      console.log("打开文件", file.key);
+      const type = file.key.split(".").pop() || "";
+      if (fileTypes.includes(type)) {
+        getFilesPreview(file.key)
+          .then((res) => res.json())
+          .then((res) => {
+            console.log("res", res);
+            setViewUrl(res.previewUrl);
+            setViewType(type);
+            setShowView(true);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        return;
+      }
+
+      const previewUrl = FILESVIEW_URL_PREFIX + file.key;
+      setViewUrl(previewUrl);
+      setViewType(type);
+      setShowView(true);
     }
   };
 
@@ -355,8 +387,13 @@ export default function FilesWareHouse(props: IProps) {
         )}
       />
       {showView && (
-        <div className="file-viewer-mask">
-          <FileViewer url={viewUrl} type={viewType} />
+        <div className="file-viewer-mask" onClick={() => setShowView(false)}>
+          <div
+            className="file-viewer-container"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FileViewer url={viewUrl} type={viewType} />
+          </div>
         </div>
       )}
     </>

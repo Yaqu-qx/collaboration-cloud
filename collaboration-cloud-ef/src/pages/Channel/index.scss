@@ -1,0 +1,28 @@
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs
+  > .ant-tabs-nav
+  .ant-tabs-nav-list,
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs
+  > div
+  > .ant-tabs-nav
+  .ant-tabs-nav-list {
+  margin-left: 2rem;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs-top
+  > .ant-tabs-nav::before,
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs-bottom
+  > .ant-tabs-nav::before,
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs-top
+  > div
+  > .ant-tabs-nav::before,
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs-bottom
+  > div
+  > .ant-tabs-nav::before {
+  border-bottom: 1px solid #ccc;
+}
+:where(.css-dev-only-do-not-override-161f05s).ant-tabs .ant-tabs-tab {
+  padding: 0.3rem 0;
+}
+
+.message-list {
+    // overflow-y: scroll;
+}

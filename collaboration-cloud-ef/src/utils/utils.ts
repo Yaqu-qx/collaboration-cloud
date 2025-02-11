@@ -12,3 +12,11 @@ export const formatSize = (bytes: number): string => {
 
   return `${size.toFixed(2)} ${units[unitIndex]}`;
 };
+
+export const getFileExtension = (filename: string) => {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex !== -1) {
+    return filename.substring(lastDotIndex + 1);
+  }
+  return '';
+};

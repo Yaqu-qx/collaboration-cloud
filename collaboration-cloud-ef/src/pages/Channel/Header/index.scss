@@ -1,0 +1,61 @@
+.channel-header {
+  margin: -2rem;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  .channel-actions {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+
+    .inquire-members {
+      display: flex;
+      gap: 0.5rem;
+      border: 1px solid #ddd;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.5rem;
+      &:hover {
+        background-color: #eee;
+      }
+
+      .members-icon {
+        font-size: 1.6rem;
+        padding: 0.1rem;
+        background-color: #ccc;
+        border-radius: 0.2rem;
+      }
+    }
+  }
+}
+
+.channel-actions-common {
+  width: 6rem;
+  margin: 0.5rem -0.5rem;
+  padding: 0.2rem 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.channel-detail {
+  @extend.channel-actions-common;
+  &:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #1d5fc2;
+  }
+}
+.channel-quit {
+  @extend.channel-actions-common;
+  color: #b03519;
+  &:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #b03519;
+  }
+}

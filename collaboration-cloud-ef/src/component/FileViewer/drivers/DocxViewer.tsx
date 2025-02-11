@@ -11,7 +11,7 @@ const DocxViewer = ({ url }: { url: string }) => {
       .then((result) => setHtml(result.value));
   }, [url]);
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div dangerouslySetInnerHTML={{ __html: html }} style={{backgroundColor: 'white'}} />;
 };
 
 export default DocxViewer;

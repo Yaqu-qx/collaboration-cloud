@@ -59,3 +59,35 @@ export const downloadFileFolder = async (prefix: string) =>
       "Content-Type": "application/json",
     },
   });
+
+export const getFilesPreview = async (key: string) =>
+  fetch(`http://localhost:4000/getFilesPreview?key=${key}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const getChannelList = async (userId: string) => 
+  fetch(`http://localhost:4000/getChannelList?userName=${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const getChannelInfo = async (channelId: string) =>
+  fetch(`http://localhost:4000/getChannelInfo/${channelId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const getChannelMessages = async (channelId: string) =>
+  fetch(`http://localhost:4000/getChannelMessages/${channelId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }); 

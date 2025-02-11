@@ -1,0 +1,70 @@
+.message-input-container {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #fff;
+    position: absolute;
+    bottom: 0.5rem;
+    margin: 1rem 0;
+    width: calc(100% - 4rem);
+    display: flex;
+    flex-direction: column;
+    
+    .file-previews {
+      margin-bottom: 0.5rem;
+      height: 3rem;
+      width: 100%;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      
+      .file-item {
+        width: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.5rem;
+        background: #eee;
+        border-radius: 4px;
+  
+        .image-preview {
+          max-width: 2rem;
+          max-height: 2rem;
+          object-fit: contain;
+          border-radius: 4px;
+        }
+  
+        .file-info {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+      }
+    }
+  
+    // .input-area {
+    //   position: relative;
+  
+    //   // .ant-input {
+    //   //   padding-right: 120px;
+    //   // }
+    // }
+  
+    .action-buttons {
+      align-self: end;
+      // position: absolute;
+      // // right: 12px;
+      // bottom: 12px;
+      // z-index: 1;
+      // background: white;
+    }
+  
+    .emoji-picker {
+      position: absolute;
+      bottom: 60px;
+      right: 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  }

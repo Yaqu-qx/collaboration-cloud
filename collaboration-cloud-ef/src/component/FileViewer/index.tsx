@@ -13,20 +13,22 @@ interface Props {
 }
 
 export default function FileViewer(Props: Props) {
-  const [file, setFile] = useState<File>();
   const { url, type } = Props;
+  console.log(type);
   switch (type) {
     case "pdf":
-      return <PDFViewer url={url} />;
     case "docx":
-      return <DocxViewer url={url} />;
     case "xlsx":
-      return <ExcelViewer url={url} />;
+      return <iframe src={url} className="file-viewer-iframe" title="file-viewer"/>;
     case "txt":
-      return <TextViewer url={url} />;
     case "md":
-      return <MarkdownViewer url={url} />;
+      return <TextViewer url={url} />;
+    case "jpg":
+    case "png":
+    case "jpeg":
+    case "gif":
+      return <img src={url} alt="file-viewer" className="file-viewer-img" />;
     default:
-      return <div>暂不支持该文件类型</div>;
+      return <div style={{ fontSize: '1.5rem' }}>暂不支持该文件类型</div>;
   }
 }

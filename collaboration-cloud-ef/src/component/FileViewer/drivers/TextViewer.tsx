@@ -9,7 +9,7 @@ const TextViewer = ({ url }: { url: string }) => {
       .then((text) => setText(text));
   }, [url]);
 
-  return <pre>{text}</pre>;
+  return <pre style={{ padding: '2rem', backgroundColor: "white" }}>{text}</pre>;
 };
 
 export default TextViewer;

@@ -12,6 +12,7 @@ import ItemCenter from "./component/ItemCenter";
 import ProjectDetails from "./pages/ProjectDetails";
 import MyProjectGroup from "./pages/MyProjectGroup";
 import PersonalCenter from "./pages/PersonalCenter";
+import Channel from "./pages/Channel";
 import { DataType } from "./typings/type";
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
             }
           />
           <Route path="my-projects" element={<MyProjectGroup />} />
-          <Route path="discussion-center" element={<div>交流中心</div>} />
+          <Route path="discussion-center" element={<Channel />} />
           <Route path="personal-center" element={<PersonalCenter />} />
 
           <Route path="project-detail" element={<ProjectDetails />} />

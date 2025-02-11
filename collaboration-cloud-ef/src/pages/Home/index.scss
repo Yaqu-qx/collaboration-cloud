@@ -120,3 +120,28 @@
   padding: 2rem;
   position: relative;
 }
+
+.channel-menu-item {
+  color: rgb(87, 75, 105);
+  margin-left: -2.5rem;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+
+  .add-channel-btn {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.layout-menu {
+  padding-top: 1rem;
+}
+
+:where(.css-dev-only-do-not-override-161f05s).ant-menu-inline.ant-menu-root .ant-menu-item >.ant-menu-title-content, :where(.css-dev-only-do-not-override-161f05s).ant-menu-inline.ant-menu-root .ant-menu-submenu-title >.ant-menu-title-content {
+  overflow: visible;
+}
+
+.ant-layout-sider .ant-menu-item, .ant-layout-sider .ant-menu-submenu-title {
+  margin-top: 0.5rem;
+}
