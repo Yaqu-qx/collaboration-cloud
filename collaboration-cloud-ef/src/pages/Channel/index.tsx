@@ -50,15 +50,58 @@ export default function Channel() {
     );
   };
   // 用户维度 消息列表变化
-  const handleMessageListModify = (dailyIndex: number, personalIndex: number , newMessages: PersonalContinuousMessage) => {
+  const handleMessageListModify = (dailyIndex: number, personalIndex: number, newMessages: PersonalContinuousMessage) => {
     const newMessageList: MessageList[] = [...messageList];
     newMessageList[dailyIndex].messages[personalIndex] = newMessages;
     setMessageList(newMessageList);
   };
   // 新添加发送的消息
   const addMessage = (userName: string, date: string, messages: MessageInfo[]) => {
-    // todo
+    const newMessageList: MessageList[] = [...messageList];
+    const dailyMessageExist = newMessageList.find(
+      (dailyItem) => dailyItem.date === date
+    );
+    if (dailyMessageExist) {
+      // 日期存在 
+      const personalMessageExist = dailyMessageExist.messages.find(
+        (personalItem) => personalItem.userName === userName
+      );
+      if (personalMessageExist) {
+        // 个人消息存在
+        personalMessageExist.messages = [...personalMessageExist.messages, ...messages];
+      } else {
+        // 个人消息不存在
+        dailyMessageExist.messages.push({
+          userName: userName,
+          messages: messages,
+        });
+      }
+    }
+    else {
+      // 日期不存在
+      newMessageList.push({
+        date: date,
+        messages: [
+          {
+            userName: userName,
+            messages: messages,
+          },
+        ],
+      });
+    }
+    setMessageList(newMessageList);
   }
+  // }
+  // const newDailyMessage: MessageList = {
+  //   date: date,
+  //   messages: [
+  //     {
+  //       userName: userName,
+  //       messages: messages,
+  //     },
+  //   ],
+  // };
+
 
   const tabItems = [
     {
@@ -95,7 +138,7 @@ export default function Channel() {
                 <div className="message-item-continuous">
                   {/* 按用户分 */}
                   {dailyItem.messages.map((personalItem, personalIndex) => (
-                    <ListItem key={personalIndex} messageInfo={personalItem}  date={dailyItem.date} index={personalIndex} onMessageListModify={(newPersonalMessage: PersonalContinuousMessage) => handleMessageListModify(dailyIndex, personalIndex, newPersonalMessage)}/>
+                    <ListItem key={personalIndex} messageInfo={personalItem} date={dailyItem.date} index={personalIndex} onMessageListModify={(newPersonalMessage: PersonalContinuousMessage) => handleMessageListModify(dailyIndex, personalIndex, newPersonalMessage)} />
                   ))}
                 </div>
               </div>
