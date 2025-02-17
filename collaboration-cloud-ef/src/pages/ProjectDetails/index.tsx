@@ -14,10 +14,11 @@ import ProjectSummery from "./ProjectSummery";
 import ProjectCalendar from "./ProjectCalendar";
 import TaskList from "./TaskList";
 import DataWareHouse from "./FilesWareHouse";
+import Channel from "../Channel";
 
 export default function ProjectDetails() {
   const location = useLocation();
-  const { projectId, projectName, projectAvatar, tags } = location.state;
+  const { projectId, projectName, projectAvatar, tags, channelId } = location.state;
   const navigate = useNavigate();
 
   const tabsItem = [
@@ -34,7 +35,7 @@ export default function ProjectDetails() {
     {
       title: "频道",
       icon: <MessageOutlined />,
-      chilren: <ProjectSummery projectId={projectId} />,
+      chilren: <Channel />,
     },
     {
       title: "资料库",
@@ -51,7 +52,7 @@ export default function ProjectDetails() {
   const handleTabClick = (key: string, event: any) => {
     const selectedTab = tabsItem[parseInt(key) - 1];
     if (selectedTab.title === "频道") {
-      navigate("/home");
+      navigate("/home/discussion-center", {state: {channelId: channelId}});
     }
   };
 

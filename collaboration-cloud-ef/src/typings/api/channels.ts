@@ -10,7 +10,7 @@ export interface ChannelInfo {
   teachers: peopleInfoType[];
   messages: channelMessage[];
   createdAt: string;
-  createdBy: string;
+  createBy: string;
 }
 
 export interface channelMessage {

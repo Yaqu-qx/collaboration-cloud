@@ -7,6 +7,7 @@ export interface projectInfo {
   tags: string[];
   create_time: string;
   description: string;
+  channelId: string;
 }
 
 

@@ -63,6 +63,7 @@ const transformProjectData = (item: projectInfo, index: number): DataType => {
     tags: item.tags,
     create_time: item.create_time,
     description: item.description,
+    channelId: item.channelId,
   };
 };
 

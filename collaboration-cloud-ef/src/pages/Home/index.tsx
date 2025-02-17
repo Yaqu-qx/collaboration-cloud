@@ -142,7 +142,7 @@ export default function Home() {
       if (keyArr[1] === (channelList.length - 1).toString()) return;
       const stateItem = channelList[Number(keyArr[1])];
       navigate(`/home${mainRoutes[Number(keyArr[0])]}`, {
-        state: { channelId: stateItem.id, channelName: stateItem.name },
+        state: { channelId: stateItem.id },
       });
     }
 

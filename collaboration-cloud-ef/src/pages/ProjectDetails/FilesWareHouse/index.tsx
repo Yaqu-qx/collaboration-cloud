@@ -42,14 +42,15 @@ import {
 import { getUserName } from "@/utils/globalState";
 import { formatSize } from "@/utils/utils";
 import FileViewer from "@/component/FileViewer";
-
+import Loading from "@/component/Loading";
+import { fileTypes } from "@/constant/const";
 const username = getUserName();
 
 interface IProps {
   projectName: string;
 }
 
-const fileTypes = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+// const fileTypes = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
 
 export default function FilesWareHouse(props: IProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
@@ -63,6 +64,7 @@ export default function FilesWareHouse(props: IProps) {
   const [viewType, setViewType] = useState<string>("");
   const [showView, setShowView] = useState(false);
   const { projectName } = props;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 获取项目下的文件列表
@@ -72,6 +74,7 @@ export default function FilesWareHouse(props: IProps) {
       .then((res) => {
         // console.log("信息", res);
         setFiles(res.data || []);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -182,6 +185,8 @@ export default function FilesWareHouse(props: IProps) {
             console.log(err);
           });
         return;
+      } else {
+        // todo 提示该文件类型无法预览
       }
 
       const previewUrl = FILESVIEW_URL_PREFIX + file.key;
@@ -212,189 +217,205 @@ export default function FilesWareHouse(props: IProps) {
 
   return (
     <>
-      <Breadcrumb
-        separator={<CaretRightOutlined />}
-        className="files-list-breadcrumb"
-      >
-        {breadcrumbItems.map((item, index) => (
-          <Breadcrumb.Item
-            key={index}
-            onClick={() => handleBreadcrumbClick(index)}
-            className="breadcrumb-item"
-          >
-            {index === 0 ? (
-              <DnsTwoToneIcon sx={{ fontSize: "1.2rem" }} />
-            ) : null}
-            <span>{item}</span>
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
-      <div className="upload-container">
-        <div className="blank" />
-        <Button type="primary" onClick={handleMultipleClick}>
-          {isMultiple ? "取消批量" : "批量操作"}
-        </Button>
-        <Upload
-          showUploadList={false}
-          action={UPLOAD_URL}
-          multiple
-          onChange={handleUploadOnChange}
-          data={(file) => ({
-            // 动态传递路径参数给后端
-            fileName: file.name,
-            basePath: breadcrumbItems.join("/"), // 基础路径（如：项目/文件夹1）
-            relativePath: (file as any).webkitRelativePath || "", // 文件的相对路径（如：子文件夹/文件.txt）
-          })}
-        >
-          <Button icon={<UploadOutlined />}>上传文件</Button>
-        </Upload>
-        <Upload
-          showUploadList={false}
-          action={UPLOAD_URL}
-          multiple
-          directory={true}
-          onChange={handleUploadOnChange}
-          data={(file) => ({
-            // 动态传递路径参数给后端
-            basePath: breadcrumbItems.join("/"), // 基础路径（如：项目/文件夹1）
-            relativePath: (file as any).webkitRelativePath || "", // 文件的相对路径（如：子文件夹/文件.txt）
-          })}
-        >
-          <Button icon={<UploadOutlined />}>上传文件夹</Button>
-        </Upload>
-      </div>
-      <div className="item-header">
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <span>名称</span>
-          <IconButton
-            size="small"
-            onClick={() => handleBreadcrumbClick(breadcrumbItems.length - 2)}
-          >
-            <RollbackOutlined />
-          </IconButton>
+      {isLoading ? (
+        <div className="position-correction">
+          <Loading />
         </div>
-        <span style={{ marginLeft: "21.8rem" }}>所有者</span>
-        <div className="last-modified-time" onClick={() => setIsRise(!isRise)}>
-          <span>上次修改日期</span>
-          <IconButton size="small">
-            {isRise ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-          </IconButton>
-        </div>
-        <span style={{ marginLeft: "4.2rem" }}>文件大小</span>
-        <MoreOutlined
-          style={{ marginLeft: "auto" }}
-          className="files-more-icon"
-        />
-      </div>
-      <ProList<IFile>
-        dataSource={files}
-        rowKey="id"
-        rowClassName="files-list-item"
-        metas={{
-          title: {
-            render: (text, record) => (
-              <div
-                className="info-container file-container"
-                onClick={() => handleFileClick(record)}
+      ) : (
+        <>
+          <Breadcrumb
+            separator={<CaretRightOutlined />}
+            className="files-list-breadcrumb"
+          >
+            {breadcrumbItems.map((item, index) => (
+              <Breadcrumb.Item
+                key={index}
+                onClick={() => handleBreadcrumbClick(index)}
+                className="breadcrumb-item"
               >
-                {record.isFilefolder ? (
-                  <FolderFilled className="file-icon" />
-                ) : (
-                  <FileOutlined className="file-icon" />
-                )}
-                <div className="info-container">{text}</div>
-                {record.isStarred && <StarFilled />}
-              </div>
-            ),
-          },
-          content: {
-            render: (_: any, record: IFile) => (
-              <Space direction="horizontal" className="file-info">
-                <div className="info-container creater-container">
-                  <img src={defaultAvatar} className="creater-avatar" />
-                  <span>{record.createrName}</span>
-                </div>
-                <div className="info-container time-container">
-                  <span>{record.latestModifiedTime}</span>
-                  <span>{record.latestModifier}</span>
-                </div>
-                <div className="info-container size-container">
-                  <span>{formatSize(record.size || -1)}</span>
-                </div>
-              </Space>
-            ),
-          },
-          actions: {
-            render: (_: any, record: any) => (
-              <div className="actions-container">
-                <Tooltip title="下载">
-                  <IconButton
-                    onClick={() =>
-                      handleDownloadClick(record.key, record.isFilefolder)
-                    }
-                  >
-                    <DownloadOutlined />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="分享">
-                  <IconButton>
-                    <ShareAltOutlined />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="重命名">
-                  <IconButton>
-                    <DriveFileRenameOutlineIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={record.isStarred ? "取消标星" : "标星置顶"}>
-                  <IconButton onClick={() => handleStattedClick(record.id)}>
-                    {record.isStarred ? <StarFilled /> : <StarOutlined />}
-                  </IconButton>
-                </Tooltip>
-              </div>
-            ),
-          },
-          extra: {
-            render: () => (
-              <Dropdown trigger={["click"]} menu={{ items: extraItems }}>
-                <MoreOutlined className="files-more-icon" />
-              </Dropdown>
-            ),
-          },
-        }}
-        rowSelection={isMultiple ? rowSelection : false}
-        tableAlertRender={() => (
-          <div className="select-alert-container">
-            <span>已选择 {selectedRowKeys.length} 项</span>
-            <div className="select-alert-actions">
-              <Tooltip title="下载">
-                <IconButton size="small">
-                  <DownloadOutlined />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="分享">
-                <IconButton size="small">
-                  <ShareAltOutlined />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="删除">
-                <IconButton size="small">
-                  <DeleteOutlined />
-                </IconButton>
-              </Tooltip>
+                {index === 0 ? (
+                  <DnsTwoToneIcon sx={{ fontSize: "1.2rem" }} />
+                ) : null}
+                <span>{item}</span>
+              </Breadcrumb.Item>
+            ))}
+          </Breadcrumb>
+          <div className="upload-container">
+            <div className="blank" />
+            <Button type="primary" onClick={handleMultipleClick}>
+              {isMultiple ? "取消批量" : "批量操作"}
+            </Button>
+            <Upload
+              showUploadList={false}
+              action={UPLOAD_URL}
+              multiple
+              onChange={handleUploadOnChange}
+              data={(file) => ({
+                // 动态传递路径参数给后端
+                fileName: file.name,
+                basePath: breadcrumbItems.join("/"), // 基础路径（如：项目/文件夹1）
+                relativePath: (file as any).webkitRelativePath || "", // 文件的相对路径（如：子文件夹/文件.txt）
+              })}
+            >
+              <Button icon={<UploadOutlined />}>上传文件</Button>
+            </Upload>
+            <Upload
+              showUploadList={false}
+              action={UPLOAD_URL}
+              multiple
+              directory={true}
+              onChange={handleUploadOnChange}
+              data={(file) => ({
+                // 动态传递路径参数给后端
+                basePath: breadcrumbItems.join("/"), // 基础路径（如：项目/文件夹1）
+                relativePath: (file as any).webkitRelativePath || "", // 文件的相对路径（如：子文件夹/文件.txt）
+              })}
+            >
+              <Button icon={<UploadOutlined />}>上传文件夹</Button>
+            </Upload>
+          </div>
+          <div className="item-header">
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <span>名称</span>
+              <IconButton
+                size="small"
+                onClick={() =>
+                  handleBreadcrumbClick(breadcrumbItems.length - 2)
+                }
+              >
+                <RollbackOutlined />
+              </IconButton>
             </div>
+            <span style={{ marginLeft: "21.8rem" }}>所有者</span>
+            <div
+              className="last-modified-time"
+              onClick={() => setIsRise(!isRise)}
+            >
+              <span>上次修改日期</span>
+              <IconButton size="small">
+                {isRise ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              </IconButton>
+            </div>
+            <span style={{ marginLeft: "4.2rem" }}>文件大小</span>
+            <MoreOutlined
+              style={{ marginLeft: "auto" }}
+              className="files-more-icon"
+            />
           </div>
-        )}
-      />
-      {showView && (
-        <div className="file-viewer-mask" onClick={() => setShowView(false)}>
-          <div
-            className="file-viewer-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <FileViewer url={viewUrl} type={viewType} />
-          </div>
-        </div>
+          <ProList<IFile>
+            dataSource={files}
+            rowKey="id"
+            rowClassName="files-list-item"
+            metas={{
+              title: {
+                render: (text, record) => (
+                  <div
+                    className="info-container file-container"
+                    onClick={() => handleFileClick(record)}
+                  >
+                    {record.isFilefolder ? (
+                      <FolderFilled className="file-icon" />
+                    ) : (
+                      <FileOutlined className="file-icon" />
+                    )}
+                    <div className="info-container">{text}</div>
+                    {record.isStarred && <StarFilled />}
+                  </div>
+                ),
+              },
+              content: {
+                render: (_: any, record: IFile) => (
+                  <Space direction="horizontal" className="file-info">
+                    <div className="info-container creater-container">
+                      <img src={defaultAvatar} className="creater-avatar" />
+                      <span>{record.createrName}</span>
+                    </div>
+                    <div className="info-container time-container">
+                      <span>{record.latestModifiedTime}</span>
+                      <span>{record.latestModifier}</span>
+                    </div>
+                    <div className="info-container size-container">
+                      <span>{formatSize(record.size || -1)}</span>
+                    </div>
+                  </Space>
+                ),
+              },
+              actions: {
+                render: (_: any, record: any) => (
+                  <div className="actions-container">
+                    <Tooltip title="下载">
+                      <IconButton
+                        onClick={() =>
+                          handleDownloadClick(record.key, record.isFilefolder)
+                        }
+                      >
+                        <DownloadOutlined />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="分享">
+                      <IconButton>
+                        <ShareAltOutlined />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="重命名">
+                      <IconButton>
+                        <DriveFileRenameOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={record.isStarred ? "取消标星" : "标星置顶"}>
+                      <IconButton onClick={() => handleStattedClick(record.id)}>
+                        {record.isStarred ? <StarFilled /> : <StarOutlined />}
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                ),
+              },
+              extra: {
+                render: () => (
+                  <Dropdown trigger={["click"]} menu={{ items: extraItems }}>
+                    <MoreOutlined className="files-more-icon" />
+                  </Dropdown>
+                ),
+              },
+            }}
+            rowSelection={isMultiple ? rowSelection : false}
+            tableAlertRender={() => (
+              <div className="select-alert-container">
+                <span>已选择 {selectedRowKeys.length} 项</span>
+                <div className="select-alert-actions">
+                  <Tooltip title="下载">
+                    <IconButton size="small">
+                      <DownloadOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="分享">
+                    <IconButton size="small">
+                      <ShareAltOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="删除">
+                    <IconButton size="small">
+                      <DeleteOutlined />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
+            )}
+          />
+          {showView && (
+            <div
+              className="file-viewer-mask"
+              onClick={() => setShowView(false)}
+            >
+              <div
+                className="file-viewer-container"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FileViewer url={viewUrl} type={viewType} />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </>
   );

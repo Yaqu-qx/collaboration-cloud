@@ -10,6 +10,7 @@ export interface ProjectInfo {
   tags: string[];
   create_time: string;
   description: string;
+  channelId: string;
 }
 
 function generateRandomProjects(): ProjectInfo[] {
@@ -25,6 +26,7 @@ function generateRandomProjects(): ProjectInfo[] {
       tags: tags.slice(0, Math.floor(Math.random() * 5)),
       create_time: new Date().toISOString().split("T")[0],
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     });
   }
   return projects;
@@ -49,6 +51,7 @@ const getProjects = async (req: Request, res: Response) => {
         tags: ["课程设计", "工程项目", "跨学科协作"],
         create_time: "2021-09-01",
         description: "这是一段描述",
+        channelId: "0000000001",
       },
       {
         project_id: "00000002",
@@ -59,6 +62,7 @@ const getProjects = async (req: Request, res: Response) => {
         tags: ["课程设计", "跨学科协作"],
         create_time: "2024-09-01",
         description: "项目介绍",
+        channelId: "0000000001",
       },
       {
         project_id: "00000003",
@@ -69,6 +73,7 @@ const getProjects = async (req: Request, res: Response) => {
         tags: ["课程设计", "科研创新"],
         create_time: "2024-03-01",
         description: "项目介绍",
+        channelId: "0000000001",
       },
       {
         project_id: "00000004",
@@ -79,6 +84,7 @@ const getProjects = async (req: Request, res: Response) => {
         tags: ["课程设计", "工程项目", "跨学科协作"],
         create_time: "2025-02-01",
         description: "该项目负责人很懒没有写描述！",
+        channelId: "0000000001",
       },
     ]);
     return;
@@ -107,6 +113,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
+      channelId: "0000000001",
     },
     {
       project_id: "00000002",
@@ -117,6 +124,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
+      channelId: "0000000001",
     },
     {
       project_id: "00000003",
@@ -127,6 +135,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
       description: "这是一个xxx项目，负责人是xxx。主要研究方向是xxx。",
+      channelId: "0000000001",
     },
     {
       project_id: "00000004",
@@ -137,6 +146,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000005",
@@ -147,6 +157,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000006",
@@ -157,6 +168,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000007",
@@ -167,6 +179,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000008",
@@ -177,6 +190,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000009",
@@ -187,6 +201,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2021-09-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000010",
@@ -197,6 +212,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["工程项目", "跨学科协作"],
       create_time: "2024-09-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000011",
@@ -207,6 +223,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["学科竞赛", "科研创新"],
       create_time: "2024-03-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
     {
       project_id: "00000012",
@@ -217,6 +234,7 @@ const getProjects = async (req: Request, res: Response) => {
       tags: ["课程设计", "工程项目", "跨学科协作"],
       create_time: "2025-02-01",
       description: "该项目负责人很懒没有写描述！",
+      channelId: "0000000001",
     },
   ]);
 

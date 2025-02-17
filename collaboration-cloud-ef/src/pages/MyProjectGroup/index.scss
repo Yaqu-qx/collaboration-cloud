@@ -59,9 +59,7 @@
     overflow-y: scroll;
     margin-top: 3rem;
     padding-right: 2rem;
-    // &::-webkit-scrollbar {
-    // //   display: none; /* 隐藏滚动条 */
-    // }
+
     /* 自定义滚动条 */
     &::-webkit-scrollbar {
       width: 6px; /* 滚动条宽度 */

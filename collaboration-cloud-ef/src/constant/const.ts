@@ -57,3 +57,5 @@ export const projectTags = [
 export const getProjectsUrl = "http://localhost:4000/projects";
 export const UPLOAD_URL = "http://localhost:4000/filesUpLoad";
 export const FILESVIEW_URL_PREFIX = "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/";
+
+export const fileTypes = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];

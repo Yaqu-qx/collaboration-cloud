@@ -9,6 +9,7 @@ export interface DataType {
   tags: string[];
   create_time: string;
   description: string;
+  channelId: string;
 }
 
 export interface personalTasksInfoType {
@@ -50,4 +51,9 @@ export interface IFileType {
   downloadUrl: string;
   latestModifiedTime: string;
   latestModifier: string;
+}
+
+export type IChannelState = {
+  channelId?: string;
+  projectId?: string;
 }

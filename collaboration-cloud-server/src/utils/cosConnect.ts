@@ -1,11 +1,13 @@
 import COS from 'cos-nodejs-sdk-v5';
-
+import dotenv from 'dotenv';
 export const bucketName = "cc-bucket-1338630949";
 export const region = "ap-shanghai";
 
+dotenv.config();
+
 export const cos = new COS({
-  SecretId: '',
-  SecretKey: '',
+  SecretId: process.env.SecretId,
+  SecretKey: process.env.SecretKey,
 });
 
 // 生成 COS 文件下载链接

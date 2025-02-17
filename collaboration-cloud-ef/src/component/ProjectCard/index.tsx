@@ -30,6 +30,7 @@ export default function ProjectCard(props: ProjectCardProps) {
       tags: ["课程设计", "学科竞赛"],
       create_time: "2022-01-01",
       description: "项目描述",
+      channelId: "0000000001",
     };
 
     navigate("/home/project-detail", { state: projectData });

@@ -23,6 +23,38 @@
   padding: 0.3rem 0;
 }
 
-.message-list {
-    // overflow-y: scroll;
+.channel-info-container {
+  height: 78vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-container {
+  height: calc(78vh - 10rem);
+  margin: 0 -2rem;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  // justify-content: end;
+
+  &::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 */
+  }
+
+  .message-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .start-block {
+    padding: 10rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .instruction {
+      font-size: 1.1rem;
+      color: #666;
+    }
+  }
 }

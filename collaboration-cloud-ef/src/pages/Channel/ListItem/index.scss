@@ -1,0 +1,95 @@
+.message-list-item {
+  display: flex;
+  padding: 0.5rem 2rem;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .message-owner-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    margin-right: 1rem;
+  }
+
+  .message-info-container {
+    .message-info-top {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+
+      .message-owner-name {
+        font-weight: bold;
+      }
+
+      .message-time {
+        color: #666;
+        &:hover {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.message-list-item-simple {
+  display: flex;
+  position: relative;
+  //   height: 2.5rem;
+  padding: 0.5rem 2rem;
+
+  &:hover {
+    background-color: #f0f0f0;
+
+    .message-send-time {
+      display: block;
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    .message-content {
+      margin-left: 1rem;
+    }
+  }
+
+  .message-content {
+    margin-left: 4rem;
+
+    .file-info-container {
+      width: 20rem;
+      border: 1.5px solid #999;
+      padding: 0.5rem;
+      border-radius: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &:hover {
+        cursor: pointer;
+        border: 2px solid rgb(50, 111, 196);
+      }
+
+      .file-icon {
+        height: 3rem;
+        width: 3rem;
+      }
+      .file-title-size {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .message-send-time {
+    margin-left: 1rem;
+    display: none;
+  }
+}
+
+.message-continuous-container {
+  margin: 0.5rem 0;
+}
