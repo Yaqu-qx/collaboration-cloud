@@ -21,7 +21,7 @@ export interface personalTasksInfoType {
 }
 
 export interface projectSummaryInfo {
-  taskStatus: {status: string; num: number}[];
+  taskStatus: { status: string; num: number }[];
   memberNum: number;
   totTaskNum: number;
   taskInfos: personalTasksInfo[];
@@ -56,4 +56,13 @@ export interface IFileType {
 export type IChannelState = {
   channelId?: string;
   projectId?: string;
+};
+
+export interface sendMessageInfo {
+  userName: string;
+  sendTime: number;
+  content: string;
+  isFile: boolean;
+  isImage: boolean;
+  isFirst: boolean;
 }

@@ -16,6 +16,8 @@ import {
 } from "@ant-design/icons";
 import ProjectorImg from "@/assets/Projector.png";
 import { Divider, Chip } from "@mui/material";
+import { sendMessageInfo } from "@/typings/type";
+import Item from "antd/es/list/Item";
 
 export default function Channel() {
   const location = useLocation();
@@ -56,7 +58,25 @@ export default function Channel() {
     setMessageList(newMessageList);
   };
   // 新添加发送的消息
-  const addMessage = (userName: string, date: string, messages: MessageInfo[]) => {
+  const addMessage = (userName: string, date: string, messages: sendMessageInfo[]) => {
+    
+    // 向服务端发送消息后 服务端返回新的messageList Todo
+
+    // 这边就先前端自己处理一下：
+    const newMessages = messages.map((item, index): MessageInfo => {
+      return ({
+        messageId: '00000001',
+          userName: item.userName,
+          userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
+          sendTime: item.sendTime,
+          content: item.content,
+          isFile: item.isFile,
+          isImage: item.isImage,
+          fileInfo: undefined, //todo
+          imageUrl: '', // todo
+          isFirst: item.isFirst,
+      })
+    });
     const newMessageList: MessageList[] = [...messageList];
     const dailyMessageExist = newMessageList.find(
       (dailyItem) => dailyItem.date === date
@@ -68,12 +88,12 @@ export default function Channel() {
       );
       if (personalMessageExist) {
         // 个人消息存在
-        personalMessageExist.messages = [...personalMessageExist.messages, ...messages];
+        personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
       } else {
         // 个人消息不存在
         dailyMessageExist.messages.push({
           userName: userName,
-          messages: messages,
+          messages: newMessages,
         });
       }
     }
@@ -84,7 +104,7 @@ export default function Channel() {
         messages: [
           {
             userName: userName,
-            messages: messages,
+            messages: newMessages,
           },
         ],
       });
@@ -156,11 +176,11 @@ export default function Channel() {
     },
   ];
 
-  const handleSend = async (content: string, files: File[]) => {
-    const formData = new FormData();
-    formData.append("channelId", channelId);
-    formData.append("content", content);
-    files.forEach((file) => formData.append("files", file));
+  const handleSend = async (userName: string, date: string, messages: sendMessageInfo[]) => {
+    // const formData = new FormData();
+    // formData.append("channelId", channelId);
+    // formData.append("content", content);
+    // files.forEach((file) => formData.append("files", file));
 
 
     // try {

@@ -19,9 +19,10 @@ import {
 import EmojiPicker from "emoji-picker-react";
 import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import "./index.scss";
+import { MessageInfo } from '@/typings/api/messages'
 
 interface MessageInputProps {
-  onSend: (content: string, files: File[]) => void;
+  onSend: (userName: string, date: string, messages: MessageInfo[]) => void;
   members: Array<{ id: string; name: string; avatar?: string }>; // 成员列表
 }
 
@@ -142,7 +143,7 @@ const MessageInput: React.FC<MessageInputProps> = (
   const handleSend = () => {
     if (!content.trim() && files.length === 0) return;
 
-    onSend(content, files);
+    // onSend(content, files); todo
     setContent("");
     setFiles([]);
   };
