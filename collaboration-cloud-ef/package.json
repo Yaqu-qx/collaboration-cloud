@@ -21,6 +21,7 @@
     "antd": "^5.22.7",
     "customize-cra": "^1.0.0",
     "docx-preview": "^0.3.4",
+    "emoji-picker-react": "^4.12.0",
     "mammoth": "^1.9.0",
     "react": "^18.3.1",
     "react-app-rewired": "^2.2.1",
@@ -60,5 +61,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "yarn": "^1.22.22"
   }
 }

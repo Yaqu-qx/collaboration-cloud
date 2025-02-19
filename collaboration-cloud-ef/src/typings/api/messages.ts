@@ -28,10 +28,8 @@ export interface MessageList {
   messages: Array<PersonalContinuousMessage>;
 }
 
-export interface sendMessageInfo {
-  userName: string;
-  sendTime: number;
-  content: string;
+export interface sendMessageExtraInfo {
+  content?: string;
   isFile: boolean;
   isImage: boolean;
   isFirst: boolean;

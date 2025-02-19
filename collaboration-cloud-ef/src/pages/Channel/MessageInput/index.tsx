@@ -20,31 +20,40 @@ import EmojiPicker from "emoji-picker-react";
 import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import "./index.scss";
 import { MessageInfo, MessageList } from '@/typings/api/messages'
-import { sendMessageInfo } from "@/typings/api/messages";
+import { sendMessageExtraInfo } from "@/typings/api/messages";
 import { getUserName } from "@/utils/globalState";
+import { addNewMessages } from "@/utils/server";
+
 
 interface MessageInputProps {
+  channelId: string;
   messageList: MessageList[];
   updateMessageList: (newMessageList: MessageList[]) => void;
   // onSend: (userName: string, date: string, messages: MessageInfo[]) => void;
   members: Array<{ id: string; name: string; avatar?: string }>; // 成员列表
 }
 
-const userName = getUserName();
+interface selectedFile {
+  file: File;
+  isImg: boolean;
+}
+
+const userName = getUserName() ?? 'Yaqu';
 const date = new Date().toLocaleDateString();
 
 const MessageInput: React.FC<MessageInputProps> = (
   props: MessageInputProps
 ) => {
   const [content, setContent] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<selectedFile[]>([]);
   const [showEmoji, setShowEmoji] = useState(false);
   const [mentionVisible, setMentionVisible] = useState(false);
   const [mentionPosition, setMentionPosition] = useState(0);
   const inputRef = useRef<any>(null);
   const filePreviewRef = useRef<HTMLDivElement>(null);
-  const { messageList, updateMessageList, members } = props;
   const [mentionQuery, setMentionQuery] = useState("");
+
+  const { channelId, messageList, updateMessageList, members } = props;
 
   // 正确获取原生textarea元素的方法
   const getTextareaElement = () => {
@@ -136,14 +145,19 @@ const MessageInput: React.FC<MessageInputProps> = (
   };
 
   // 处理文件选择
-  const handleFileSelect = (fileList: FileList) => {
+  const handleFileSelect = (fileList: FileList, isImg: Boolean) => {
     const newFiles = Array.from(fileList);
     if (newFiles.some((f) => f.size > 50 * 1024 * 1024)) {
       // 限制50MB
       message.error("文件大小不能超过50MB");
       return;
     }
-    setFiles((prev) => [...prev, ...newFiles]);
+    // 带图片判断的文件列表
+    const newFilesPro = newFiles.map((file) => ({
+      file: file,
+      isImg: isImg,
+    }));
+    setFiles((prev) => [...prev, ...newFilesPro as selectedFile[]]);
   };
 
   // 发送消息
@@ -154,26 +168,50 @@ const MessageInput: React.FC<MessageInputProps> = (
   //   setContent("");
   //   setFiles([]);
   // };
+  const createMessageExtraInfo = (): sendMessageExtraInfo[] => {
+    let messageExtraInfos: sendMessageExtraInfo[] = [];
+    let isFirst = true;
+    files.map((iFile) => {
+      if (iFile.isImg) {
+        messageExtraInfos.push({
+          isFile: false,
+          isImage: true,
+          isFirst: isFirst,
+        })
+      }
+      isFirst = false;
+    })
+
+    return messageExtraInfos;
+  }
 
   const handleSend = () => {
-    const messages: sendMessageInfo[] = []; //!!
+    const messages: sendMessageExtraInfo[] = []; //!!
+    const sendTime = Date.now();
+    const newMessagesInfo = createMessageExtraInfo();
     // 向服务端发送消息后 服务端返回新的messageList Todo
-
-    // 这边就先前端自己处理一下：
-    const newMessages = messages.map((item, index): MessageInfo => {
-      return ({
-        messageId: '00000001',
-          userName: item.userName,
-          userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
-          sendTime: item.sendTime,
-          content: item.content,
-          isFile: item.isFile,
-          isImage: item.isImage,
-          fileInfo: undefined, //todo
-          imageUrl: '', // todo
-          isFirst: item.isFirst,
+    addNewMessages(channelId, date, userName, sendTime, newMessagesInfo)
+      .then((res) => res.json())
+     .then((res) => {
+        console.log(res);
+        // 更新消息列表
+        updateMessageList(res.data);
       })
-    });
+    // 这边就先前端自己处理一下：
+    // const newMessages = messages.map((item, index): MessageInfo => {
+    //   return ({
+    //     messageId: '00000001',
+    //       userName: userName ?? 'Yaqu',
+    //       userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
+    //       sendTime: item.sendTime,
+    //       content: item.content,
+    //       isFile: item.isFile,
+    //       isImage: item.isImage,
+    //       fileInfo: undefined, //todo
+    //       imageUrl: '', // todo
+    //       isFirst: item.isFirst,
+    //   })
+    // });
     const newMessageList: MessageList[] = [...messageList];
     const dailyMessageExist = newMessageList.find(
       (dailyItem) => dailyItem.date === date
@@ -215,18 +253,18 @@ const MessageInput: React.FC<MessageInputProps> = (
       {/* 文件预览区 */}
       {files.length > 0 && (
         <div ref={filePreviewRef} className="file-previews">
-          {files.map((file, index) => (
+          {files.map((iFile, index) => (
             <div key={index} className="file-item">
-              {file.type.startsWith("image/") ? (
+              {iFile.file.type.startsWith("image/") ? (
                 <img
-                  src={URL.createObjectURL(file)}
+                  src={URL.createObjectURL(iFile.file)}
                   alt="预览"
                   className="image-preview"
                 />
               ) : (
                 <div className="file-info">
                   <PaperClipOutlined />
-                  <span>{file.name}</span>
+                  <span>{iFile.file.name}</span>
                 </div>
               )}
               <Button
@@ -302,7 +340,7 @@ const MessageInput: React.FC<MessageInputProps> = (
               multiple
               showUploadList={false}
               beforeUpload={(_, fileList) => {
-                handleFileSelect(fileList as any);
+                handleFileSelect(fileList as any, true);
                 return false;
               }}
             >
@@ -314,7 +352,7 @@ const MessageInput: React.FC<MessageInputProps> = (
               multiple
               showUploadList={false}
               beforeUpload={(_, fileList) => {
-                handleFileSelect(fileList as any);
+                handleFileSelect(fileList as any, false);
                 return false;
               }}
             >

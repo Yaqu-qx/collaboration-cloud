@@ -1,3 +1,5 @@
+import { sendMessageExtraInfo } from "@/typings/api/messages";
+
 export const fetchProjects = async (
   value: string,
   isRecommend: boolean = false
@@ -92,28 +94,19 @@ export const getChannelMessages = async (channelId: string) =>
     },
   });
 
-// 频道页发送消息
-export const addNewMessage = async () =>
+// 频道页发送消息 用户维度
+// 一开始显示50条消息， 上拉更新显示更多，到顶显示已经加载全部的toast
+export const addNewMessages = async (channelId: string, date: string, userName: string, sendTime: number, newMessagesInfo: sendMessageExtraInfo[] ) =>
   fetch(``, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      channelId: "string",
-      content: "string",
-      userName: "string",
-      userId: "string",
-      createTime: "string",
-      isRead: true,
-      isDelete: true,
-      isTop: true,
-      isPin: true,
-      isRecommend: true,
-      replyTo: "string",
-      replyToUserId: "string",
-      replyToUserName: "string",
-      replyToContent: "string",
-      replyToCreateTime: "string",
+      channelId: channelId,
+      date: date,
+      userName: userName,
+      sendTime: sendTime,
+      newMessagesInfo: newMessagesInfo,
     }),
   });

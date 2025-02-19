@@ -58,11 +58,11 @@ export type IChannelState = {
   projectId?: string;
 };
 
-export interface sendMessageInfo {
-  userName: string;
-  sendTime: number;
-  content: string;
-  isFile: boolean;
-  isImage: boolean;
-  isFirst: boolean;
-}
+// export interface sendMessageInfo {
+//   userName: string;
+//   sendTime: number;
+//   content: string;
+//   isFile: boolean;
+//   isImage: boolean;
+//   isFirst: boolean;
+// }
