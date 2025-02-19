@@ -19,12 +19,19 @@ import {
 import EmojiPicker from "emoji-picker-react";
 import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import "./index.scss";
-import { MessageInfo } from '@/typings/api/messages'
+import { MessageInfo, MessageList } from '@/typings/api/messages'
+import { sendMessageInfo } from "@/typings/api/messages";
+import { getUserName } from "@/utils/globalState";
 
 interface MessageInputProps {
-  onSend: (userName: string, date: string, messages: MessageInfo[]) => void;
+  messageList: MessageList[];
+  updateMessageList: (newMessageList: MessageList[]) => void;
+  // onSend: (userName: string, date: string, messages: MessageInfo[]) => void;
   members: Array<{ id: string; name: string; avatar?: string }>; // 成员列表
 }
+
+const userName = getUserName();
+const date = new Date().toLocaleDateString();
 
 const MessageInput: React.FC<MessageInputProps> = (
   props: MessageInputProps
@@ -36,7 +43,7 @@ const MessageInput: React.FC<MessageInputProps> = (
   const [mentionPosition, setMentionPosition] = useState(0);
   const inputRef = useRef<any>(null);
   const filePreviewRef = useRef<HTMLDivElement>(null);
-  const { onSend, members } = props;
+  const { messageList, updateMessageList, members } = props;
   const [mentionQuery, setMentionQuery] = useState("");
 
   // 正确获取原生textarea元素的方法
@@ -140,13 +147,68 @@ const MessageInput: React.FC<MessageInputProps> = (
   };
 
   // 发送消息
-  const handleSend = () => {
-    if (!content.trim() && files.length === 0) return;
+  // const handleSend = () => {
+  //   if (!content.trim() && files.length === 0) return;
 
-    // onSend(content, files); todo
-    setContent("");
-    setFiles([]);
-  };
+  //   // onSend(content, files); todo
+  //   setContent("");
+  //   setFiles([]);
+  // };
+
+  const handleSend = () => {
+    const messages: sendMessageInfo[] = []; //!!
+    // 向服务端发送消息后 服务端返回新的messageList Todo
+
+    // 这边就先前端自己处理一下：
+    const newMessages = messages.map((item, index): MessageInfo => {
+      return ({
+        messageId: '00000001',
+          userName: item.userName,
+          userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
+          sendTime: item.sendTime,
+          content: item.content,
+          isFile: item.isFile,
+          isImage: item.isImage,
+          fileInfo: undefined, //todo
+          imageUrl: '', // todo
+          isFirst: item.isFirst,
+      })
+    });
+    const newMessageList: MessageList[] = [...messageList];
+    const dailyMessageExist = newMessageList.find(
+      (dailyItem) => dailyItem.date === date
+    );
+    if (dailyMessageExist) {
+      // 日期存在 
+      const personalMessageExist = dailyMessageExist.messages.find(
+        (personalItem) => personalItem.userName === userName
+      );
+      if (personalMessageExist) {
+        // 个人消息存在
+        personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
+      } else {
+        // 个人消息不存在
+        dailyMessageExist.messages.push({
+          userName: userName ?? 'Yaqu',
+          messages: newMessages,
+        });
+      }
+    }
+    else {
+      // 日期不存在
+      newMessageList.push({
+        date: date,
+        messages: [
+          {
+            userName: userName || 'Yaqu',
+            messages: newMessages,
+          },
+        ],
+      });
+    }
+    updateMessageList(newMessageList);
+  }
+
 
   return (
     <div className="message-input-container">

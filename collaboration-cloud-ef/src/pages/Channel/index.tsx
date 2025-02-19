@@ -58,59 +58,59 @@ export default function Channel() {
     setMessageList(newMessageList);
   };
   // 新添加发送的消息
-  const addMessage = (userName: string, date: string, messages: sendMessageInfo[]) => {
+  // const addMessage = (userName: string, date: string, messages: sendMessageInfo[]) => {
     
-    // 向服务端发送消息后 服务端返回新的messageList Todo
+  //   // 向服务端发送消息后 服务端返回新的messageList Todo
 
-    // 这边就先前端自己处理一下：
-    const newMessages = messages.map((item, index): MessageInfo => {
-      return ({
-        messageId: '00000001',
-          userName: item.userName,
-          userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
-          sendTime: item.sendTime,
-          content: item.content,
-          isFile: item.isFile,
-          isImage: item.isImage,
-          fileInfo: undefined, //todo
-          imageUrl: '', // todo
-          isFirst: item.isFirst,
-      })
-    });
-    const newMessageList: MessageList[] = [...messageList];
-    const dailyMessageExist = newMessageList.find(
-      (dailyItem) => dailyItem.date === date
-    );
-    if (dailyMessageExist) {
-      // 日期存在 
-      const personalMessageExist = dailyMessageExist.messages.find(
-        (personalItem) => personalItem.userName === userName
-      );
-      if (personalMessageExist) {
-        // 个人消息存在
-        personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
-      } else {
-        // 个人消息不存在
-        dailyMessageExist.messages.push({
-          userName: userName,
-          messages: newMessages,
-        });
-      }
-    }
-    else {
-      // 日期不存在
-      newMessageList.push({
-        date: date,
-        messages: [
-          {
-            userName: userName,
-            messages: newMessages,
-          },
-        ],
-      });
-    }
-    setMessageList(newMessageList);
-  }
+  //   // 这边就先前端自己处理一下：
+  //   const newMessages = messages.map((item, index): MessageInfo => {
+  //     return ({
+  //       messageId: '00000001',
+  //         userName: item.userName,
+  //         userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
+  //         sendTime: item.sendTime,
+  //         content: item.content,
+  //         isFile: item.isFile,
+  //         isImage: item.isImage,
+  //         fileInfo: undefined, //todo
+  //         imageUrl: '', // todo
+  //         isFirst: item.isFirst,
+  //     })
+  //   });
+  //   const newMessageList: MessageList[] = [...messageList];
+  //   const dailyMessageExist = newMessageList.find(
+  //     (dailyItem) => dailyItem.date === date
+  //   );
+  //   if (dailyMessageExist) {
+  //     // 日期存在 
+  //     const personalMessageExist = dailyMessageExist.messages.find(
+  //       (personalItem) => personalItem.userName === userName
+  //     );
+  //     if (personalMessageExist) {
+  //       // 个人消息存在
+  //       personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
+  //     } else {
+  //       // 个人消息不存在
+  //       dailyMessageExist.messages.push({
+  //         userName: userName,
+  //         messages: newMessages,
+  //       });
+  //     }
+  //   }
+  //   else {
+  //     // 日期不存在
+  //     newMessageList.push({
+  //       date: date,
+  //       messages: [
+  //         {
+  //           userName: userName,
+  //           messages: newMessages,
+  //         },
+  //       ],
+  //     });
+  //   }
+  //   setMessageList(newMessageList);
+  // }
   // }
   // const newDailyMessage: MessageList = {
   //   date: date,
@@ -239,7 +239,9 @@ export default function Channel() {
         />
 
         <MessageInput
-          onSend={handleSend}
+          // onSend={handleSend}
+          messageList={messageList}
+          updateMessageList={() => setMessageList}
           members={[
             { id: "1", name: "张三", avatar: "..." },
             { id: "2", name: "李四" },

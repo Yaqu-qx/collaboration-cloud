@@ -68,7 +68,7 @@ export const getFilesPreview = async (key: string) =>
     },
   });
 
-export const getChannelList = async (userId: string) => 
+export const getChannelList = async (userId: string) =>
   fetch(`http://localhost:4000/getChannelList?userName=${userId}`, {
     method: "GET",
     headers: {
@@ -90,4 +90,30 @@ export const getChannelMessages = async (channelId: string) =>
     headers: {
       "Content-Type": "application/json",
     },
-  }); 
+  });
+
+// 频道页发送消息
+export const addNewMessage = async () =>
+  fetch(``, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      channelId: "string",
+      content: "string",
+      userName: "string",
+      userId: "string",
+      createTime: "string",
+      isRead: true,
+      isDelete: true,
+      isTop: true,
+      isPin: true,
+      isRecommend: true,
+      replyTo: "string",
+      replyToUserId: "string",
+      replyToUserName: "string",
+      replyToContent: "string",
+      replyToCreateTime: "string",
+    }),
+  });
