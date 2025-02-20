@@ -1,6 +1,6 @@
 export interface fileInfoSimple {
   id: string;
-  fileUrl: string;
+  key: string;
   size: number;
   title: string;
 }
@@ -33,4 +33,5 @@ export interface sendMessageExtraInfo {
   isFile: boolean;
   isImage: boolean;
   isFirst: boolean;
+  file?: File;
 }

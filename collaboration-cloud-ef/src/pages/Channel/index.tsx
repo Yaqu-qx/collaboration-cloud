@@ -16,7 +16,7 @@ import {
 } from "@ant-design/icons";
 import ProjectorImg from "@/assets/Projector.png";
 import { Divider, Chip } from "@mui/material";
-import { sendMessageInfo } from "@/typings/type";
+import { sendMessageExtraInfo } from "@/typings/api/messages";
 import Item from "antd/es/list/Item";
 
 export default function Channel() {
@@ -176,7 +176,7 @@ export default function Channel() {
     },
   ];
 
-  const handleSend = async (userName: string, date: string, messages: sendMessageInfo[]) => {
+  const handleSend = async (userName: string, date: string, messages: sendMessageExtraInfo[]) => {
     // const formData = new FormData();
     // formData.append("channelId", channelId);
     // formData.append("content", content);
@@ -240,6 +240,7 @@ export default function Channel() {
 
         <MessageInput
           // onSend={handleSend}
+          channelId={channelId}
           messageList={messageList}
           updateMessageList={() => setMessageList}
           members={[
