@@ -178,15 +178,30 @@ const MessageInput: React.FC<MessageInputProps> = (
           isImage: true,
           isFirst: isFirst,
         })
+      } else {
+        messageExtraInfos.push({
+          isFile: true,
+          isImage: false,
+          isFirst: isFirst,
+          file: iFile.file,
+        })
       }
       isFirst = false;
     })
+
+    if(content && content.trim()) {
+      messageExtraInfos.push({
+        isFile: false,
+        isImage: false,
+        isFirst: isFirst,
+        content: content,
+      })
+    }
 
     return messageExtraInfos;
   }
 
   const handleSend = () => {
-    const messages: sendMessageExtraInfo[] = []; //!!
     const sendTime = Date.now();
     const newMessagesInfo = createMessageExtraInfo();
     // 向服务端发送消息后 服务端返回新的messageList Todo

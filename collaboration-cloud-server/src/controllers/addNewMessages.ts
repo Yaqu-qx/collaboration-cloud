@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { cos, bucketName, region } from "../utils/cosConnect";
+import multer from "multer";
 
 interface sendMessageExtraInfo {
   content?: string;
   isFile: boolean;
   isImage: boolean;
   isFirst: boolean;
-  file?: File;
+  file?: Express.Multer.File;
 }
 
 interface MessageInfo {
@@ -16,7 +17,7 @@ interface MessageInfo {
   userName: string;
   userAvatar: string;
   sendTime: number;
-  content: string;
+  content?: string;
   isFile: boolean;
   isImage: boolean;
   fileInfo?: {
@@ -37,24 +38,71 @@ export const addNewMessages = async (req: Request, res: Response) => {
   const filePath = path.join(__dirname, "../data/channelMessages.json");
   const rawData = fs.readFileSync(filePath, "utf8");
   const messageData = JSON.parse(rawData);
+  
+   // 新增文件上传处理
+   const processFileUpload = async (file: File) => {
+    const fileKey = `channels/${channelId}/${file.name}`;
+    await cos.putObject({
+      Bucket: bucketName,
+      Region: region,
+      Key: fileKey,
+      Body: Buffer.from(file.buffer),
+    });
+    return {
+      id: fileKey,
+      key: fileKey,
+      size: file.size,
+      title: file.name
+    };
+  };
 
   // 转换MessageInfo
-  // const messageInfo: MessageInfo = newMessagesInfo.map((item: sendMessageExtraInfo, index) => {
-  //   messageId: `${Date.now()}_${Math.random().toString(36).substr(2)}`;
-  //   userName;
-  //   userAvatar;
-  //   sendTime;
-  //   content: newMessagesInfo.content || '文件消息';
-  //   isFile: item.isFile;
-  //   isImage: item.isImage;
-  //   fileInfo: {
-  //     id: fileKey,
-  //     key: fileKey,
-  //     size: newMessagesInfo.file.originalFile.size,
-  //     title: newMessagesInfo.file.uploadName
-  //   },
-  //   isFirst: newMessagesInfo.isFirst
-  // });
+  const messageInfo: MessageInfo = newMessagesInfo.map((item: sendMessageExtraInfo) => {
+    if (item.isFile) {
+      
+      return {
+        messageId: new Date().getTime().toString() + Math.random().toString(36).substring(2),
+        userName: userName || 'Yaqu',
+        userAvatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar%2Fgroup-avatar%2Fgroup_avatar1.png", // 暂时使用默认头像
+        sendTime: sendTime,
+        isFile: item.isFile,
+        isImage: item.isImage,
+        fileInfo: {
+          id: "",
+          key: "",
+          size: 0,
+          title: "",
+        },
+        isFirst: item.isFirst,
+      };
+    } else if (item.isImage) {
+      return {
+        messageId: "",
+        userName: userName || 'Yaqu',
+        userAvatar: "",
+        sendTime: sendTime,
+        content: item.content || "",
+        isFile: item.isFile,
+        isImage: item.isImage,
+        fileInfo: undefined,
+        imageUrl: "",
+        isFirst: item.isFirst,
+      };
+    } else {
+      return {
+        messageId: "",
+        userName: userName || 'Yaqu',
+        userAvatar: "",
+        sendTime: sendTime,
+        content: item.content || "",
+        isFile: item.isFile,
+        isImage: item.isImage,
+        fileInfo: undefined,
+        imageUrl: "",
+        isFirst: item.isFirst,
+      };
+    }
+  });
 
   // 查找对应日期的消息列表
   const newMessageList = [...messageData];

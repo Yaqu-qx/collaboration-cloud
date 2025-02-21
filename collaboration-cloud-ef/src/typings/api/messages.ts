@@ -10,7 +10,7 @@ export interface MessageInfo {
   userName: string;
   userAvatar: string;
   sendTime: number;
-  content: string;
+  content?: string;
   isFile: boolean;
   isImage: boolean;
   fileInfo?: fileInfoSimple;

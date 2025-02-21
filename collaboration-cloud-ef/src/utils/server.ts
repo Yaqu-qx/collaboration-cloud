@@ -96,7 +96,7 @@ export const getChannelMessages = async (channelId: string) =>
 
 // 频道页发送消息 用户维度
 // 一开始显示50条消息， 上拉更新显示更多，到顶显示已经加载全部的toast
-export const addNewMessages = async (channelId: string, date: string, userName: string, sendTime: number, newMessagesInfo: sendMessageExtraInfo[] ) =>
+export const addNewMessages = async (channelId: string, date: string, userName: string, sendTime: number, newMessagesInfo: sendMessageExtraInfo[]) =>
   fetch(``, {
     method: "POST",
     headers: {

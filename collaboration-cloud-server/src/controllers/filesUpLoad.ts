@@ -9,7 +9,7 @@ import { generatePresignedUrl, bucketName, region, cos } from "../utils/cosConne
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
 
-const filesUpLoad = async (req: Request, res: Response) => {
+export const filesUpLoad = async (req: Request, res: Response) => {
   const { basePath, relativePath, fileName } = req.body;
   const file = req.file; 
   // windows 路径转为 linux 路径 '\' -> '/'
