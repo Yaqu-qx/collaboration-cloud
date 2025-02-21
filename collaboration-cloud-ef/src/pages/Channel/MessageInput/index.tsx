@@ -177,6 +177,7 @@ const MessageInput: React.FC<MessageInputProps> = (
           isFile: false,
           isImage: true,
           isFirst: isFirst,
+          file: iFile.file,
         })
       } else {
         messageExtraInfos.push({

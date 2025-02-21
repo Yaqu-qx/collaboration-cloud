@@ -30,7 +30,8 @@ interface MessageInfo {
   isFirst: boolean;
 }
 
-export const addNewMessages = async (req: Request, res: Response) => {
+const addNewMessages = async (req: Request, res: Response) => {
+  const files = req.files as Express.Multer.File[];
   const { channelId, date, userName, sendTime, newMessagesInfo } = req.body;
   console.log(req.body);
 
@@ -40,31 +41,43 @@ export const addNewMessages = async (req: Request, res: Response) => {
   const messageData = JSON.parse(rawData);
   
    // 新增文件上传处理
-   const processFileUpload = async (file: File) => {
-    const fileKey = `channels/${channelId}/${file.name}`;
+   const processFileUpload = async (file: Express.Multer.File) => {
+    const fileKey = `channels/${channelId}/${file.originalname}`;
     await cos.putObject({
       Bucket: bucketName,
       Region: region,
       Key: fileKey,
-      Body: Buffer.from(file.buffer),
+      Body: file.buffer,
     });
     return {
       id: fileKey,
       key: fileKey,
       size: file.size,
-      title: file.name
+      title: file.originalname
     };
   };
 
   // 转换MessageInfo
-  const messageInfo: MessageInfo = newMessagesInfo.map((item: sendMessageExtraInfo) => {
+  const messageInfo: MessageInfo[] = await Promise.all(newMessagesInfo.map(async (item: any, index) => {
+    const messageId = `${Date.now()}_${Math.random().toString(36).substring(2)}`;
+    
+    const baseInfo = {
+      messageId,
+      userName: userName || 'Yaqu',
+      userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg",
+      sendTime: sendTime || Date.now(),
+      isFile: item.isFile,
+      isImage: item.isImage,
+      isFirst: item.isFirst,
+    };
+
     if (item.isFile) {
       
       return {
         messageId: new Date().getTime().toString() + Math.random().toString(36).substring(2),
         userName: userName || 'Yaqu',
-        userAvatar: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar%2Fgroup-avatar%2Fgroup_avatar1.png", // 暂时使用默认头像
-        sendTime: sendTime,
+        userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg", // 暂时使用默认头像
+        sendTime: sendTime || Date.now(),
         isFile: item.isFile,
         isImage: item.isImage,
         fileInfo: {
@@ -104,6 +117,7 @@ export const addNewMessages = async (req: Request, res: Response) => {
     }
   });
 
+
   // 查找对应日期的消息列表
   const newMessageList = [...messageData];
   const dailyMessageExist = newMessageList.find(
@@ -137,5 +151,6 @@ export const addNewMessages = async (req: Request, res: Response) => {
       ],
     });
   }
-
 }
+
+export default addNewMessages;

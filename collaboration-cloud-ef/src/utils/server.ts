@@ -96,17 +96,33 @@ export const getChannelMessages = async (channelId: string) =>
 
 // 频道页发送消息 用户维度
 // 一开始显示50条消息， 上拉更新显示更多，到顶显示已经加载全部的toast
-export const addNewMessages = async (channelId: string, date: string, userName: string, sendTime: number, newMessagesInfo: sendMessageExtraInfo[]) =>
-  fetch(``, {
+export const addNewMessages = async (
+  channelId: string,
+  date: string,
+  userName: string,
+  sendTime: number,
+  newMessagesInfo: sendMessageExtraInfo[],
+) => {
+  const formData = new FormData();
+  
+  // 添加文件
+  if (files) {
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+  }
+
+  // 添加其他参数
+  formData.append('data', JSON.stringify({
+    channelId,
+    date,
+    userName,
+    sendTime,
+    newMessagesInfo
+  }));
+
+  return fetch(`http://localhost:4000/addNewMessages`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      channelId: channelId,
-      date: date,
-      userName: userName,
-      sendTime: sendTime,
-      newMessagesInfo: newMessagesInfo,
-    }),
+    body: formData
   });
+};
