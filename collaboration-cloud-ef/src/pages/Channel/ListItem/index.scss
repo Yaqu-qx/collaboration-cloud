@@ -31,13 +31,16 @@
         }
       }
     }
+
+   .message-content {
+     margin-left: 0;  
+   }
   }
 }
 
 .message-list-item-simple {
   display: flex;
   position: relative;
-  //   height: 2.5rem;
   padding: 0.5rem 2rem;
 
   &:hover {
@@ -56,33 +59,33 @@
     }
   }
 
-  .message-content {
-    margin-left: 4rem;
+  // .message-content {
+  //   margin-left: 4rem;
 
-    .file-info-container {
-      width: 20rem;
-      border: 1.5px solid #999;
-      padding: 0.5rem;
-      border-radius: 0.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+  //   .file-info-container {
+  //     width: 20rem;
+  //     border: 1.5px solid #999;
+  //     padding: 0.5rem;
+  //     border-radius: 0.2rem;
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: space-between;
 
-      &:hover {
-        cursor: pointer;
-        border: 2px solid rgb(50, 111, 196);
-      }
+  //     &:hover {
+  //       cursor: pointer;
+  //       border: 2px solid rgb(50, 111, 196);
+  //     }
 
-      .file-icon {
-        height: 3rem;
-        width: 3rem;
-      }
-      .file-title-size {
-        display: flex;
-        flex-direction: column;
-      }
-    }
-  }
+  //     .file-icon {
+  //       height: 3rem;
+  //       width: 3rem;
+  //     }
+  //     .file-title-size {
+  //       display: flex;
+  //       flex-direction: column;
+  //     }
+  //   }
+  // }
 
   .message-send-time {
     margin-left: 1rem;
@@ -92,4 +95,33 @@
 
 .message-continuous-container {
   margin: 0.5rem 0;
+}
+
+.file-viewer-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-viewer-container {
+  width: 80%;
+  height: 100%;
+  background-color: #fff;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+
+  .file-viewer-iframe {
+    width: 80%;
+    height: 100%;
+  }
 }

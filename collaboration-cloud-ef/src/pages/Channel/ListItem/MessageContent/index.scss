@@ -1,0 +1,29 @@
+.message-content {
+    margin-left: 4rem;
+
+    .file-info-container {
+      width: 20rem;
+      border: 1.5px solid #999;
+      padding: 0.5rem;
+      border-radius: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &:hover {
+        cursor: pointer;
+        border: 2px solid rgb(50, 111, 196);
+      }
+
+      .file-icon {
+        height: 3rem;
+        width: 3rem;
+      }
+      .file-title-size {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  

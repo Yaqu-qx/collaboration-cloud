@@ -176,24 +176,6 @@ export default function Channel() {
     },
   ];
 
-  const handleSend = async (userName: string, date: string, messages: sendMessageExtraInfo[]) => {
-    // const formData = new FormData();
-    // formData.append("channelId", channelId);
-    // formData.append("content", content);
-    // files.forEach((file) => formData.append("files", file));
-
-
-    // try {
-    //   await fetch("/api/messages", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    //   // 处理发送成功后的逻辑
-    // } catch (error) {
-    //   console.error("发送失败:", error);
-    // }
-  };
-
   useEffect(() => {
     const fetchChannelInfo = getChannelInfo(channelId)
       .then((res) => res.json())
