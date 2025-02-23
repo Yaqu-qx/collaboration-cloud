@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import { cos, bucketName, region } from "../utils/cosConnect";
-import multer from "multer";
+import {
+  cos,
+  bucketName,
+  region,
+  generatePresignedUrl,
+} from "../utils/cosConnect";
 
 interface sendMessageExtraInfo {
   content?: string;
@@ -30,127 +34,218 @@ interface MessageInfo {
   isFirst: boolean;
 }
 
-const addNewMessages = async (req: Request, res: Response) => {
-  const files = req.files as Express.Multer.File[];
-  const { channelId, date, userName, sendTime, newMessagesInfo } = req.body;
-  console.log(req.body);
+export interface PersonalContinuousMessage {
+  userName: string;
+  messages: Array<MessageInfo>;
+}
 
-  // 读取消息数据
-  const filePath = path.join(__dirname, "../data/channelMessages.json");
-  const rawData = fs.readFileSync(filePath, "utf8");
-  const messageData = JSON.parse(rawData);
-  
-   // 新增文件上传处理
-   const processFileUpload = async (file: Express.Multer.File) => {
-    const fileKey = `channels/${channelId}/${file.originalname}`;
-    await cos.putObject({
-      Bucket: bucketName,
-      Region: region,
-      Key: fileKey,
-      Body: file.buffer,
-    });
+export interface MessageList {
+  date: string;
+  messages: Array<PersonalContinuousMessage>;
+}
+
+interface fileInfoSimple {
+  id: string;
+  key: string;
+  size: number;
+  title: string;
+  imageUrl?: string,
+};
+
+const imgTypes = ["jpg", "jpeg", "png", "gif", "bmp"];
+const isImg = (fileKey: string) => {
+  const type = fileKey.split(".").pop() || "";
+  return imgTypes.includes(type.toLowerCase());
+};
+
+// 新增文件上传处理
+const processFileUpload = async (
+  channelId: string,
+  file: Express.Multer.File
+) => {
+  const fileName = decodeURIComponent(file.originalname);
+  const fileKey = `channels/${channelId}/${fileName}`;
+  console.log("fileKey", decodeURIComponent(file.originalname), fileKey);
+  await cos.putObject({
+    Bucket: bucketName,
+    Region: region,
+    Key: fileKey,
+    Body: file.buffer,
+  });
+
+  if (isImg(fileKey)) {
+    const presignedUrl = await generatePresignedUrl(fileKey);
     return {
       id: fileKey,
       key: fileKey,
       size: file.size,
-      title: file.originalname
-    };
+      title: fileName,
+      imageUrl: presignedUrl,
+    }; 
+  }
+
+  return {
+    id: fileKey,
+    key: fileKey,
+    size: file.size,
+    title: fileName,
   };
+};
 
-  // 转换MessageInfo
-  const messageInfo: MessageInfo[] = await Promise.all(newMessagesInfo.map(async (item: any, index) => {
-    const messageId = `${Date.now()}_${Math.random().toString(36).substring(2)}`;
-    
-    const baseInfo = {
-      messageId,
-      userName: userName || 'Yaqu',
-      userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg",
-      sendTime: sendTime || Date.now(),
-      isFile: item.isFile,
-      isImage: item.isImage,
-      isFirst: item.isFirst,
-    };
+const addNewMessages = async (req: Request, res: Response) => {
+  const files = req.files as Express.Multer.File[];
+  const { channelId, date, userName, sendTime, content } = req.body;
+  console.log("files", files, "body", req.body);
 
-    if (item.isFile) {
-      
-      return {
-        messageId: new Date().getTime().toString() + Math.random().toString(36).substring(2),
-        userName: userName || 'Yaqu',
-        userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg", // 暂时使用默认头像
-        sendTime: sendTime || Date.now(),
-        isFile: item.isFile,
-        isImage: item.isImage,
-        fileInfo: {
-          id: "",
-          key: "",
-          size: 0,
-          title: "",
-        },
-        isFirst: item.isFirst,
-      };
-    } else if (item.isImage) {
-      return {
-        messageId: "",
-        userName: userName || 'Yaqu',
-        userAvatar: "",
-        sendTime: sendTime,
-        content: item.content || "",
-        isFile: item.isFile,
-        isImage: item.isImage,
-        fileInfo: undefined,
-        imageUrl: "",
-        isFirst: item.isFirst,
-      };
-    } else {
-      return {
-        messageId: "",
-        userName: userName || 'Yaqu',
-        userAvatar: "",
-        sendTime: sendTime,
-        content: item.content || "",
-        isFile: item.isFile,
-        isImage: item.isImage,
-        fileInfo: undefined,
-        imageUrl: "",
-        isFirst: item.isFirst,
-      };
-    }
-  });
+  // 创建新消息信息
+  const createNewMessageInfo = (
+    isFirst: boolean,
+    filesInfo: fileInfoSimple[],
+    content = ""
+  ) => {
+    if (files.length <= 0 && !content) return [];
+    let newMessages: MessageInfo[] = [];
+    filesInfo.map((file) =>  {
+      const isImage = isImg(file.key);
+      // const imageUrl = isImage ? generatePresignedUrl(file.key) : undefined;
+      newMessages.push({
+        messageId: `${Date.now()}_${Math.random().toString(36).substring(2)}`,
+        userName: userName || "Yaqu",
+        userAvatar:
+          "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg",
+        sendTime: Number(sendTime) || Date.now(),
+        isFile: !isImage,
+        isImage,
+        fileInfo: !isImage ? file : undefined,
+        imageUrl: file?.imageUrl,
+        isFirst,
+      });
+      isFirst = false;
+    });
 
-
-  // 查找对应日期的消息列表
-  const newMessageList = [...messageData];
-  const dailyMessageExist = newMessageList.find(
-    (dailyItem) => dailyItem.date === date
-  );
-  if (dailyMessageExist) {
-    // 获取最后一条用户消息项
-    const lastUserMessages = dailyMessageExist.messages[dailyMessageExist.messages.length - 1];
-    
-    // 检查最后用户是否匹配
-    if (lastUserMessages?.userName === userName) {
-      // 追加到现有用户消息列表
-      lastUserMessages.messages.push(...newMessagesInfo);
-    } else {
-      // 新建用户消息项
-      dailyMessageExist.messages.push({
-        userName: userName ?? 'Yaqu',
-        messages: newMessagesInfo,
+    if (content) {
+      newMessages.push({
+        messageId: `${Date.now()}_${Math.random().toString(36).substring(2)}`,
+        userName: userName || "Yaqu",
+        userAvatar:
+          "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg",
+        sendTime: Number(sendTime) || Date.now(),
+        content,
+        isFile: false,
+        isImage: false,
+        isFirst,
       });
     }
+    return newMessages;
+  };
+
+  // 读取消息数据
+  const filePath = path.join(__dirname, "../data/channelMessages.json");
+  const rawData = fs.readFileSync(filePath, "utf8");
+  const messageData = JSON.parse(rawData) as MessageList[];
+  // 上传文件并获取文件信息
+  const fileInfoPromises = files.map((file) =>
+    processFileUpload(channelId, file)
+  );
+  const fileInfos = (await Promise.all(fileInfoPromises)) as fileInfoSimple[];
+
+  // const messageInfo: MessageInfo[] = await Promise.all(files.map((file) => {
+  //   processFileUpload(channelId, file);
+  //   const messageId = `${Date.now()}_${Math.random().toString(36).substring(2)}`;
+
+  //   const baseInfo = {
+  //     messageId,
+  //     userName: userName || 'Yaqu',
+  //     userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg",
+  //     sendTime: sendTime || Date.now()
+  //   };
+
+  //   if (item.isFile) {
+
+  //     return {
+  //       messageId: new Date().getTime().toString() + Math.random().toString(36).substring(2),
+  //       userName: userName || 'Yaqu',
+  //       userAvatar: "https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg", // 暂时使用默认头像
+  //       sendTime: sendTime || Date.now(),
+  //       isFile: item.isFile,
+  //       isImage: item.isImage,
+  //       fileInfo: {
+  //         id: "",
+  //         key: "",
+  //         size: 0,
+  //         title: "",
+  //       },
+  //       isFirst: item.isFirst,
+  //     };
+  //   } else if (item.isImage) {
+  //     return {
+  //       messageId: "",
+  //       userName: userName || 'Yaqu',
+  //       userAvatar: "",
+  //       sendTime: sendTime,
+  //       content: item.content || "",
+  //       isFile: item.isFile,
+  //       isImage: item.isImage,
+  //       fileInfo: undefined,
+  //       imageUrl: "",
+  //       isFirst: item.isFirst,
+  //     };
+  //   } else {
+  //     return {
+  //       messageId: "",
+  //       userName: userName || 'Yaqu',
+  //       userAvatar: "",
+  //       sendTime: sendTime,
+  //       content: item.content || "",
+  //       isFile: item.isFile,
+  //       isImage: item.isImage,
+  //       fileInfo: undefined,
+  //       imageUrl: "",
+  //       isFirst: item.isFirst,
+  //     };
+  //   }
+  // }));
+
+  // 查找对应日期的消息列表
+  // 修正后的消息分组逻辑
+  let newMessageList = [...messageData];
+
+  // 查找或创建日期分组
+  let dailyMessageExist = newMessageList.find((item) => item.date === date);
+  if (!dailyMessageExist) {
+    dailyMessageExist = { date, messages: [] };
+    newMessageList.push(dailyMessageExist);
   }
-  else {
-    // 日期不存在
-    newMessageList.push({
-      date: date,
-      messages: [
-        {
-          userName: userName || 'Yaqu',
-          messages: newMessagesInfo,
-        },
-      ],
+
+  // 查找用户消息组
+  let userMessageGroup =
+    dailyMessageExist.messages[dailyMessageExist.messages.length - 1]
+      ?.userName === userName
+      ? dailyMessageExist.messages[dailyMessageExist.messages.length - 1]
+      : undefined;
+  // 创建新消息组
+  if (!userMessageGroup?.messages) {
+    userMessageGroup = { userName, messages: [] };
+    dailyMessageExist.messages.push(userMessageGroup);
+  }
+
+  // 添加新消息到用户组
+  const newMessages = createNewMessageInfo(
+    (userMessageGroup.messages.length || 0) === 0, // isFirst由是否为空决定
+    fileInfos,
+    content
+  );
+
+  userMessageGroup.messages.push(...newMessages);
+  console.log("newMessageList", newMessageList);
+  // 保存更新后的消息数据
+  fs.writeFileSync(filePath, JSON.stringify(newMessageList, null, 2));
+  res
+    .status(200)
+    .json({
+      message: "消息添加成功",
+      data: newMessageList,
     });
-  }
-}
+};
 
 export default addNewMessages;

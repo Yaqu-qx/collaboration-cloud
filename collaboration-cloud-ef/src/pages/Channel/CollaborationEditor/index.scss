@@ -1,0 +1,87 @@
+// src/components/CollaborationEditor.scss
+.collab-editor {
+  border-radius: 4px;
+  z-index: 100;
+  height: 100%;
+//   position: relative;
+
+  .toggle-icon {
+    position: absolute;
+    z-index: 999;
+    height: 1rem;
+    width: 1rem;
+    cursor: pointer;
+  }
+  .toggle-toolbar-icon {
+    left: 50%;
+    @extend .toggle-icon;
+  }
+  .toggle-mode-icon {
+    @extend .toggle-icon;
+    &:hover {
+      color: rgb(50, 111, 196);
+    }
+  }
+
+  .editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 5rem 0.5rem 1rem;
+    border-bottom: 1px solid #999;
+    background: white;
+    flex-shrink: 0;
+  }
+
+  .editor-content {
+    height: calc(78vh - 5rem);
+    padding: 0 15%;
+    overflow-y: auto;
+    background: rgb(249, 249, 249);
+  }
+
+  .w-e-text-container {
+    padding: 0.5rem 1rem;
+    height: auto;
+    min-height: 100%;
+  }
+  .w-e-text-placeholder {
+    padding: 0.5rem 1rem;
+  }
+
+  .save-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.8rem;
+    display: flex;
+    z-index: 9999;
+  }
+}
+
+.w-e-textarea-divider {
+  padding: 0;
+}
+
+.title-container {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e8e8e8;
+    
+    h1 {
+      margin: 0;
+      outline: none;
+      
+      &[data-placeholder]:empty:before {
+        content: attr(data-placeholder);
+        color: #bfbfbf;
+      }
+    }
+    
+    .title-divider {
+      margin: 0.5rem 0;
+      border: none;
+      border-top: 1px solid #e8e8e8;
+    }
+  }
+
+  .w-e-text-container [data-slate-editor] h1, .w-e-text-container [data-slate-editor] h2, .w-e-text-container [data-slate-editor] h3, .w-e-text-container [data-slate-editor] h4, .w-e-text-container [data-slate-editor] h5 {
+    margin: 0.2rem 0 0 0;
+  }

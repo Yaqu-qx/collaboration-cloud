@@ -32,6 +32,10 @@ export interface sendMessageExtraInfo {
   content?: string;
   isFile: boolean;
   isImage: boolean;
-  isFirst: boolean;
   file?: File;
+}
+
+export interface selectedFile {
+  file: File;
+  isImg: boolean;
 }

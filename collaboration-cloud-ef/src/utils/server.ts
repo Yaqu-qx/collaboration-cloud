@@ -1,4 +1,6 @@
-import { sendMessageExtraInfo } from "@/typings/api/messages";
+// import { selectedFile, sendMessageExtraInfo } from "@/typings/api/messages";
+
+import { selectedFile } from "@/typings/api/messages";
 
 export const fetchProjects = async (
   value: string,
@@ -101,28 +103,49 @@ export const addNewMessages = async (
   date: string,
   userName: string,
   sendTime: number,
-  newMessagesInfo: sendMessageExtraInfo[],
+  files: selectedFile[],
+  content: string
 ) => {
   const formData = new FormData();
-  
+  // const messageExtraInfos: sendMessageExtraInfo[] = [];
   // 添加文件
-  if (files) {
-    files.forEach(file => {
-      formData.append('files', file);
-    });
-  }
+  files.forEach((iFile) => {
+    const encodedName = encodeURIComponent(iFile.file.name);
+    const correctedFile = new File([iFile.file], encodedName, { type: iFile.file.type });
+    formData.append("files", correctedFile);
+  });
 
   // 添加其他参数
-  formData.append('data', JSON.stringify({
-    channelId,
-    date,
-    userName,
-    sendTime,
-    newMessagesInfo
-  }));
+  formData.append("channelId", channelId);
+  formData.append("date", date);
+  formData.append("userName", userName);
+  formData.append("sendTime", sendTime.toString());
+  formData.append("content", content || "");
+  // formData.append('messages', JSON.stringify(messageExtraInfos));
 
   return fetch(`http://localhost:4000/addNewMessages`, {
     method: "POST",
-    body: formData
+    body: formData,
   });
 };
+
+
+export const saveCollaborateFile = async (file: File, html: string, channelId: string) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("content", html);
+  formData.append("channelId", channelId);
+  return fetch(`http://localhost:4000/saveCollaborateFile`, {
+    method: "POST",
+    body: formData,
+  })
+}
+
+export const openCollaborationFile = async (channelId: string, fileName: string) => {
+  return fetch(`http://localhost:4000/openCollaborationFile?channelId=${channelId}&fileName=${fileName}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }) 
+}

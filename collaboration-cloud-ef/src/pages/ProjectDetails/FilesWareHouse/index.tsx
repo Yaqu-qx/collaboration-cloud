@@ -150,7 +150,7 @@ export default function FilesWareHouse(props: IProps) {
     downloadF(key)
       .then((res) => res.json())
       .then((res) => {
-        const downloadUrl = res.downloadUrl;
+        const downloadUrl = res.data.downloadUrl;
         console.log("downloadUrl", downloadUrl);
         window.open(downloadUrl);
       })
@@ -170,7 +170,7 @@ export default function FilesWareHouse(props: IProps) {
         });
     } else {
       // todo 打开文件
-      console.log("打开文件", file.key);
+      console.log("打开文件？", file.key);
       const type = file.key.split(".").pop() || "";
       if (fileTypes.includes(type)) {
         getFilesPreview(file.key)
@@ -186,10 +186,10 @@ export default function FilesWareHouse(props: IProps) {
           });
         return;
       } else {
-        // todo 提示该文件类型无法预览
+        console.log("该文件类型无法通过cos在线预览");
       }
-
-      const previewUrl = FILESVIEW_URL_PREFIX + file.key;
+      const previewUrl = FILESVIEW_URL_PREFIX + encodeURIComponent(file.key);
+      console.log("previewUrl", previewUrl);
       setViewUrl(previewUrl);
       setViewType(type);
       setShowView(true);

@@ -9,6 +9,7 @@ interface PreviewResponse {
 
 // 获取在线文档预览地址（返回 Promise）
 function getDocHtmlPreviewUrl(key: string): Promise<PreviewResponse> {
+  
   return new Promise((resolve, reject) => {
     const config = {
       Bucket: bucketName,
@@ -26,7 +27,10 @@ function getDocHtmlPreviewUrl(key: string): Promise<PreviewResponse> {
         Query: {
           'ci-process': 'doc-preview', // 必须参数
           'dstType': 'html',          // 必须参数
-          'weboffice_url': 1          // 需要返回预览链接
+          'weboffice_url': 1,          // 需要返回预览链接
+          'weboffice_editable': 1, // 启用WebOffice编辑模式
+          'copyable': 1,           // 允许复制内容
+          'simple': 0              // 显示完整功能栏
         }
       },
       (err, data) => {

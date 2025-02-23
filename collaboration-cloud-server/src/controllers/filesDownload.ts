@@ -9,7 +9,7 @@ const filesDownload = async (req: Request, res: Response) => {
 
   try {
     const downloadUrl = await generatePresignedUrl(key);
-    // console.log('downloadUrl',downloadUrl);
+    console.log('downloadUrl',downloadUrl, 'key', key);
     res.status(200).json({ message: "success", data: { downloadUrl: downloadUrl } });
   } catch (error) {
     console.error(error);

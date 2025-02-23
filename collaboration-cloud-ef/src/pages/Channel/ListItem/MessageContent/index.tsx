@@ -12,26 +12,28 @@ import { formatSize } from "@/utils/utils";
 import './index.scss';
 
 interface MessageContentProps {
-    isFile: boolean;
-    isImage: boolean;
-    content?: string;
-    fileInfo?: any;
-    imageUrl?: string;
-    onFileClick: (fileKey: string) => void;
-    onFilePreview: (isVisible: boolean) => void;
-    onFileViewType: (type: string) => void;
-  }
+  isFile: boolean;
+  isImage: boolean;
+  content?: string;
+  fileInfo?: any;
+  imageUrl?: string;
+  onPreviewUrl: (previewUrl: string) => void;
+  onFilePreview: (isShow: boolean) => void;
+  onFileViewType: (type: string) => void;
+}
   
- export default function MessageContent(props: MessageContentProps) {
-    const { isFile, isImage, content, fileInfo, imageUrl, onFileClick, onFilePreview, onFileViewType } = props;
+export default function MessageContent(props: MessageContentProps) {
+    const { isFile, isImage, content, fileInfo, imageUrl, onPreviewUrl, onFilePreview, onFileViewType } = props;
+    
     const handleFileClick = (fileKey: string, ) => {
       const type = fileKey.split(".").pop() || "";
+      console.log("type", type);
       if(fileTypes.includes(type)){
         getFilesPreview(fileKey)
           .then(res => res.json())
           .then((res) => {
             console.log("res", res);
-            onFileClick(res.previewUrl);
+            onPreviewUrl(res.previewUrl);
             onFilePreview(true);
             onFileViewType(type);
           })
@@ -39,6 +41,13 @@ interface MessageContentProps {
             console.log(err);
           }); 
       }
+    }
+
+    const handleImgClick = (imgUrl: string) => {
+      const type = imgUrl.split(".").pop() || "";
+      onPreviewUrl(imgUrl);
+      onFilePreview(true);
+      onFileViewType(type);
     }
   
     if (!isFile && !isImage) {
@@ -89,7 +98,7 @@ interface MessageContentProps {
     }
   
     if (isImage) {
-      return <img src={imageUrl} alt="图片" className="message-content" />;
+      return <img src={imageUrl} alt="图片" className="message-content image-content" onClick={() => handleImgClick(imageUrl || '')} />;
     }
     return null;
   }

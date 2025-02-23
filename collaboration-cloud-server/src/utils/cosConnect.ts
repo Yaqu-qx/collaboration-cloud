@@ -11,12 +11,12 @@ export const cos = new COS({
 });
 
 // 生成 COS 文件下载链接
-export const generatePresignedUrl = (fileName: any) => {
+export const generatePresignedUrl = (key: any) => {
     return new Promise((resolve, reject) => {
       cos.getObjectUrl({
         Bucket: bucketName,
         Region: region,
-        Key: fileName,
+        Key: key,
         Expires: 3600  // 链接有效时间，单位为秒
       }, (err: any, data: any) => {
         if (err) {

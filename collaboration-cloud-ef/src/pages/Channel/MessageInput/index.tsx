@@ -19,26 +19,18 @@ import {
 import EmojiPicker from "emoji-picker-react";
 import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import "./index.scss";
-import { MessageInfo, MessageList } from '@/typings/api/messages'
-import { sendMessageExtraInfo } from "@/typings/api/messages";
+import { MessageInfo, MessageList } from "@/typings/api/messages";
+import { sendMessageExtraInfo, selectedFile } from "@/typings/api/messages";
 import { getUserName } from "@/utils/globalState";
 import { addNewMessages } from "@/utils/server";
 
-
 interface MessageInputProps {
   channelId: string;
-  messageList: MessageList[];
   updateMessageList: (newMessageList: MessageList[]) => void;
-  // onSend: (userName: string, date: string, messages: MessageInfo[]) => void;
   members: Array<{ id: string; name: string; avatar?: string }>; // 成员列表
 }
 
-interface selectedFile {
-  file: File;
-  isImg: boolean;
-}
-
-const userName = getUserName() ?? 'Yaqu';
+const userName = getUserName() ?? "Yaqu";
 const date = new Date().toLocaleDateString();
 
 const MessageInput: React.FC<MessageInputProps> = (
@@ -53,7 +45,7 @@ const MessageInput: React.FC<MessageInputProps> = (
   const filePreviewRef = useRef<HTMLDivElement>(null);
   const [mentionQuery, setMentionQuery] = useState("");
 
-  const { channelId, messageList, updateMessageList, members } = props;
+  const { channelId, updateMessageList, members } = props;
 
   // 正确获取原生textarea元素的方法
   const getTextareaElement = () => {
@@ -157,99 +149,68 @@ const MessageInput: React.FC<MessageInputProps> = (
       file: file,
       isImg: isImg,
     }));
-    setFiles((prev) => [...prev, ...newFilesPro as selectedFile[]]);
+    setFiles((prev) => [...prev, ...(newFilesPro as selectedFile[])]);
   };
 
+  // 创建消息信息
+  // const createMessageExtraInfo = (): sendMessageExtraInfo[] => {
+  //   let messageExtraInfos: sendMessageExtraInfo[] = [];
+  //   let isFirst = true;
+  //   files.map((iFile) => {
+  //     if (iFile.isImg) {
+  //       messageExtraInfos.push({
+  //         isFile: false,
+  //         isImage: true,
+  //         isFirst: isFirst,
+  //         file: iFile.file,
+  //       })
+  //     } else {
+  //       messageExtraInfos.push({
+  //         isFile: true,
+  //         isImage: false,
+  //         isFirst: isFirst,
+  //         file: iFile.file,
+  //       })
+  //     }
+  //     isFirst = false;
+  //   })
+
+  //   if(content && content.trim()) {
+  //     messageExtraInfos.push({
+  //       isFile: false,
+  //       isImage: false,
+  //       isFirst: isFirst,
+  //       content: content,
+  //     })
+  //   }
+
+  //   return messageExtraInfos;
+  // }
   // 发送消息
-  // const handleSend = () => {
-  //   if (!content.trim() && files.length === 0) return;
-
-  //   // onSend(content, files); todo
-  //   setContent("");
-  //   setFiles([]);
-  // };
-  const createMessageExtraInfo = (): sendMessageExtraInfo[] => {
-    let messageExtraInfos: sendMessageExtraInfo[] = [];
-    let isFirst = true;
-    files.map((iFile) => {
-      if (iFile.isImg) {
-        messageExtraInfos.push({
-          isFile: false,
-          isImage: true,
-          isFirst: isFirst,
-          file: iFile.file,
-        })
-      } else {
-        messageExtraInfos.push({
-          isFile: true,
-          isImage: false,
-          isFirst: isFirst,
-          file: iFile.file,
-        })
-      }
-      isFirst = false;
-    })
-
-    if(content && content.trim()) {
-      messageExtraInfos.push({
-        isFile: false,
-        isImage: false,
-        isFirst: isFirst,
-        content: content,
-      })
-    }
-
-    return messageExtraInfos;
-  }
-
   const handleSend = () => {
+    if (!content.trim() && files.length === 0) return;
+
     const sendTime = Date.now();
-    const newMessagesInfo = createMessageExtraInfo();
-    // 向服务端发送消息后 服务端返回新的messageList Todo
-    addNewMessages(channelId, date, userName, sendTime, newMessagesInfo)
+    addNewMessages(
+      channelId,
+      date,
+      userName,
+      sendTime,
+      files || [],
+      content || ""
+    )
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
+        console.log('newMessage!!', res.data);
         // 更新消息列表
         updateMessageList(res.data);
+        setContent("");
+        setFiles([]);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-    // const newMessageList: MessageList[] = [...messageList];
-    // const dailyMessageExist = newMessageList.find(
-    //   (dailyItem) => dailyItem.date === date
-    // );
-    // if (dailyMessageExist) {
-    //   // 日期存在 
-    //   const personalMessageExist = dailyMessageExist.messages.find(
-    //     (personalItem) => personalItem.userName === userName
-    //   );
-    //   if (personalMessageExist) {
-    //     // 个人消息存在
-    //     personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
-    //   } else {
-    //     // 个人消息不存在
-    //     dailyMessageExist.messages.push({
-    //       userName: userName ?? 'Yaqu',
-    //       messages: newMessages,
-    //     });
-    //   }
-    // }
-    // else {
-    //   // 日期不存在
-    //   newMessageList.push({
-    //     date: date,
-    //     messages: [
-    //       {
-    //         userName: userName || 'Yaqu',
-    //         messages: newMessages,
-    //       },
-    //     ],
-    //   });
-    // }
-  }
-
+  };
 
   return (
     <div className="message-input-container">

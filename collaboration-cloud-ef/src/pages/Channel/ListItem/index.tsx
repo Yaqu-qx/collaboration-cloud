@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PersonalContinuousMessage, MessageInfo } from "@/typings/api/messages";
 import "./index.scss";
 import { formatTimestamp } from "@/utils/utils";
@@ -60,6 +60,10 @@ export default function ListItem(props: IProps) {
     setSelectedEmoji(emoji.emoji);
   };
 
+  useEffect(() => {
+    setMessages(messageInfo.messages);
+  }, [messageInfo.messages]);
+
   // 处理引用
   // function handleQuote(message: MessageInfo) {
   //   // 需要将引用内容传递给父组件
@@ -72,7 +76,7 @@ export default function ListItem(props: IProps) {
   return (
     <>
       {showFilePreview && 
-        <div className="file-viewer-mask" onClick={() => setShowFilePreview(false)}>
+        <div className="file-viewer-mask" onClick={() => {setShowFilePreview(false); setFileViewUrl('')}}>
           <div
             className="file-viewer-container"
             onClick={(e) => e.stopPropagation()}
@@ -115,9 +119,9 @@ export default function ListItem(props: IProps) {
                   content={content}
                   fileInfo={fileInfo}
                   imageUrl={imageUrl}
-                  onFileClick={() => setFileViewUrl}
-                  onFilePreview={() => setShowFilePreview}
-                  onFileViewType={() => setViewType}
+                  onPreviewUrl={(previewUrl: string) => setFileViewUrl(previewUrl)}
+                  onFilePreview={(isShow: boolean) => setShowFilePreview(isShow)}
+                  onFileViewType={(type: string) => setViewType(type)}
                 />
               </div>
             </div>
@@ -132,9 +136,9 @@ export default function ListItem(props: IProps) {
                 content={content}
                 fileInfo={fileInfo}
                 imageUrl={imageUrl}
-                onFileClick={() => setFileViewUrl}
-                onFilePreview={() => setShowFilePreview}
-                onFileViewType={() => setViewType}
+                onPreviewUrl={(previewUrl: string) => setFileViewUrl(previewUrl)}
+                onFilePreview={(isShow: boolean) => setShowFilePreview(isShow)}
+                onFileViewType={(type: string) => setViewType(type)}
               />
             </div>
           );

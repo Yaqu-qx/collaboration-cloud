@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { ChannelInfo } from "@/typings/api/channels";
 import { getChannelInfo, getChannelMessages } from "@/utils/server";
@@ -6,7 +6,11 @@ import Loading from "@/component/Loading";
 import Header from "./Header";
 import "./index.scss";
 import MessageInput from "./MessageInput";
-import { MessageInfo, MessageList, PersonalContinuousMessage } from "@/typings/api/messages";
+import {
+  MessageInfo,
+  MessageList,
+  PersonalContinuousMessage,
+} from "@/typings/api/messages";
 import ListItem from "./ListItem";
 import { Button, Tabs } from "antd";
 import {
@@ -16,8 +20,7 @@ import {
 } from "@ant-design/icons";
 import ProjectorImg from "@/assets/Projector.png";
 import { Divider, Chip } from "@mui/material";
-import { sendMessageExtraInfo } from "@/typings/api/messages";
-import Item from "antd/es/list/Item";
+import CollaborationEditor  from "./CollaborationEditor";
 
 export default function Channel() {
   const location = useLocation();
@@ -30,6 +33,7 @@ export default function Channel() {
   const [messageList, setMessageList] = useState<MessageList[]>([]);
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [tabActiveKey, setTabActiveKey] = useState("MESSAGE_BLOCK"); // COLLABORATION_BLOCK || MESSAGE_BLOCK
 
   // 自动滚动到底部
   const scrollToBottom = () => {
@@ -52,129 +56,86 @@ export default function Channel() {
     );
   };
   // 用户维度 消息列表变化
-  const handleMessageListModify = (dailyIndex: number, personalIndex: number, newMessages: PersonalContinuousMessage) => {
+  const handleMessageListModify = (
+    dailyIndex: number,
+    personalIndex: number,
+    newMessages: PersonalContinuousMessage
+  ) => {
     const newMessageList: MessageList[] = [...messageList];
     newMessageList[dailyIndex].messages[personalIndex] = newMessages;
     setMessageList(newMessageList);
   };
-  // 新添加发送的消息
-  // const addMessage = (userName: string, date: string, messages: sendMessageInfo[]) => {
-    
-  //   // 向服务端发送消息后 服务端返回新的messageList Todo
-
-  //   // 这边就先前端自己处理一下：
-  //   const newMessages = messages.map((item, index): MessageInfo => {
-  //     return ({
-  //       messageId: '00000001',
-  //         userName: item.userName,
-  //         userAvatar: 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg', //默认的个人头像
-  //         sendTime: item.sendTime,
-  //         content: item.content,
-  //         isFile: item.isFile,
-  //         isImage: item.isImage,
-  //         fileInfo: undefined, //todo
-  //         imageUrl: '', // todo
-  //         isFirst: item.isFirst,
-  //     })
-  //   });
-  //   const newMessageList: MessageList[] = [...messageList];
-  //   const dailyMessageExist = newMessageList.find(
-  //     (dailyItem) => dailyItem.date === date
-  //   );
-  //   if (dailyMessageExist) {
-  //     // 日期存在 
-  //     const personalMessageExist = dailyMessageExist.messages.find(
-  //       (personalItem) => personalItem.userName === userName
-  //     );
-  //     if (personalMessageExist) {
-  //       // 个人消息存在
-  //       personalMessageExist.messages = [...personalMessageExist.messages, ...newMessages];
-  //     } else {
-  //       // 个人消息不存在
-  //       dailyMessageExist.messages.push({
-  //         userName: userName,
-  //         messages: newMessages,
-  //       });
-  //     }
-  //   }
-  //   else {
-  //     // 日期不存在
-  //     newMessageList.push({
-  //       date: date,
-  //       messages: [
-  //         {
-  //           userName: userName,
-  //           messages: newMessages,
-  //         },
-  //       ],
-  //     });
-  //   }
-  //   setMessageList(newMessageList);
-  // }
-  // }
-  // const newDailyMessage: MessageList = {
-  //   date: date,
-  //   messages: [
-  //     {
-  //       userName: userName,
-  //       messages: messages,
-  //     },
-  //   ],
-  // };
-
 
   const tabItems = [
-    {
-      key: "1",
-      label: "消息",
-      icon: <MessageFilled />,
-      children: (
-        <div className="message-container" ref={messageContainerRef}>
-          <div className="message-list">
-            <div className="start-block">
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                <img
-                  src={ProjectorImg}
-                  alt="small-icon"
-                  style={{ height: "2rem", width: "2rem" }}
-                />
-                <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-                  {"# " + channelInfo.channelName}
+      {
+        key: "MESSAGE_BLOCK",
+        label: "消息",
+        icon: <MessageFilled />,
+        children: (
+          <div className="message-container" ref={messageContainerRef}>
+            <div className="message-list">
+              <div className="start-block">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={ProjectorImg}
+                    alt="small-icon"
+                    style={{ height: "2rem", width: "2rem" }}
+                  />
+                  <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                    {"# " + channelInfo.channelName}
+                  </div>
                 </div>
+                <p className="instruction">{getCreactText()}</p>
+                <Button icon={<UserAddOutlined />} style={{ width: "10rem" }}>
+                  添加新成员
+                </Button>
               </div>
-              <p className="instruction">{getCreactText()}</p>
-              <Button icon={<UserAddOutlined />} style={{ width: "10rem" }}>
-                添加新成员
-              </Button>
+              {messageList.map((dailyItem, dailyIndex) => (
+                <div className="message-item" key={dailyIndex}>
+                  {/* 按日期分 */}
+                  <Divider style={{ margin: "1rem 0" }}>
+                    <Chip label={dailyItem.date} size="small" />
+                  </Divider>
+                  <div className="message-item-continuous">
+                    {/* 按用户分 */}
+                    {dailyItem.messages.map((personalItem, personalIndex) => (
+                      <ListItem
+                        key={`${dailyItem.date}_${personalItem.userName}`}
+                        messageInfo={personalItem}
+                        date={dailyItem.date}
+                        index={personalIndex}
+                        onMessageListModify={(
+                          newPersonalMessage: PersonalContinuousMessage
+                        ) =>
+                          handleMessageListModify(
+                            dailyIndex,
+                            personalIndex,
+                            newPersonalMessage
+                          )
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
             </div>
-            {messageList.map((dailyItem, dailyIndex) => (
-              <div className="message-item" key={dailyIndex}>
-                {/* 按日期分 */}
-                <Divider style={{ margin: "1rem 0" }}>
-                  <Chip label={dailyItem.date} size="small" />
-                </Divider>
-                <div className="message-item-continuous">
-                  {/* 按用户分 */}
-                  {dailyItem.messages.map((personalItem, personalIndex) => (
-                    <ListItem key={personalIndex} messageInfo={personalItem} date={dailyItem.date} index={personalIndex} onMessageListModify={(newPersonalMessage: PersonalContinuousMessage) => handleMessageListModify(dailyIndex, personalIndex, newPersonalMessage)} />
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
           </div>
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: "画板",
-      icon: <SnippetsFilled />,
-      children: <div>画板</div>,
-    },
-  ];
+        ),
+      },
+      {
+        key: "COLLABORATION_BLOCK",
+        label: "协作",
+        icon: <SnippetsFilled />,
+        children: <div style={{margin: '0 -2rem'}}><CollaborationEditor channelId={channelId}/></div>,
+      },
+    ];
 
   useEffect(() => {
     const fetchChannelInfo = getChannelInfo(channelId)
@@ -202,6 +163,20 @@ export default function Channel() {
     });
   }, []);
 
+  // 修改消息更新回调函数
+  const handleNewMessageList = (newList: MessageList[]) => {
+    // 创建全新数组引用
+    // const sortedList = [...newList].sort((a, b) =>
+    //   new Date(a.date).getTime() - new Date(b.date).getTime()
+    // );
+
+    // 使用函数式更新保证状态同步
+    setMessageList(newList);
+
+    // 强制滚动到底部
+    setTimeout(scrollToBottom, 100);
+  };
+
   return (
     <>
       {loading && <Loading />}
@@ -211,8 +186,10 @@ export default function Channel() {
           memberCount={channelInfo?.members?.length || 0}
         />
         <Tabs
+          activeKey={tabActiveKey}
           className="channel-tabs"
           items={tabItems}
+          onTabClick={(key) => setTabActiveKey(key)}
           tabBarStyle={{
             margin: "-2rem",
             marginTop: "1.5rem",
@@ -220,16 +197,15 @@ export default function Channel() {
           }}
         />
 
-        <MessageInput
+        {(tabActiveKey === 'MESSAGE_BLOCK') && <MessageInput
           // onSend={handleSend}
           channelId={channelId}
-          messageList={messageList}
-          updateMessageList={() => setMessageList}
+          updateMessageList={handleNewMessageList}
           members={[
             { id: "1", name: "张三", avatar: "..." },
             { id: "2", name: "李四" },
           ]}
-        />
+        />}
       </div>
     </>
   );

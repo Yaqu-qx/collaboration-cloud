@@ -122,7 +122,7 @@ const fileFoldDownload = async (req: Request, res: Response) => {
     const result = await postFileCompressTask(prefix, zipFilekey);
     const downloadUrl = await generatePresignedUrl(zipFilekey);
     console.log("result:", result, "下载链接:", downloadUrl);
-    res.status(200).json({ downloadUrl: downloadUrl });
+    res.status(200).json({ message: "success", data: { downloadUrl: downloadUrl } });
   } catch (error) {
     console.error("文件压缩任务失败:", error);
     res.status(500).send("文件压缩任务失败");
