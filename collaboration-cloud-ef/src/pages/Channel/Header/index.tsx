@@ -27,7 +27,7 @@ const Header = (props: IHeaderProps) => {
           <PeopleOutlineSharpIcon className="members-icon" />
           <span>{memberCount}</span>
         </div>
-        <Dropdown menu={{ items }}>
+        <Dropdown menu={{ items }} overlayStyle={{zIndex: 100000}}>
           <MoreOutlined />
         </Dropdown>
       </div>
