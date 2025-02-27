@@ -133,7 +133,7 @@ export default function Channel() {
         key: "COLLABORATION_BLOCK",
         label: "协作",
         icon: <SnippetsFilled />,
-        children: <div style={{margin: '0 -2rem'}}><CollaborationEditor channelId={channelId}/></div>,
+        children: <div style={{margin: '0 -2rem', position: 'relative'}}><CollaborationEditor channelId={channelId}/></div>,
       },
     ];
 

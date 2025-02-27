@@ -4,7 +4,7 @@
   height: 75vh;
   display: flex;
   flex-direction: column;
-//   position: relative;
+  // position: relative;
 
   .toggle-icon {
     position: absolute;
@@ -74,6 +74,7 @@
     z-index: 999;
     background: rgb(249, 249, 249);
     gap: 1rem;
+    position: relative;
 
     p {
       font-size: 1.5rem;
@@ -86,6 +87,20 @@
       gap: 1rem;
       align-items: center;
     }
+
+    .new-create-modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+    }
+
+    // 覆盖antd默认蒙层样式
+  .ant-modal-wrap {
+    position: absolute;
+    z-index: 1000;
+  }
   }
 }
 

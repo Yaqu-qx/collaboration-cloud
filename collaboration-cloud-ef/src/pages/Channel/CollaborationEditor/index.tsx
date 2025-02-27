@@ -6,15 +6,20 @@ import "./index.scss";
 import FoldUpIcon from "@/assets/foldup.png";
 import FoldDownIcon from "@/assets/folddown.png";
 import ToolBarModeIcon from "@/assets/toolBarMode.png";
-import { SaveFilled, FolderOpenOutlined, FileTextOutlined } from "@ant-design/icons";
-import { Button, Tooltip, message } from "antd";
+import {
+  SaveFilled,
+  FolderOpenOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import { Button, Tooltip, message, Modal } from "antd";
 import { saveCollaborateFile, openCollaborationFile } from "@/utils/server";
 
 interface Props {
   channelId: string;
 }
 
-const defaultHtml = "<h1 placeholder='请输入标题'></h1><hr class='title-divider'/>"
+const defaultHtml =
+  "<h1 placeholder='请输入标题'></h1><hr class='title-divider'/>";
 
 export default function CollaborationEditor(props: Props) {
   // editor 实例
@@ -26,6 +31,7 @@ export default function CollaborationEditor(props: Props) {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [isFileOpened, setIsFileOpened] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 新增文件选择处理函数
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +55,13 @@ export default function CollaborationEditor(props: Props) {
 
   useEffect(() => {
     openCollaborationFile(channelId, "document.html")
-     .then((res) => res.json())
-     .then((res) => {
+      .then((res) => res.json())
+      .then((res) => {
         console.log("文件内容", res);
         setHtml(res.data.content); // 更新编辑器内容
-        setTitle('document'); // 更新编辑器内容
+        setTitle("document"); // 更新编辑器内容
       })
-     .catch((error) => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
@@ -102,9 +108,14 @@ export default function CollaborationEditor(props: Props) {
   }, [editor]);
 
   const handleCreateNewFile = () => {
-    // todo
+    setIsModalOpen(false);
+    setTitle(""); //
     setIsFileOpened(true);
     setHtml(defaultHtml);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -135,13 +146,15 @@ export default function CollaborationEditor(props: Props) {
           </Tooltip>
         )}
 
-        {isFileOpened && <Button
-          icon={<SaveFilled />}
-          className="save-button"
-          onClick={handleSave}
-        >
-          保存
-        </Button>}
+        {isFileOpened && (
+          <Button
+            icon={<SaveFilled />}
+            className="save-button"
+            onClick={handleSave}
+          >
+            保存
+          </Button>
+        )}
 
         {showToolbar && (
           <Toolbar
@@ -153,17 +166,43 @@ export default function CollaborationEditor(props: Props) {
             style={{ transition: "all 0.3s ease" }}
           />
         )}
-        
-        {!isFileOpened && <div className="not-open-default">
-          <p>还没有打开任何文件!</p>
-          <div className="btns">
-            <Button icon={<FolderOpenOutlined />}>打开文件</Button>
-            <Button icon={<FileTextOutlined />} onClick={handleCreateNewFile}>新建文件</Button>
+
+        {!isFileOpened && (
+          <div className="not-open-default">
+            <p>还没有打开任何文件!</p>
+            <div className="btns">
+              <Button icon={<FolderOpenOutlined />}>打开文件</Button>
+              <Button
+                icon={<FileTextOutlined />}
+                onClick={() => setIsModalOpen(true)}
+              >
+                新建文件
+              </Button>
+            </div>
+            <Modal
+              title={"新文件名"}
+              open={isModalOpen}
+              onOk={handleCreateNewFile}
+              onCancel={handleCancel}
+              okText={"创建"}
+              getContainer={() => document.querySelector(".not-open-default")!}
+              className="new-create-modal"
+            >
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="请输入文件名"
+              />
+            </Modal>
           </div>
-        </div>}
+        )}
 
         <>
-          <div className="title-container" style={{ display: isFileOpened? "block" : "none"}}>
+          <div
+            className="title-container"
+            style={{ display: isFileOpened ? "block" : "none" }}
+          >
             <span className="title-content">当前文件: {title}</span>
           </div>
           <Editor
@@ -173,10 +212,9 @@ export default function CollaborationEditor(props: Props) {
             onCreated={setEditor}
             onChange={(editor) => setHtml(editor.getHtml())}
             mode="default"
-            style={{ display: isFileOpened? "block" : "none"}}
+            style={{ display: isFileOpened ? "block" : "none" }}
           />
         </>
-        
       </div>
     </>
   );
