@@ -36,3 +36,7 @@ export const getUserName = (): string | undefined => {
 export const getUserTelephone = (): string | undefined => {
   return globalUserInfo?.telephone;
 };
+
+export const getUserId = (): string | undefined => {
+  return globalUserInfo?.id;
+};

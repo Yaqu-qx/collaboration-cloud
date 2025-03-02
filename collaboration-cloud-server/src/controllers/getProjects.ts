@@ -33,14 +33,9 @@ function generateRandomProjects(): ProjectInfo[] {
 }
 
 const getProjects = async (req: Request, res: Response) => {
-  // console.log("?????????", req.query.project_name, req.query?.isRecommend, req.query?.tags);
   // 按标签筛选
   if (req.query?.tags) {
     const mytags: string[] = (req.query.tags as string).split(",");
-    // const projects = await connection.query(
-    //   "SELECT * FROM projects WHERE tags && $1",
-    //   [mytags]
-    // );
     res.status(200).json([
       {
         project_id: "00000001",

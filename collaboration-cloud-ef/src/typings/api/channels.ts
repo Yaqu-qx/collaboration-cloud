@@ -8,7 +8,7 @@ export interface ChannelInfo {
   description?: string;
   members: peopleInfoType[];
   teachers: peopleInfoType[];
-  messages: channelMessage[];
+  fileList: string[];
   createdAt: string;
   createBy: string;
 }

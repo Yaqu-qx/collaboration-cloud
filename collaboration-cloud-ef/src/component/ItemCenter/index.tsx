@@ -201,7 +201,6 @@ export default function ItemCenter(props: IProps) {
       content: "收藏成功！",
       duration: 1,
     });
-
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -356,8 +355,8 @@ export default function ItemCenter(props: IProps) {
   const handleApplySubmit = () => {
     console.log("apply submit");
     // TODO: 文本框内容判断
-    
-    // TODO: 发送申请请求 
+
+    // TODO: 发送申请请求
 
     setApplyText("");
     setApplyProject(undefined);
@@ -433,80 +432,75 @@ export default function ItemCenter(props: IProps) {
         />
       </div>
       {createPanelVisible && (
-        <div className="create-panel-mask">
-          <div className="create-panel">
-            <CreatePanel
-              onPanelVisible={(visible) => setCreatePanelVisible(visible)}
-            />
-          </div>
-        </div>
+        <CreatePanel
+          onPanelVisible={(visible) => setCreatePanelVisible(visible)}
+        />
       )}
 
       {applyPanelVisible && (
         <div className="apply-panel-mask">
-          
-            {!applyFinish ? (
-              <div className="apply-to-join">
-                <IconButton
-                  aria-label="close"
-                  size="small"
-                  onClick={handleFinishApply}
-                  className="apply-close-btn"
-                >
-                  <CloseOutlined />
-                </IconButton>
-                <p className="title">申请加入</p>
-                <div className="apply-info">
-                  <div className="apply-info-block">
-                    <p>申请人：{getUserName() ?? ""} </p>
-                    <p>申请人学号：{getUserAccount() ?? ""} </p>
-                  </div>
-                  <div className="apply-info-block">
-                    <p>项目名称：{applyProject?.name ?? ""} </p>
-                    <p>项目组：{applyProject?.group ?? ""} </p> 
-                    <p>主指导老师：{applyProject?.teacher ?? ""} </p>
-                  </div>
+          {!applyFinish ? (
+            <div className="apply-to-join">
+              <IconButton
+                aria-label="close"
+                size="small"
+                onClick={handleFinishApply}
+                className="apply-close-btn"
+              >
+                <CloseOutlined />
+              </IconButton>
+              <p className="title">申请加入</p>
+              <div className="apply-info">
+                <div className="apply-info-block">
+                  <p>申请人：{getUserName() ?? ""} </p>
+                  <p>申请人学号：{getUserAccount() ?? ""} </p>
                 </div>
-                <div className="apply-reason">
-                  <p>
-                    申请理由 <span style={{ color: "red" }}>*</span>
-                  </p>
-                  <TextArea
-                    placeholder="请输入申请理由"
-                    allowClear
-                    onChange={handleApplyText}
-                    value={applyText}
-                    className="reason-input"
-                  />
-                  <p style={{ color: "#999" }}>
-                    申请后将向项目的项目管理人（主指导老师）发送申请通知，审核通过方可加入。
-                  </p>
+                <div className="apply-info-block">
+                  <p>项目名称：{applyProject?.name ?? ""} </p>
+                  <p>项目组：{applyProject?.group ?? ""} </p>
+                  <p>主指导老师：{applyProject?.teacher ?? ""} </p>
                 </div>
-                <button className="submit-btn" onClick={handleApplySubmit}>
-                  提交申请
-                </button>
               </div>
-            ) : (
-              <div className="apply-success-popup">
-                <IconButton
-                  aria-label="close"
-                  size="small"
-                  onClick={handleFinishApply}
-                  className="apply-close-btn"
-                >
-                  <CloseOutlined />
-                </IconButton>
-                <img src={applySuccessImg} className="apply-success-img" />
-                <p className="apply-success-text"> 提交成功！待审核中... </p>
-                <Button
-                  type="primary"
-                  className="finish-btn"
-                  onClick={handleFinishApply}
-                >
-                  完成
-                </Button>
+              <div className="apply-reason">
+                <p>
+                  申请理由 <span style={{ color: "red" }}>*</span>
+                </p>
+                <TextArea
+                  placeholder="请输入申请理由"
+                  allowClear
+                  onChange={handleApplyText}
+                  value={applyText}
+                  className="reason-input"
+                />
+                <p style={{ color: "#999" }}>
+                  申请后将向项目的项目管理人（主指导老师）发送申请通知，审核通过方可加入。
+                </p>
               </div>
-            )}
+              <button className="submit-btn" onClick={handleApplySubmit}>
+                提交申请
+              </button>
+            </div>
+          ) : (
+            <div className="apply-success-popup">
+              <IconButton
+                aria-label="close"
+                size="small"
+                onClick={handleFinishApply}
+                className="apply-close-btn"
+              >
+                <CloseOutlined />
+              </IconButton>
+              <img src={applySuccessImg} className="apply-success-img" />
+              <p className="apply-success-text"> 提交成功！待审核中... </p>
+              <Button
+                type="primary"
+                className="finish-btn"
+                onClick={handleFinishApply}
+              >
+                完成
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </>

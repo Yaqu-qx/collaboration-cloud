@@ -1,0 +1,54 @@
+.modal-file-container {
+  background: white;
+  height: 20rem;
+  width: 18rem;
+  position: absolute;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  .modal-file-hint {
+    font-size: 0.8rem;
+    color: #2d2d2d;
+    font-weight: bold;
+  }
+
+  .modal-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    height: 16rem;
+    overflow-y: overlay;
+    padding-right: 0.5rem;
+
+    &::-webkit-scrollbar {
+        width: 6px; // 滚动条宽度
+        background: transparent; // 透明背景
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c2c2c2; 
+        border-radius: 3px;
+        &:hover {
+          background: #a0a0a0;
+        }
+      }
+    
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.2rem;
+      border: 1.5px solid #c2c2c2;
+      font-weight: 500;
+
+      cursor: pointer;
+      &:hover {
+        background: rgb(247, 235, 255);
+      }
+      transition: all 0.2s ease-in-out;
+    }
+  }
+}

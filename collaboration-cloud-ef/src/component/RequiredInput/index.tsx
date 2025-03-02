@@ -3,11 +3,13 @@ import "./index.scss";
 import { Input } from "antd";
 
 interface IProps {
+  value: string;
   label: string;
   placeholder: string;
   prefix?: React.ReactNode;
   faq?: string;
   width?: string;
+  // onChange?: (value: string) => void;
   onInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +23,7 @@ export default function RequiredInput(props: IProps) {
       </p>
       <Input
         size="large"
+        value={props.value}
         placeholder={props.placeholder}
         prefix={props.prefix}
         onChange={props.onInputChange}

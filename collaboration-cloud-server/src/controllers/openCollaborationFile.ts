@@ -23,6 +23,16 @@ const openCollaborationFile = async (req: Request, res: Response) => {
       },
     });
   } catch (err: any) {
+    if (err.Code === 'NoSuchKey') {
+      return res.status(200).json({
+        success: true,
+        data: {
+          content: '<h3>在这里开始你的项目规划吧！</h3>', // 返回默认内容
+          fileName: "myPlanning.html"
+        }
+      });
+    }
+
     console.error("文件获取失败:", err);
     res.status(err.statusCode || 500).json({
       success: false,

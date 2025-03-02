@@ -15,8 +15,8 @@ export interface groupInfo {
   group_id: string;
   group_name: string;
   member_count: number;
-  main_mentor: string;
-  other_mentors: string[];
+  main_mentor?: string;
+  other_mentors?: string[];
   create_time: string;
   description: string;
   members: string[];

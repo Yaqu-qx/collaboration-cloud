@@ -50,17 +50,12 @@
     padding: 0.5rem 1rem;
   }
 
-  .save-button {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.8rem;
-    display: flex;
-    z-index: 99999;
-  }
-
   .title-container {
     background: rgb(249, 249, 249);
     padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .not-open-default {
@@ -78,7 +73,7 @@
 
     p {
       font-size: 1.5rem;
-      color: #7a6a6a; 
+      color: #7a6a6a;
       font-weight: bold;
     }
 
@@ -90,17 +85,24 @@
 
     .new-create-modal {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
+      top: calc(50% - 3rem);
+      left: calc(50% - 5rem);
+      // transform: translate(-50%, -50%);
+      .create-input {
+        height: 2rem;
+        padding-left: 0.5rem;
+      }
     }
-
-    // 覆盖antd默认蒙层样式
-  .ant-modal-wrap {
-    position: absolute;
-    z-index: 1000;
   }
+
+  .start-modal-mask {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -109,26 +111,31 @@
 }
 
 .title-container {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e8e8e8;
-    
-    h1 {
-      margin: 0;
-      outline: none;
-      
-      &[data-placeholder]:empty:before {
-        content: attr(data-placeholder);
-        color: #bfbfbf;
-      }
-    }
-    
-    .title-divider {
-      margin: 0.5rem 0;
-      border: none;
-      border-top: 1px solid #e8e8e8;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #757575;
+  padding: relative;
+
+  h1 {
+    margin: 0;
+    outline: none;
+
+    &[data-placeholder]:empty:before {
+      content: attr(data-placeholder);
+      color: #bfbfbf;
     }
   }
 
-  .w-e-text-container [data-slate-editor] h1, .w-e-text-container [data-slate-editor] h2, .w-e-text-container [data-slate-editor] h3, .w-e-text-container [data-slate-editor] h4, .w-e-text-container [data-slate-editor] h5 {
-    margin: 0.2rem 0 0 0;
+  .title-divider {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid #e8e8e8;
   }
+}
+
+.w-e-text-container [data-slate-editor] h1,
+.w-e-text-container [data-slate-editor] h2,
+.w-e-text-container [data-slate-editor] h3,
+.w-e-text-container [data-slate-editor] h4,
+.w-e-text-container [data-slate-editor] h5 {
+  margin: 0.2rem 0 0 0;
+}

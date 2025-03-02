@@ -24,6 +24,8 @@ import applicationSuccessImg from "@/assets/application_success.png";
 import successIcon from "@/assets/successIcon.png";
 import teamWorkImg from "@/assets/teamWorkImg.png";
 import { tagColor } from "@/constant/const";
+import CreateGroup from "../CreateGroup";
+
 const { TextArea } = Input;
 const { Dragger } = Upload;
 interface Iprops {
@@ -45,8 +47,19 @@ export default function CreatePanel(props: Iprops) {
     { value: "2", label: "Lucy", avatar: defaultAvater },
     { value: "3", label: "Tom", avatar: defaultAvater },
   ]); // 指导老师列表
+  const [teams, setTeams] = useState([
+    { value: "1", label: "Team 1", avatar: teamIcon },
+    { value: "2", label: "Team 2", avatar: teamIcon },
+    { value: "3", label: "Team 3", avatar: teamIcon },
+  ]); // 团队列表
   const [textAreaValue, setTextAreaValue] = useState("");
   const [isCreated, setIsCreated] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [mainTeacher, setMainTeacher] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<string>("");
+  const [additionalTeachers, setAdditionalTeachers] = useState<string[]>([]);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
 
   const onTextAreaChange = (e: any) => {
     setTextAreaValue(e.target.value);
@@ -77,26 +90,39 @@ export default function CreatePanel(props: Iprops) {
   const handleWatchDetail = () => {
     console.log("watch detail");
     // todo 跳转到项目详情页面
-
   };
 
   // 创建项目逻辑
   const handleProCreact = () => {
     console.log("create project");
     // todo 发送请求 创建新项目
-
+    let hasError = false;
+    if (
+      !projectName.trim() ||
+      !mainTeacher ||
+      selectedTags.length === 0 ||
+      !selectedTeam
+    ) {
+      hasError = true;
+    }
+    if (hasError) {
+      message.error("请填写所有带星号的必填项！");
+      return;
+    }
     setIsCreated(true);
   };
 
   // 跳转创建团队页面
   const HandleCreatNewTeam = () => {
     console.log("create new team");
-    // todo 跳转创建团队页面
-
+    if (!projectName.trim()) {
+      message.error("请先输入项目名！");
+      return;
+    }
+    setShowCreateGroup(true);
   };
 
   // todo 最小化保存编辑信息
-  // todo 附件上传逻辑
   // todo 成功创建逻辑
   // 查看详情逻辑
 
@@ -104,218 +130,260 @@ export default function CreatePanel(props: Iprops) {
     <div className="not-found-node">
       <img src={teamWorkImg} alt="Team Work Img" className="teamwork-img" />
       <p>还没有组建团队？创建一个新的项目小组吧！</p>
-      <Button type="primary" className="create-team-btn" onClick={HandleCreatNewTeam}>
+      <Button
+        type="primary"
+        className="create-team-btn"
+        onClick={HandleCreatNewTeam}
+      >
         创建项目组
       </Button>
     </div>
-  )
+  );
+
+  const handleNewGroup = (groupName: string) => {
+    const newGroup = {
+      value: `${teams.length + 1}`,
+      label: groupName,
+      avatar: teamIcon,
+    };
+    setTeams([...teams, newGroup]);
+    setSelectedTeam(newGroup.value);
+  }
 
   return (
     <>
-      {!isCreated ? (
-        <>
-          <div className="panel-header">
-            <span className="panel-title"> 新项目</span>
-            <div className="panel-btns">
-              <IconButton aria-label="minus" size="small">
-                <MinusOutlined />
-              </IconButton>
-              {/* <IconButton aria-label="shrink" size="small">
+      {showCreateGroup ? (
+        <CreateGroup
+          onPanelVisible={setShowCreateGroup}
+          isFromNewItemPanel={true}
+          item={projectName}
+          onNewGroup={handleNewGroup}
+        />
+      ) : (
+        <div className="create-panel-mask">
+          <div className="create-panel">
+            {!isCreated ? (
+              <>
+                <div className="panel-header">
+                  <span className="panel-title"> 新项目</span>
+                  <div className="panel-btns">
+                    <IconButton aria-label="minus" size="small">
+                      <MinusOutlined />
+                    </IconButton>
+                    {/* <IconButton aria-label="shrink" size="small">
                 <ShrinkOutlined />
               </IconButton> */}
-              <IconButton
-                aria-label="close"
-                size="small"
-                onClick={() => onPanelVisible(false)}
-              >
-                <CloseOutlined />
-              </IconButton>
-            </div>
-          </div>
-          {/* // 滚动 */}
-          <div className="panel-body">
-            <div>
-              <p>
-                探索与团队合作所能实现的可能性，随时在项目设置中编辑项目详细信息。
-              </p>
-              <p className="required-tip">
-                必填字段标有星号 <span style={{ color: "red" }}>*</span>
-              </p>
-            </div>
+                    <IconButton
+                      aria-label="close"
+                      size="small"
+                      onClick={() => onPanelVisible(false)}
+                    >
+                      <CloseOutlined />
+                    </IconButton>
+                  </div>
+                </div>
+                {/* // 滚动 */}
+                <div className="panel-body">
+                  <div>
+                    <p>
+                      探索与团队合作所能实现的可能性，随时在项目设置中编辑项目详细信息。
+                    </p>
+                    <p className="required-tip">
+                      必填字段标有星号 <span style={{ color: "red" }}>*</span>
+                    </p>
+                  </div>
 
-            <RequiredInput
-              label="项目名称"
-              placeholder="请输入项目名称"
-              prefix={
+                  <RequiredInput
+                    label="项目名称"
+                    placeholder="请输入项目名称"
+                    value={projectName}
+                    onInputChange={(e) => setProjectName(e.target.value)}
+                    prefix={
+                      <img
+                        src={newItemIcon}
+                        alt="newItemIcon"
+                        className="new-item-icon"
+                      />
+                    }
+                    width="23rem"
+                  />
+                  {/* 选择指导老师 */}
+                  <SelectInput
+                    value={mainTeacher}
+                    onChange={(value: any) => setMainTeacher(value)}
+                    required={true}
+                    label="主指导老师"
+                    showSearch={true}
+                    placeholder="请选择指导老师"
+                    prefix={
+                      <img
+                        src={teacherIcon}
+                        alt="teacherIcon"
+                        className="new-item-icon"
+                      />
+                    }
+                    options={teachers}
+                    width="23rem"
+                    faq="为了项目管理和任务分配的顺利进行，每个项目需指定一名指导老师，未指定则分配默认负责人。选择创建后将向指导老师发送申请，审核通过后项目方可加入。"
+                  />
+                  {/* 选择标签 */}
+                  <SelectInput
+                    value={selectedTags}
+                    onChange={(value: any) => setSelectedTags(value)}
+                    required={true}
+                    mode="tags"
+                    label="Tags"
+                    showSearch={false}
+                    placeholder="请选择项目标签"
+                    width="23rem"
+                    options={tagOptions}
+                    tagColor={tagColor}
+                  />
+
+                  <SelectInput
+                    value={selectedTeam}
+                    onChange={(value: any) => setSelectedTeam(value)}
+                    notFoundNode={notFoundNode}
+                    required={true}
+                    label="项目组"
+                    showSearch={true}
+                    placeholder="选择一个团队"
+                    prefix={
+                      <img
+                        src={teamIcon}
+                        alt="teacherIcon"
+                        className="new-item-icon"
+                      />
+                    }
+                    options={teams}
+                    width="23rem"
+                    faq="绑定你的团队或新建一个项目组（输入空格显示新建入口）"
+                  />
+
+                  <Divider style={{ borderColor: "#ccc" }} />
+
+                  <SelectInput
+                    value={additionalTeachers}
+                    onChange={(value: any) => setAdditionalTeachers(value)}
+                    maxCount={3}
+                    required={false}
+                    mode="multiple"
+                    label="更多导师"
+                    showSearch={true}
+                    placeholder="多选指导老师"
+                    width="23rem"
+                    options={teachers}
+                    faq="如有多个指导老师，可在此处选择，最多可选择3人。"
+                  />
+
+                  <div>
+                    <p>创建理由</p>
+                    <TextArea
+                      showCount
+                      maxLength={100}
+                      onChange={onTextAreaChange}
+                      placeholder="简要说明你的申请理由"
+                      style={{ marginTop: "0.2rem" }}
+                    />
+                  </div>
+
+                  <div className="attachment-block">
+                    <p>初始附件</p>
+                    <Dragger {...upLoadProps}>
+                      <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                      </p>
+                      <p className="ant-upload-text">
+                        Click or drag file to this area to upload
+                      </p>
+                      <p className="ant-upload-hint">
+                        Support for a single or bulk upload. Strictly prohibited
+                        from uploading private data or other banned files.
+                      </p>
+                    </Dragger>
+                    <p className="attachment-tip">
+                      项目初始文件，可上传项目相关资料，如需求文档、设计图、源代码等。
+                    </p>
+                  </div>
+
+                  <div>
+                    <p>项目描述</p>
+                    <TextArea
+                      showCount
+                      value={textAreaValue}
+                      onChange={onTextAreaChange}
+                      placeholder="请简要介绍一下新项目"
+                      style={{
+                        height: 120,
+                        resize: "none",
+                        marginTop: "0.2rem",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="panel-footer">
+                  <Button
+                    type="text"
+                    onClick={() => onPanelVisible(false)}
+                    className="cancel-btn"
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    type="primary"
+                    className="create-btn"
+                    onClick={handleProCreact}
+                  >
+                    创建
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="panel-after-create">
+                <div className="panel-header-2">
+                  <IconButton
+                    aria-label="close"
+                    size="small"
+                    onClick={() => onPanelVisible(false)}
+                    className="close-btn"
+                  >
+                    <CloseOutlined />
+                  </IconButton>
+                </div>
+
                 <img
-                  src={newItemIcon}
-                  alt="newItemIcon"
-                  className="new-item-icon"
+                  src={applicationSuccessImg}
+                  className="application-success-img"
                 />
-              }
-              width="23rem"
-            />
-            {/* 选择指导老师 */}
-            <SelectInput
-              required={true}
-              label="主指导老师"
-              showSearch={true}
-              placeholder="请选择指导老师"
-              prefix={
-                <img
-                  src={teacherIcon}
-                  alt="teacherIcon"
-                  className="new-item-icon"
-                />
-              }
-              options={teachers}
-              width="23rem"
-              faq="为了项目管理和任务分配的顺利进行，每个项目需指定一名指导老师，未指定则分配默认负责人。选择创建后将向指导老师发送申请，审核通过后项目方可加入。"
-            />
-            {/* 选择标签 */}
-            <SelectInput
-              required={true}
-              mode="tags"
-              label="Tags"
-              showSearch={false}
-              placeholder="请选择项目标签"
-              width="23rem"
-              options={tagOptions}
-              tagColor={tagColor}
-            />
+                <div className="success-tip-block">
+                  <img src={successIcon} className="success-icon" />
+                  <span className="success-tip">已向项目管理人发送申请！</span>
+                </div>
 
-            <SelectInput
-              notFoundNode={notFoundNode}
-              required={true}
-              label="项目组"
-              showSearch={true}
-              placeholder="选择一个团队"
-              prefix={
-                <img
-                  src={teamIcon}
-                  alt="teacherIcon"
-                  className="new-item-icon"
-                />
-              }
-              options={teachers}
-              width="23rem"
-              faq="绑定你的团队或新建一个项目组（输入空格显示新建入口）"
-            />
-
-            <Divider style={{ borderColor: "#ccc" }} />
-
-            <SelectInput
-              maxCount={3}
-              required={false}
-              mode="multiple"
-              label="更多导师"
-              showSearch={true}
-              placeholder="多选指导老师"
-              width="23rem"
-              options={teachers}
-              faq="如有多个指导老师，可在此处选择，最多可选择3人。"
-            />
-
-            <div>
-              <p>创建理由</p>
-              <TextArea
-                showCount
-                maxLength={100}
-                onChange={onTextAreaChange}
-                placeholder="简要说明你的申请理由"
-                style={{ marginTop: "0.2rem" }}
-              />
-            </div>
-
-            <div className="attachment-block">
-              <p>初始附件</p>
-              <Dragger {...upLoadProps}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
+                <p className="success-tip-more">
+                  您可以在 [消息]-{`>`}
+                  [我的申请]
+                  中查看审核进度。也可以给对应导师发送反馈信息，提醒审核任务哦~
                 </p>
-                <p className="ant-upload-text">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload. Strictly prohibited from
-                  uploading private data or other banned files.
-                </p>
-              </Dragger>
-              <p className="attachment-tip">
-                项目初始文件，可上传项目相关资料，如需求文档、设计图、源代码等。
-              </p>
-            </div>
-
-            <div>
-              <p>项目描述</p>
-              <TextArea
-                showCount
-                onChange={onTextAreaChange}
-                placeholder="请简要介绍一下新项目"
-                style={{ height: 120, resize: "none", marginTop: "0.2rem" }}
-              />
-            </div>
-          </div>
-
-          <div className="panel-footer">
-            <Button
-              type="text"
-              onClick={() => onPanelVisible(false)}
-              className="cancel-btn"
-            >
-              取消
-            </Button>
-            <Button
-              type="primary"
-              className="create-btn"
-              onClick={handleProCreact}
-            >
-              创建
-            </Button>
-          </div>
-        </>
-      ) : (
-        <div className="panel-after-create">
-          <div className="panel-header-2">
-            <IconButton
-              aria-label="close"
-              size="small"
-              onClick={() => onPanelVisible(false)}
-              className="close-btn"
-            >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-
-          <img
-            src={applicationSuccessImg}
-            className="application-success-img"
-          />
-          <div className="success-tip-block">
-            <img src={successIcon} className="success-icon" />
-            <span className="success-tip">已向项目管理人发送申请！</span>
-          </div>
-
-          <p className="success-tip-more">
-            您可以在 [消息]-{`>`}
-            [我的申请]
-            中查看审核进度。也可以给对应导师发送反馈信息，提醒审核任务哦~
-          </p>
-          <div className="panel-footer">
-            <Button
-              type="text"
-              onClick={handleWatchDetail}
-              className="detail-btn"
-            >
-              查看详情
-            </Button>
-            <Button
-              type="primary"
-              className="finish-btn"
-              onClick={() => onPanelVisible(false)}
-            >
-              完成
-            </Button>
+                <div className="panel-footer">
+                  <Button
+                    type="text"
+                    onClick={handleWatchDetail}
+                    className="detail-btn"
+                  >
+                    查看详情
+                  </Button>
+                  <Button
+                    type="primary"
+                    className="finish-btn"
+                    onClick={() => onPanelVisible(false)}
+                  >
+                    完成
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -1,0 +1,60 @@
+[
+    {
+        "project_id": "00000001",
+        "project_name": "Project 1",
+        "team_name": "Team 1",
+        "member_count": 3,
+        "teacher": "John Doe",
+        "tags": [
+            "课程设计",
+            "工程项目",
+            "跨学科协作"
+        ],
+        "create_time": "2021-09-01",
+        "description": "这是一段描述，描述了项目的内容和目标。本项目旨在通过合作和创新，为学生提供一个机会，让他们在实践中应用所学的知识和技能。",
+        "channelId": "0000000001"
+    },
+    {
+        "project_id": "00000002",
+        "project_name": "Project 2",
+        "team_name": "Team 2",
+        "member_count": 8,
+        "teacher": "Julie Smith",
+        "tags": [
+            "课程设计",
+            "跨学科协作"
+        ],
+        "create_time": "2024-09-01",
+        "description": "项目介绍",
+        "channelId": "0000000001"
+    },
+    {
+        "project_id": "00000003",
+        "project_name": "Project 3",
+        "team_name": "Team 3",
+        "member_count": 8,
+        "teacher": "John Doe",
+        "tags": [
+            "课程设计",
+            "科研创新"
+        ],
+        "create_time": "2024-03-01",
+        "description": "项目介绍",
+        "channelId": "0000000001"
+    },
+    {
+        "project_id": "00000004",
+        "project_name": "Project 4",
+        "team_name": "Team 4",
+        "member_count": 3,
+        "teacher": "John Doe",
+        "tags": [
+            "课程设计",
+            "工程项目",
+            "跨学科协作"
+        ],
+        "create_time": "2025-02-01",
+        "description": "该项目负责人很懒没有写描述！",
+        "channelId": "0000000001"
+    }
+]

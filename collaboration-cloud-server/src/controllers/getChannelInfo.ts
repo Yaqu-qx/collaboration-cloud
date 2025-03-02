@@ -42,7 +42,7 @@ const getChannelInfo = (req: Request, res: Response) => {
             "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar%2Fgroup-avatar%2Fgroup_avatar5.png",
         },
       ],
-      messages: [],
+      fileList: ['myfile', 'document', '协作记录', '协作文件1', '协作文件2'],
       createdAt: "2025年1月10日",
       createBy: "Alice",
     },

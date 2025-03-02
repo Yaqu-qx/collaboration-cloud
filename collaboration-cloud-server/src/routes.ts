@@ -14,6 +14,8 @@ import getChannelMessages from "./controllers/getChannelMessages";
 import addNewMessages from "./controllers/addNewMessages";
 import saveCollaborateFile from "./controllers/saveCollaborationFile";
 import openCollaborationFile from "./controllers/openCollaborationFile";
+import saveMyPlanning from "./controllers/saveMyPlanning";
+import openMyPlanning from "./controllers/openMyPlanning";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -42,4 +44,6 @@ export const attachPublicRoutes = (app: any): void => {
   app.post("/addNewMessages", upload.array('files'), addNewMessages);
   app.post("/saveCollaborateFile", upload.single('file'), saveCollaborateFile);
   app.get("/openCollaborationFile", openCollaborationFile);
+  app.get("/openMyPlanning", openMyPlanning);
+  app.post("/saveMyPlanning", upload.single('file'), saveMyPlanning);
 };

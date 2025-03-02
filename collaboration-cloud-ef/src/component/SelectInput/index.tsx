@@ -11,6 +11,7 @@ type optionType = {
 };
 
 interface IProps {
+  value: string | string[];
   tagColor?: {
     [key: string]: string;
 };
@@ -25,6 +26,7 @@ interface IProps {
   faq?: string;
   width?: string;
   options?: optionType[];
+  onChange?: (value: string|string[]) => void; 
   onInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 type TagRender = SelectProps['tagRender'];
@@ -76,6 +78,7 @@ export default function SelectInput(props: IProps) {
         {props.required && <span style={{ color: "red" }}>*</span>}
       </p>
       <Select
+        value={props.value}
         maxCount={props.maxCount}
         notFoundContent={props?.notFoundNode}
         mode={props?.mode}
@@ -84,7 +87,7 @@ export default function SelectInput(props: IProps) {
         size="large"
         placeholder={props.placeholder}
         prefix={props.prefix}
-        onChange={props.onInputChange}
+        onChange={props.onChange}
         style={{ width: props.width }}
         filterOption={(input, option) =>
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())

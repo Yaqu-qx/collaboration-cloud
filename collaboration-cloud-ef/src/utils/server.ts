@@ -149,3 +149,23 @@ export const openCollaborationFile = async (channelId: string, fileName: string)
     },
   }) 
 }
+
+export const openMyPlanning = async (userId: string) => {
+  return fetch(`http://localhost:4000/openMyPlanning?userId=${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }) 
+}
+
+export const saveMyPlanning = async (file: File, html: string, userId: string) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("content", html);
+  formData.append("userId", userId);
+  return fetch(`http://localhost:4000/saveMyPlanning`, {
+    method: "POST",
+    body: formData,
+  }) 
+}

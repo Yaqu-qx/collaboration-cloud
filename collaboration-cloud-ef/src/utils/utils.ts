@@ -60,3 +60,12 @@ export function formatTimestamp(timestamp: number): any {
     time: `${hour}:${minute}`,
   });
 }
+
+// 随机生成一个唯一的 id
+export const generateId = () => {
+  // 时间戳部分（13位）
+  const timestamp = Date.now().toString(36);
+  // 随机数部分（4位）
+  const randomStr = Math.random().toString(36).substr(2, 4);
+  return `${timestamp}_${randomStr}`.toUpperCase();
+};

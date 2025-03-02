@@ -1,4 +1,8 @@
 {
     "workbench.colorTheme": "Default Dark Modern",
-    "marscode.chatLanguage": "cn"
+    "marscode.chatLanguage": "cn",
+    "marscode.codeCompletionPro": {
+        "enableCodeCompletionPro": true
+    },
+    "marscode.enableInlineCommand": true
 }
