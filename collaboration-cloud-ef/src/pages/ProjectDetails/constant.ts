@@ -7,3 +7,11 @@ export const INTRODUCE_EXEPAMPLE = {
   "4. 数据驱动决策：通过大数据分析和机器学习模型，优化资源管理和环境保护策略，提高决策的科学性和效率。",
   goalsAndVision: "生态与科技融合创新项目将继续推动跨学科合作，探索更多创新性技术，推动生态环境保护和可持续发展的深入发展。未来，项目将加强与政府、企业和社区的合作，共同构建美好生态环境。",
 } 
+
+export enum TABS_KEY {
+  Project_Summery = '1',
+  Project_Tasks = '2',
+  Project_Channel = '3',
+  Project_Files = '4',
+  Project_Calendar = '5',
+}

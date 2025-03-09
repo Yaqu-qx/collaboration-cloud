@@ -3,6 +3,7 @@ import getProjects from "./controllers/getProjects";
 import getGroups from "./controllers/getGroups";
 import getSummuryDatas from "./controllers/getSummuryDatas";
 import multer from "multer";
+import express from "express";
 import filesUpLoad from "./controllers/filesUpLoad";
 import getFilesInfo from "./controllers/getFilesInfo";
 import filesDownload from "./controllers/filesDownload";
@@ -16,6 +17,10 @@ import saveCollaborateFile from "./controllers/saveCollaborationFile";
 import openCollaborationFile from "./controllers/openCollaborationFile";
 import saveMyPlanning from "./controllers/saveMyPlanning";
 import openMyPlanning from "./controllers/openMyPlanning";
+import deleteFilefold from "./controllers/deleteFilefold";
+
+import deleteFiles from "./controllers/deleteFiles";
+import renameFile from "./controllers/renameFile";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -46,4 +51,9 @@ export const attachPublicRoutes = (app: any): void => {
   app.get("/openCollaborationFile", openCollaborationFile);
   app.get("/openMyPlanning", openMyPlanning);
   app.post("/saveMyPlanning", upload.single('file'), saveMyPlanning);
+
+  app.use(express.json()); 
+  app.post("/deleteFiles", deleteFiles);
+  app.post("/deleteFilefold", deleteFilefold);
+  app.post("/renameFile", renameFile);
 };

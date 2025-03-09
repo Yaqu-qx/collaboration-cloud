@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
-import IconButton from "@mui/material/IconButton";
+import ApplyJoin from "../ApplyJoin";
 import {
   Button,
   Input,
@@ -26,20 +26,17 @@ import {
   SearchOutlined,
   MinusCircleTwoTone,
   PushpinOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
 import { projectInfo } from "@/typings/api/project_info";
 import { fetchProjects, fetchProjectsByTags } from "@/utils/server";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import CreatePanel from "../CreatePanel";
 import { DataType } from "@/typings/type";
-import { getUserAccount, getUserName } from "@/utils/globalState";
-import applySuccessImg from "@/assets/application_success.png";
+import { getUserName } from "@/utils/globalState";
 
 type SearchProps = GetProps<typeof Input.Search>;
 
 const { Search } = Input;
-const { TextArea } = Input;
 const { SHOW_PARENT } = TreeSelect;
 
 type DataIndex = keyof DataType;
@@ -351,25 +348,6 @@ export default function ItemCenter(props: IProps) {
     setSearchValue(value);
   };
 
-  // 提交申请
-  const handleApplySubmit = () => {
-    console.log("apply submit");
-    // TODO: 文本框内容判断
-
-    // TODO: 发送申请请求
-
-    setApplyText("");
-    setApplyProject(undefined);
-    setApplyFinish(true);
-  };
-
-  const handleFinishApply = () => {
-    setApplyText("");
-    setApplyProject(undefined);
-    setApplyPanelVisible(false);
-    setApplyFinish(false);
-  };
-
   return (
     <>
       {contextHolder}
@@ -438,70 +416,10 @@ export default function ItemCenter(props: IProps) {
       )}
 
       {applyPanelVisible && (
-        <div className="apply-panel-mask">
-          {!applyFinish ? (
-            <div className="apply-to-join">
-              <IconButton
-                aria-label="close"
-                size="small"
-                onClick={handleFinishApply}
-                className="apply-close-btn"
-              >
-                <CloseOutlined />
-              </IconButton>
-              <p className="title">申请加入</p>
-              <div className="apply-info">
-                <div className="apply-info-block">
-                  <p>申请人：{getUserName() ?? ""} </p>
-                  <p>申请人学号：{getUserAccount() ?? ""} </p>
-                </div>
-                <div className="apply-info-block">
-                  <p>项目名称：{applyProject?.name ?? ""} </p>
-                  <p>项目组：{applyProject?.group ?? ""} </p>
-                  <p>主指导老师：{applyProject?.teacher ?? ""} </p>
-                </div>
-              </div>
-              <div className="apply-reason">
-                <p>
-                  申请理由 <span style={{ color: "red" }}>*</span>
-                </p>
-                <TextArea
-                  placeholder="请输入申请理由"
-                  allowClear
-                  onChange={handleApplyText}
-                  value={applyText}
-                  className="reason-input"
-                />
-                <p style={{ color: "#999" }}>
-                  申请后将向项目的项目管理人（主指导老师）发送申请通知，审核通过方可加入。
-                </p>
-              </div>
-              <button className="submit-btn" onClick={handleApplySubmit}>
-                提交申请
-              </button>
-            </div>
-          ) : (
-            <div className="apply-success-popup">
-              <IconButton
-                aria-label="close"
-                size="small"
-                onClick={handleFinishApply}
-                className="apply-close-btn"
-              >
-                <CloseOutlined />
-              </IconButton>
-              <img src={applySuccessImg} className="apply-success-img" />
-              <p className="apply-success-text"> 提交成功！待审核中... </p>
-              <Button
-                type="primary"
-                className="finish-btn"
-                onClick={handleFinishApply}
-              >
-                完成
-              </Button>
-            </div>
-          )}
-        </div>
+        <ApplyJoin
+          applyProject={applyProject}
+          onClose={() => setApplyPanelVisible(false)}
+        />
       )}
     </>
   );

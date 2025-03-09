@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import { projectInfo } from "@/typings/api/project_info";
-import projectInco from "@/assets/projectIcon.png";
-import { Button, Divider } from "antd";
+import projectIcon from "@/assets/projectIcon.png";
+import projectIconYl from "@/assets/project_yl.png";
+import { Button, Divider, Tooltip } from "antd";
 import ColoredTags from "@/component/ColoredTags";
 
 interface ProjectCardProps {
   projectInfo: projectInfo;
   isEnd: boolean;
+  isMenaged?: boolean;
 }
 
 export default function ProjectCard(props: ProjectCardProps) {
-  const { projectInfo, isEnd } = props;
+  const { projectInfo, isEnd, isMenaged } = props;
+  console.log('isM',isMenaged);
   const navigate = useNavigate();
 
   // 跳转详情页
@@ -31,6 +34,7 @@ export default function ProjectCard(props: ProjectCardProps) {
       create_time: "2022-01-01",
       description: "项目描述",
       channelId: "0000000001",
+      isManager: isMenaged,
     };
 
     navigate("/home/project-detail", { state: projectData });
@@ -39,8 +43,8 @@ export default function ProjectCard(props: ProjectCardProps) {
   return (
     <>
       <div className="project-content">
-        <img src={projectInco} alt="project-icon" className="project-icon" />
-
+      <Tooltip title={'黄色标注则为负责人'}><img src={isMenaged ? projectIconYl : projectIcon} alt="project-icon" className="project-icon" />
+      </Tooltip>
         <div className="main-info">
           <div className="top-line">
             <span>{projectInfo.project_name}</span>

@@ -71,7 +71,6 @@ export default function MyPlanning(props: Props) {
         .catch(() => {
           message.error("保存失败");
         });
-
       onClose();
     }
   };

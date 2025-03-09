@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./index.scss";
-import { Button, Row, Col, Input } from "antd";
+import { Button, Row, Col, Input, Tooltip } from "antd";
 import type { SearchProps } from "antd/lib/input";
 import { SnippetsOutlined } from "@ant-design/icons";
 import { projectInfo, groupInfo } from "@/typings/api/project_info";
@@ -20,32 +20,41 @@ import CreateGroup from "@/component/CreateGroup";
 const sortIcon: string[] = [sort, rise, decline];
 const { Search } = Input;
 const UserName = getUserName() ?? "Yaqu";
+const sortTip: string[] = ["当前默认排序", "当前按创建时间升序", "当前按创建时间降序"];
 
 export default function MyProjectGroup() {
   const [projectList, setProjectList] = useState([] as projectInfo[]);
-  const [groups, setGroups] = useState([] as groupInfo[]);
+  const [joinedGroups, setJoinedGroups] = useState([] as groupInfo[]);
+  const [managedGroups, setManagedGroups] = useState([] as groupInfo[]);
   const [projectInputValue, setProjectInputValue] = useState("");
-  const [groupInputValue, setGroupInputValue] = useState("");
-  const [sortType, setSortType] = useState(0);
+  const [joinedGroupInputValue, setJoinedGroupInputValue] = useState("");
+  const [managedGroupInputValue, setManagedGroupInputValue] = useState("");
+  const [sortType, setSortType] = useState(0); // 0: 默认排序 1: 升序 2: 降序
   const [loading, setLoading] = useState(true);
   const [openSchedule, setOpenSchedule] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
 
-  const [selectedGroups, setSelectedGroups] = useState(groups);
+  const [selectedJoinedGroups, setSelectedJoinedGroups] = useState(joinedGroups);
+  const [selectedManagedGroups, setSelectedManagedGroups] = useState(managedGroups);
   const [selectedProjects, setSelectedProjects] = useState(projectList);
 
   const handleOpenSchedule = () => {
     setOpenSchedule(true);
   };
 
-  const handleGroupSearch: SearchProps["onSearch"] = (value, _e, info) => {
+  const handleJoinedGroupSearch: SearchProps["onSearch"] = (value, _e, info) => {
     console.log(info?.source, value);
-    setGroupInputValue(value);
+    setJoinedGroupInputValue(value);
+    // todo 搜索项目组逻辑
+  };
+
+  const handleManagedGroupSearch: SearchProps["onSearch"] = (value, _e, info) => {
+setManagedGroupInputValue(value);
     // todo 搜索项目组逻辑
   };
 
   const handleGroupCreate = (newGroupInfo: groupInfo) => {
-    setGroups((prevGroups) => [...prevGroups, newGroupInfo]);
+    setManagedGroups((prevGroups) => [...prevGroups, newGroupInfo]);
   }
 
   const handleProjectSearch: SearchProps["onSearch"] = (value, _e, info) => {
@@ -79,7 +88,8 @@ export default function MyProjectGroup() {
       .then((response) => response.json())
       .then((data) => {
         console.log("group_data", data);
-        setGroups(data);
+        setJoinedGroups(data);
+        setManagedGroups(data.filter((group:any) => group.manager === UserName));
       })
       .catch((error) => {
         console.error(error);
@@ -98,27 +108,64 @@ export default function MyProjectGroup() {
     Promise.all([getGroups, getProjects]).then(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    const sorted = [...selectedProjects].sort((a, b) => {
+      if(sortType === 1) return a.create_time.localeCompare(b.create_time);
+      if(sortType === 2) return b.create_time.localeCompare(a.create_time);
+      return a.project_id.localeCompare(b.project_id);
+    });
+    setSelectedProjects(sorted);
+  }, [sortType]);
+
   const handleSortModeChange = () => {
     setSortType((sortType + 1) % 3);
     // todo 排序逻辑
   };
 
-  const handleDelete = (groupId: string) => {
-    const modifiedGroups = groups.filter((group) => group.group_id !== groupId);
-    setGroups(modifiedGroups);
+  const handleJoinedDelete = (groupId: string) => {
+    const modifiedGroups = joinedGroups.filter((group) => group.group_id !== groupId);
+    setJoinedGroups(modifiedGroups);
+    console.log('modifiedGroups', modifiedGroups);
+  }
+
+  const handleManagedDelete = (groupId: string) => {
+    const modifiedGroups = managedGroups.filter((group) => group.group_id!== groupId);
+    setManagedGroups(modifiedGroups);
     console.log('modifiedGroups', modifiedGroups);
   }
 
   useEffect(() => {
-    if(groupInputValue.trim() === "") {
-      setSelectedGroups(groups);
+    if(joinedGroupInputValue.trim() === "") {
+      setSelectedJoinedGroups(joinedGroups);
       return;
     }
-    const groupsDisply = groups.filter((group) => {
-      return group.group_name.includes(groupInputValue); 
+    const groupsDisply = joinedGroups.filter((group) => {
+      return group.group_name.includes(joinedGroupInputValue); 
     });
-    setSelectedGroups(groupsDisply);
-  }, [groupInputValue, groups]);
+    setSelectedJoinedGroups(groupsDisply);
+  }, [joinedGroupInputValue, joinedGroups]);
+
+  useEffect(() => {
+    if(managedGroupInputValue.trim() === "") {
+      setSelectedManagedGroups(managedGroups);
+      return;
+    }
+    const groupsDisply = managedGroups.filter((group) => {
+      return group.group_name.includes(managedGroupInputValue);
+    }); 
+    setSelectedManagedGroups(groupsDisply);
+  }, [managedGroupInputValue, managedGroups]);
+
+  useEffect(() => {
+    if(projectInputValue.trim() === "") {
+      setSelectedProjects(projectList);
+      return;
+    }
+    const projectsDisply = projectList.filter((project) => {
+      return project.project_name.includes(projectInputValue); 
+    });
+    setSelectedProjects(projectsDisply);
+  }, [projectList, projectInputValue])
 
   return (
     <>
@@ -154,15 +201,43 @@ export default function MyProjectGroup() {
               </div>
             </div>
 
-            <p className="title">项目组</p>
+            <p className="title">我参与的项目组</p>
             <div className="operation-bar">
               <Search
-                value={groupInputValue}
+                value={joinedGroupInputValue}
                 onChange={(e) => {
-                  setGroupInputValue(e.target.value);
+                  setJoinedGroupInputValue(e.target.value);
                 }}
                 placeholder="搜索项目组"
-                onSearch={handleGroupSearch}
+                onSearch={handleJoinedGroupSearch}
+                allowClear
+                className="project-search"
+              />
+              <Button type="primary" onClick={() => setShowCreateGroup(true)}>
+                创建项目组
+              </Button>
+            </div>
+            <Row gutter={[20, 24]} className="group-row">
+              {selectedJoinedGroups.map((group, index) => (
+                <Col
+                  span={6}
+                  key={`group-${index}-${group.group_id}`}
+                  className="group-col"
+                >
+                  <GroupCard group={group} onLeave={() => handleJoinedDelete(group.group_id)}  type={'joinedGroup'} />
+                </Col>
+              ))}
+            </Row>
+
+            <p className="title">我管理的项目组</p>
+            <div className="operation-bar">
+              <Search
+                value={managedGroupInputValue}
+                onChange={(e) => {
+                  setManagedGroupInputValue(e.target.value);
+                }}
+                placeholder="搜索项目组"
+                onSearch={handleManagedGroupSearch}
                 allowClear
                 className="project-search"
               />
@@ -172,13 +247,13 @@ export default function MyProjectGroup() {
             </div>
 
             <Row gutter={[20, 24]} className="group-row">
-              {selectedGroups.map((group, index) => (
+              {selectedManagedGroups.map((group, index) => (
                 <Col
                   span={6}
                   key={`group-${index}-${group.group_id}`}
                   className="group-col"
                 >
-                  <GroupCard group={group} onLeave={() => handleDelete(group.group_id)}/>
+                  <GroupCard group={group} onLeave={() => handleManagedDelete(group.group_id)} type={'managedGroup'} />
                 </Col>
               ))}
             </Row>
@@ -196,12 +271,15 @@ export default function MyProjectGroup() {
                   className="project-search"
                 />
 
-                <img
+                <Tooltip title={sortTip[sortType]}>
+                  <img
                   src={sortIcon[sortType]}
                   alt="排序"
                   onClick={handleSortModeChange}
                   className="sort-icon"
                 />
+                </Tooltip>
+                
               </div>
 
               <div className="project-list">
@@ -210,6 +288,7 @@ export default function MyProjectGroup() {
                     projectInfo={project}
                     key={`project-${project.project_id}`}
                     isEnd={index === selectedProjects.length - 1}
+                    isMenaged={project.teacher === UserName}
                   />
                 ))}
               </div>

@@ -40,3 +40,7 @@ export const getUserTelephone = (): string | undefined => {
 export const getUserId = (): string | undefined => {
   return globalUserInfo?.id;
 };
+
+export const getUserPassword = (): string | undefined => {
+  return globalUserInfo?.password;
+};

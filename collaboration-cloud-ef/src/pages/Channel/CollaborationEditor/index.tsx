@@ -16,6 +16,8 @@ import { Button, Tooltip, message, Modal } from "antd";
 import { saveCollaborateFile, openCollaborationFile } from "@/utils/server";
 import FileList from "./FileList";
 
+
+
 interface Props {
   channelId: string;
   fileList: string[];
@@ -36,26 +38,6 @@ export default function CollaborationEditor(props: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showFileList, setShowFileList] = useState(false);
-
-  // 新增文件选择处理函数
-  // const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-
-  //   // 读取文件内容
-  //   const reader = new FileReader();
-  //   reader.onload = (event) => {
-  //     const content = event.target?.result as string;
-  //     setHtml(content); // 更新编辑器内容
-  //     setCurrentFile(file);
-  //   };
-
-  //   if (file.type === "text/html") {
-  //     reader.readAsText(file);
-  //   } else {
-  //     alert("仅支持HTML文件");
-  //   }
-  // };
 
   const openFile = (fileName: string) => {
     openCollaborationFile(channelId, fileName + ".html")
@@ -285,7 +267,7 @@ export default function CollaborationEditor(props: Props) {
             onCreated={setEditor}
             onChange={(editor) => setHtml(editor.getHtml())}
             mode="default"
-            style={{ display: isFileOpened ? "block" : "none" }}
+            style={{ display: isFileOpened ? "block" : "none", zIndex: 100 }}
           />
         </>
       </div>

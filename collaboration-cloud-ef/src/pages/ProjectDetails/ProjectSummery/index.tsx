@@ -10,20 +10,22 @@ import wuguiIcon from "@/assets/wugui.png";
 import reportIcon from "@/assets/report.png";
 import ProjectIntroduce from "../ProjectIntroduce";
 import MembersIntroPanel from "../MembersIntroPanel";
-import { peopleInfoType } from "@/typings/type"
-
-
-const data = [
-  { type: "计划中", value: 27 },
-  { type: "新创建", value: 25 },
-  { type: "推进中", value: 18 },
-  { type: "已停滞", value: 15 },
-  { type: "已完成", value: 10 },
-];
+import { peopleInfoType } from "@/typings/type";
+import AddNewMember from "../MembersIntroPanel/AddNewMember";
+import { message } from "antd";
+// const data = [
+//   { type: "计划中", value: 27 },
+//   { type: "新创建", value: 25 },
+//   { type: "推进中", value: 18 },
+//   { type: "已停滞", value: 15 },
+//   { type: "已完成", value: 10 },
+// ];
 
 // 细节 工具说明、实时记录后端实现和localstorage缓存、跳转（消息、list）
 type IProps = {
   projectId: string;
+  onTaskList: (filter: any) => void;
+  isManager?: boolean;
 };
 
 export default function ProjectSummery(props: IProps) {
@@ -40,6 +42,7 @@ export default function ProjectSummery(props: IProps) {
   const [teachers, setTeachers] = useState<peopleInfoType[]>([]);
   const [members, setMembers] = useState<peopleInfoType[]>([]);
   const [recordContent, setRecordContent] = useState("");
+  const [inviteMember, setInviteMember] = useState(false);
 
   useEffect(() => {
     getProjectSummery(props.projectId)
@@ -74,8 +77,14 @@ export default function ProjectSummery(props: IProps) {
       });
   }, []);
 
+  const handleInvite = (members:string[]) => {
+    // 邀请成员逻辑
+    message.success('邀请成功!');
+  }
+
   return (
     <>
+      {inviteMember && <AddNewMember onClose={() => setInviteMember(false)} onInvite={handleInvite} />}
       {loading ? (
         <div className="position-correction">
           <Loading />
@@ -95,16 +104,30 @@ export default function ProjectSummery(props: IProps) {
             />
           </div>
 
-          <div className="first-part"> 
-            <ProjectIntroduce mainIntro={mainIntro} feature={feature} goalsAndVision={goalsAndVision} />
-            <MembersIntroPanel recordContent={recordContent} teachers={teachers} members={members}/>
+          <div className="first-part">
+            <ProjectIntroduce
+              mainIntro={mainIntro}
+              feature={feature}
+              goalsAndVision={goalsAndVision}
+              isManager={props.isManager}
+            />
+            <MembersIntroPanel
+              recordContent={recordContent}
+              teachers={teachers}
+              members={members}
+              onInvite={setInviteMember}
+            />
           </div>
-          
+
           <div className="chart-block">
-            <PieChartPanel />
+            <PieChartPanel
+              onTaskList={props.onTaskList}
+            />
             <ProgressPanel
               totalTasks={totTaskNum}
               progressInfos={progressInfo}
+              onTaskList={props.onTaskList}
+              onInvite={setInviteMember}
             />
           </div>
         </div>

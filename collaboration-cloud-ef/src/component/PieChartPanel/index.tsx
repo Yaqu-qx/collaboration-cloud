@@ -5,13 +5,15 @@ import { PIE_CHART_COLORS } from "./pieConstant";
 import { PlusSquareTwoTone } from "@ant-design/icons";
 
 const taskStatus = [
-  { label: "计划中", value: 2 },
-  { label: "新创建", value: 5 },
-  { label: "推进中", value: 8 },
+  { label: "计划中", value: 1 },
+  { label: "进行中", value: 4 },
+  { label: "已完成", value: 13 },
+  { label: "延期中", value: 7 },
   { label: "已停滞", value: 5 },
-  { label: "已完成", value: 10 },
   { label: "任务总计", value: 30 },
 ];
+
+const statusLabels = ["planning", "processing", "finished", "postponing", "stopped"];
 
 const centerDisplay = (index: number) => {
   const percentage =
@@ -33,19 +35,27 @@ const centerDisplay = (index: number) => {
   );
 };
 
-export default function PieChartPanel() {
+type Props = {
+  onTaskList: (filter: Record<string, any>) => void;
+};
+
+export default function PieChartPanel(props: Props) {
   const [data, setData] = useState(taskStatus);
   const [labelColors, setLabelColors] = useState(PIE_CHART_COLORS.unactive);
   const [selectedItem, setSelectedItem] = useState(
     (taskStatus.length - 1) as number
   );
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
-  const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   const displayIndex = hoveredItem !== null ? hoveredItem : selectedItem;
 
-  const handleItemClieck = (value: any) => {
-    console.log(value.dataIndex);
-    // todo 跳转到list详情页面
+  const handleItemClick = (value: any) => {
+    
+    const clickedLabel = statusLabels[value.dataIndex];
+    console.log("pie jeep", clickedLabel);
+    // 触发父组件标签切换
+    props.onTaskList({ 
+      status: clickedLabel, 
+    });
   };
 
   // 颜色加深跟谁hover选项
@@ -97,7 +107,7 @@ export default function PieChartPanel() {
           slotProps={{
             legend: { hidden: true },
           }}
-          onItemClick={(_, value) => handleItemClieck(value)}
+          onItemClick={(_, value) => handleItemClick(value)}
         />
         {centerDisplay(displayIndex)}
         <div className="pie-legend">

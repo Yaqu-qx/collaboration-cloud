@@ -17,7 +17,6 @@ import {
 import logOutIcon from "@/assets/logout.png";
 import IconButton from "@mui/material/IconButton";
 import { getChannelList } from "@/utils/server";
-import Channel from "@/pages/Channel";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -70,7 +69,7 @@ export default function Home() {
 
   const items: MenuItem[] = [
     getItem("项目中心", "0", <ProjectOutlined />),
-    getItem("我的项目组", "1", <UsergroupAddOutlined />),
+    getItem("我的项目空间", "1", <UsergroupAddOutlined />),
     getItem(
       "交流中心",
       "2",

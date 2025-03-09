@@ -4,14 +4,16 @@ import { groupInfo } from "@/typings/api/project_info";
 import { Avatar, Button, Tooltip, Modal } from "antd";
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import leaveGroupIcon from "@/assets/leaveGroup.png";
+import dismissGroupIcon from "@/assets/dismiss.png";
 
 interface Props {
   group: groupInfo;
   onLeave: () => void;
+  type?: "joinedGroup" | "managedGroup";
 }
 
 export default function GroupCard(props: Props) {
-  const { group, onLeave } = props;
+  const { group, onLeave, type } = props;
   const [openLeaveModal, setOpenLeaveModal] = useState(false);
 
   const handleLeave = () => {
@@ -22,7 +24,7 @@ export default function GroupCard(props: Props) {
   return (
     <>
       <Modal
-        title={"确认退出该项目组？"}
+        title={`确认${type === "joinedGroup" ? "退出" : "解散"}该项目组？`}
         centered
         open={openLeaveModal}
         onOk={handleLeave}
@@ -39,20 +41,27 @@ export default function GroupCard(props: Props) {
           />
           <div className="group-header-right">
             <div className="icon-container">
-              <img
-                src={leaveGroupIcon}
-                alt="leave-group"
-                className="leave-group-icon"
-                onClick={() => setOpenLeaveModal(true)}
-              />
+              <Tooltip
+                placement="topRight"
+                title={type === "managedGroup" ? "解散项目组" : "退出项目组"}
+              >
+                <img
+                  src={
+                    type === "managedGroup" ? dismissGroupIcon : leaveGroupIcon
+                  }
+                  alt="leave-group"
+                  className="leave-group-icon"
+                  onClick={() => setOpenLeaveModal(true)}
+                />{" "}
+              </Tooltip>
             </div>
 
-            <p>{props.group.group_name}</p>
+            <p>{group.group_name}</p>
           </div>
         </div>
 
         <div className="group-description">
-          {props.group.description ||
+          {group.description ||
             "props.group.description 这是一个xxx项目，负责人是xxx。主要研究方向是xxx这是一个xxx项目，负责人是xxx。主要研究方向是xxx这是一个xxx项目，负责人是xxx。主要研究方向是xxx这是一个xxx项目，负责人是xxx。主要研究方向是xxx这是一个xxx项目，负责人是xxx。主要研究方向是xxx这是一个xxx项目，负责人是xxx。主要研究方向是xxx"}
         </div>
         <Avatar.Group
@@ -63,6 +72,7 @@ export default function GroupCard(props: Props) {
               color: "#f56a00",
               backgroundColor: "#fde3cf",
               cursor: "pointer",
+              marginBottom: "1rem",
             },
             popover: { trigger: "click" },
           }}
@@ -80,9 +90,11 @@ export default function GroupCard(props: Props) {
             icon={<AntDesignOutlined />}
           />
         </Avatar.Group>
-        <Button type="dashed" className="more-details-btn">
-          ...
-        </Button>
+        {type === "managedGroup" && (
+          <Button type="dashed" className="more-details-btn">
+            ...
+          </Button>
+        )}
       </div>
     </>
   );

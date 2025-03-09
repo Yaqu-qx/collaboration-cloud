@@ -6,11 +6,15 @@ import { Chip, Avatar, colors } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import TextAreaPro from "../TextAreaPro";
+import AddNewMember from "./AddNewMember";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   teachers: peopleInfoType[];
   members: peopleInfoType[];
   recordContent: string;
+  onInvite: (value:boolean) => void;
 }
 
 const getAvatar = (avatar: string) => {
@@ -26,23 +30,22 @@ const chipStyle = {
 };
 
 export default function MembersIntroPanel(prop: IProps) {
-  const { teachers, members, recordContent } = prop;
+  const { teachers, members, recordContent, onInvite } = prop;
+  const navigate = useNavigate();
 
   const handleCommunicte = () => {
     console.log("handleCommunicte");
     // 跳转到聊天页面
   };
 
-  const handleChipClick = () => {
+  const handleChipClick = (name:string, avatar:string) => {
     console.log("handleChipClick");
     // 跳转到个人主页
-
+    navigate("/home/personal-center", { state: { name: name, avatarUrl: avatar, isOwner: false } });
   };
 
   const handleAddMember = () => {
-    console.log("handleAddMember");
-    // 跳转到邀请成员页面
-    
+    onInvite(true);
   };
 
   const getChip = (
@@ -59,7 +62,7 @@ export default function MembersIntroPanel(prop: IProps) {
         avatar={getAvatar(avatar)}
         label={name}
         onDelete={handleCommunicte}
-        onClick={handleChipClick}
+        onClick={() => handleChipClick(name, avatar)}
         deleteIcon={<ChatRoundedIcon />}
         color={color as any}
         sx={chipStyle}
@@ -68,9 +71,14 @@ export default function MembersIntroPanel(prop: IProps) {
   };
 
   return (
+    <>
     <div className="panel-container">
       <div className="record-board">
-        <TextAreaPro recordContent={recordContent} title="实时记录板" placeholder="实时记录todo、临时idea、备忘..." />
+        <TextAreaPro
+          recordContent={recordContent}
+          title="实时记录板"
+          placeholder="实时记录todo、临时idea、备忘..."
+        />
       </div>
       <div className="teacher-block">
         <p className="member-intro-title">指导老师</p>
@@ -103,5 +111,6 @@ export default function MembersIntroPanel(prop: IProps) {
         />
       </div>
     </div>
+    </>
   );
 }

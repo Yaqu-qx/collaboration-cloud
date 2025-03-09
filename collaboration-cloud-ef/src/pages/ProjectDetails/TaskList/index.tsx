@@ -1,9 +1,11 @@
+import React, { useEffect } from "react";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { EditableProTable } from "@ant-design/pro-components";
 import { useRef, useState } from "react";
 import { AutoComplete, message } from "antd";
 import avatarExample from "@/assets/avatarExample.png";
 import "./index.scss";
+import rawData from './defaultData.json';
 
 // import request from 'umi-request';
 export const waitTimePromise = async (time: number = 100) => {
@@ -33,56 +35,15 @@ type TaskItem = {
   children?: TaskItem[];
 };
 
-const defaultData: TaskItem[] = [
-  {
-    id: 624748504,
-    title: "调研与分析",
-    readonly: "调研与分析",
-    decs: "调研市场，分析竞品，制定方案...",
-    responsisbleAvatar: avatarExample,
-    responsisbleName: "Amily",
-    state: "todo",
-    due_to_finish: "2025-09-01",
-    created_at: "2025-03-01",
-    update_at: "2025-09-01",
-  },
-  {
-    id: 624691229,
-    title: "收集数据",
-    readonly: "收集数据",
-    decs: "在网上查阅收集相关的数据，包括现有系统分析报告、现有系统技术难点、shiro权限配置等",
-    responsisbleAvatar: avatarExample,
-    responsisbleName: "Amily",
-    state: "processing",
-    due_to_finish: "2025-03-01",
-    created_at: "2025-01-01",
-    update_at: "2025-01-01",
-  },
-  {
-    id: 624271229,
-    title: "技术方案设计",
-    readonly: "技术方案设计",
-    decs: "分析数据，制定技术方案，包括技术选型、架构设计、技术实现等",
-    responsisbleAvatar: avatarExample,
-    responsisbleName: "John",
-    state: "finished",
-    due_to_finish: "2025-03-01",
-    created_at: "2025-01-01",
-    update_at: "2025-01-01",
-  },
-  {
-    id: 624270000,
-    title: "制作ppt",
-    readonly: "制作ppt",
-    decs: "制作答辩ppt，包括产品介绍、功能介绍、技术架构、用户体验等",
-    responsisbleAvatar: avatarExample,
-    responsisbleName: "John",
-    state: "postponing",
-    due_to_finish: "2025-03-01",
-    created_at: "2025-01-01",
-    update_at: "2025-01-01",
-  },
-];
+type Iprops = {
+  filter?: {
+    status?: string;
+    personName?: string;
+  };
+  isManager?: boolean;
+}
+
+let defaultData: TaskItem[] = rawData.defaultData as TaskItem[];
 
 const options = [
   { value: "Amily", label: "Amily", avatar: avatarExample },
@@ -134,27 +95,32 @@ const personRenderFormItem = (
   );
 };
 
-export default function TaskList() {
+export default function TaskList(props: Iprops) {
+  const { filter, isManager } = props;
   const actionRef = useRef<ActionType>(null);
   const [dataSource, setDataSource] = useState<TaskItem[]>(defaultData);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchTitleText, setSearchTitleText] = useState(""); // 搜索框文本状态
 
-  // 过滤数据的逻辑
-  const handleSearch = (value: string) => {
-    setSearchTitleText(value);
-    if (!value) {
-      setDataSource(defaultData); // 如果搜索框为空，重置为默认数据
-    } else {
-      const filteredData = defaultData.filter((item) =>
-        Object.values(item).some((field) =>
-          field.toString().toLowerCase().includes(value.toLowerCase())
-        )
+  useEffect(() => {
+    let filteredData = [...defaultData];
+    console.log("filter: ", filter);
+    
+    // 应用外部传入的filter
+    if (filter?.status) {
+      filteredData = filteredData.filter(item => 
+        item.state?.toLowerCase() === filter.status?.toLowerCase()
       );
-      setDataSource(filteredData);
     }
-  };
+
+    if (filter?.personName) {
+      filteredData = filteredData.filter(item => 
+        item.responsisbleName.toLowerCase() === filter.personName?.toLowerCase()
+      );
+    }
+    
+    setDataSource(filteredData);
+  }, [filter]);
 
   const handleReload = () => {
     setIsLoading(true);
@@ -211,16 +177,16 @@ export default function TaskList() {
       key: "state",
       dataIndex: "state",
       filters: [
-        { text: "TODO", value: "TODO" },
+        { text: "计划中", value: "planning" },
         { text: "进行中", value: "processing" },
         { text: "已完成", value: "finished" },
         { text: "延期中", value: "postponing" },
-        { text: "已终止", value: "stopped" },
+        { text: "已停滞", value: "stopped" },
       ],
       onFilter: (value, record) => record.state === value,
       valueType: "select",
       valueEnum: {
-        todo: { text: "TODO", status: "Default" },
+        planning: { text: "计划中", status: "Default" },
         processing: {
           text: "进行中",
           status: "Processing",
@@ -234,7 +200,7 @@ export default function TaskList() {
           status: "Warning",
         },
         stopped: {
-          text: "已终止",
+          text: "已停滞",
           status: "Error",
         },
       },
@@ -297,7 +263,7 @@ export default function TaskList() {
       align: "center",
       width: 150,
       render: (text, record, _, action) => (
-        <div className="action-buttons">
+        isManager && <div className="action-buttons">
           <a
             key="editable"
             onClick={() => {
@@ -322,6 +288,7 @@ export default function TaskList() {
 
   return (
     <EditableProTable<TaskItem>
+    scroll={{ y: 400, x: 1500 }}
       columns={columns}
       actionRef={actionRef}
       defaultValue={defaultData}
@@ -368,7 +335,7 @@ export default function TaskList() {
           console.log("value: ", value);
         },
       }}
-      recordCreatorProps={{
+      recordCreatorProps={isManager ? {
         position: "bottom", // 可以设置为 'top' 或 'bottom'
         record: () => ({
           id: Date.now(),
@@ -381,7 +348,7 @@ export default function TaskList() {
           update_at: new Date().toISOString(),
           created_at: new Date().toISOString(),
         }), // 初始化新行数据
-      }}
+      } : false}
       rowKey="id"
       search={{
         labelWidth: "auto",

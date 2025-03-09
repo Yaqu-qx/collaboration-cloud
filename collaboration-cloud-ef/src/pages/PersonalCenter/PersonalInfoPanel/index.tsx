@@ -84,7 +84,8 @@ const getItem = (
   title: string,
   info: infoItemType,
   editable: boolean,
-  updateInfo: (value: infoItemType) => void
+  updateInfo: (value: infoItemType) => void,
+  isOwner: boolean
 ) => {
   const { value, visiableMode } = info;
   const items: MenuProps["items"] = getMenu(value, updateInfo);
@@ -93,29 +94,25 @@ const getItem = (
     <div className="personal-info-item">
       <img src={icon} alt={title} className="personal-info-item-icon" />
       <span>{title}</span>
-      {editable ? (
+      {editable && isOwner ? (
         <>
           <Paragraph
             style={{ marginLeft: "2rem" }}
-            editable={{
-              onChange: (newValue: string) =>
-                updateInfo({ value: newValue, visiableMode }),
-            }}
+            editable={
+              isOwner
+                ? {
+                    onChange: (newValue: string) =>
+                      updateInfo({ value: newValue, visiableMode }),
+                  }
+                : false
+            }
           >
             {value}
           </Paragraph>
           <Dropdown menu={{ items }}>{Visiable[visiableMode]}</Dropdown>
         </>
       ) : (
-        <>
-          <span style={{ marginLeft: "2rem" }}>{value}</span>
-          <div style={{ marginLeft: "auto", color: "#ccc" }}>
-            <GlobalOutlined />
-            <span style={{ marginLeft: "0.5rem", fontSize: "0.8rem" }}>
-              所有人
-            </span>
-          </div>
-        </>
+        uVisiable()
       )}
     </div>
   );
@@ -130,7 +127,8 @@ const getContactItem = (
   setIsEdit: (value: boolean) => void,
   onChange: (value: string) => void,
   handleUpdate: () => void,
-  setVisiableMode: (value: infoItemType) => void
+  setVisiableMode: (value: infoItemType) => void,
+  isOwner: boolean
 ) => {
   const isPhoneNum = title === "手机号:";
   const contantItems: MenuProps["items"] = getMenu(info.value, setVisiableMode);
@@ -158,25 +156,41 @@ const getContactItem = (
       ) : (
         <>
           <span style={{ marginLeft: "2rem" }}>{info.value}</span>
-          <Button
-            variant="text"
-            className="edit-btn"
-            onClick={() => {
-              setIsEdit(true);
-            }}
-          >
-            {isPhoneNum ? "换绑" : "编辑"}
-          </Button>
+          {isOwner && (
+            <Button
+              variant="text"
+              className="edit-btn"
+              onClick={() => {
+                setIsEdit(true);
+              }}
+            >
+              {isPhoneNum ? "换绑" : "编辑"}
+            </Button>
+          )}
         </>
       )}
-      <Dropdown menu={{ items: contantItems }}>
-        {Visiable[info.visiableMode]}
-      </Dropdown>
+      {isOwner ? (
+        <Dropdown menu={{ items: contantItems }}>
+          {Visiable[info.visiableMode]}
+        </Dropdown>
+      ) : (
+        uVisiable()
+      )}
     </div>
   );
 };
 
-export default function PersonalInfoPanel() {
+const uVisiable = () => {
+  return (
+    <div style={{ marginLeft: "auto", color: "#ccc" }}>
+      <GlobalOutlined />
+      <span style={{ marginLeft: "0.5rem", fontSize: "0.8rem" }}>所有人</span>
+    </div>
+  );
+};
+
+export default function PersonalInfoPanel(props: { isOwner: boolean }) {
+  const { isOwner } = props;
   const [name, setName] = useState({} as infoItemType);
   const [nickname, setNickname] = useState({} as infoItemType);
   const [account, setAccount] = useState({} as infoItemType);
@@ -245,6 +259,7 @@ export default function PersonalInfoPanel() {
 
   useEffect(() => {
     // TODO: get personal info from server
+    setName({ value: "张三", visiableMode: 0 });
     setNickname({ value: "Yaqu", visiableMode: 0 });
     setAccount({ value: "1701010101", visiableMode: 0 });
     setClassId({ value: "1701", visiableMode: 0 });
@@ -281,16 +296,16 @@ export default function PersonalInfoPanel() {
               <InfoCircleFilled style={{ marginLeft: "0.5rem" }} />
             </Tooltip>
           </div>
-          {getItem(nameIcon, "姓名:", name, false, setName)}
-          {getItem(accountIcon, "学号:", account, false, setAccount)}
-          {getItem(nicknameIcon, "昵称:", nickname, true, setNickname)}
-          {getItem(genderIcon, "性别:", gender, true, setGender)}
-          {getItem(classIdIcon, "班级:", classId, true, setClassId)}
-          {getItem(homeTownIcon, "家乡:", homeTown, true, setHomeTown)}
+          {getItem(nameIcon, "姓名:", name, false, setName, isOwner)}
+          {getItem(accountIcon, "账号:", account, false, setAccount, isOwner)}
+          {getItem(nicknameIcon, "昵称:", nickname, true, setNickname, isOwner)}
+          {getItem(genderIcon, "性别:", gender, true, setGender, isOwner)}
+          {getItem(classIdIcon, "班级:", classId, true, setClassId, isOwner)}
+          {getItem(homeTownIcon, "家乡:", homeTown, true, setHomeTown, isOwner)}
           <div className="personal-info-item">
             <img src={calendarIcon} className="personal-info-item-icon" />
             <span>{"出生日期:"}</span>
-            {birthdayEdit ? (
+            {birthdayEdit && isOwner ? (
               <>
                 <DatePicker
                   onChange={(date) => {
@@ -320,9 +335,13 @@ export default function PersonalInfoPanel() {
                 {birthday.value}
               </span>
             )}
-            <Dropdown menu={{ items: birthdayItems }}>
-              {Visiable[birthday.visiableMode]}
-            </Dropdown>
+            {isOwner ? (
+              <Dropdown menu={{ items: birthdayItems }}>
+                {Visiable[birthday.visiableMode]}
+              </Dropdown>
+            ) : (
+              uVisiable()
+            )}
           </div>
         </div>
       </div>
@@ -341,7 +360,8 @@ export default function PersonalInfoPanel() {
             handlePhoneUpdate,
             () => null,
             () => null,
-            setPhoneNum
+            setPhoneNum,
+            isOwner
           )}
           {getContactItem(
             emailIcon,
@@ -352,7 +372,8 @@ export default function PersonalInfoPanel() {
             setIsEmailEdit,
             setTempEmail,
             handleEmailUpdate,
-            setEmail
+            setEmail,
+            isOwner
           )}
           {getContactItem(
             wechatIcon,
@@ -363,7 +384,8 @@ export default function PersonalInfoPanel() {
             setIsWechatEdit,
             setTempWechat,
             handleWechatUpdate,
-            setWechat
+            setWechat,
+            isOwner
           )}
           {getContactItem(
             blogIcon,
@@ -374,7 +396,8 @@ export default function PersonalInfoPanel() {
             setIsBlogEdit,
             setTempBlog,
             handleBlogUpdate,
-            setBlog
+            setBlog,
+            isOwner
           )}
           {getContactItem(
             githubIcon,
@@ -385,7 +408,8 @@ export default function PersonalInfoPanel() {
             setIsGithubEdit,
             setTempGithub,
             handleGithubUpdate,
-            setGithub
+            setGithub,
+            isOwner
           )}
         </div>
       </div>

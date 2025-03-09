@@ -19,6 +19,7 @@ interface IProps {
   mainIntro: string;
   feature: string;
   goalsAndVision: string;
+  isManager?: boolean;
 }
 
 export default function ProjectIntroduce(props: IProps) {
@@ -71,7 +72,7 @@ export default function ProjectIntroduce(props: IProps) {
           >
             {displayStrToList(mainIntro)}
           </Paragraph>
-          <EditTwoTone onClick={() => setEditMainIntro(true)} />
+          {props.isManager && <EditTwoTone onClick={() => setEditMainIntro(true)} /> }
         </div>
       )}
       <Badge status="processing" text="项目特点" className="badge" />
@@ -94,7 +95,7 @@ export default function ProjectIntroduce(props: IProps) {
           >
             {displayStrToList(feature)}
           </Paragraph>
-          <EditTwoTone onClick={() => setEditFeature(true)} />
+          {props.isManager && <EditTwoTone onClick={() => setEditFeature(true)} /> }
         </div>
       )}
       <Badge status="processing" text="目标与展望" className="badge" />
@@ -113,7 +114,7 @@ export default function ProjectIntroduce(props: IProps) {
           <Paragraph className="goalsAndVision-text" ellipsis={ellipsisProps}>
             {displayStrToList(goalsAndVision)}
           </Paragraph>
-          <EditTwoTone onClick={() => setEditGoalsAndVision(true)} />
+          {props.isManager && <EditTwoTone onClick={() => setEditGoalsAndVision(true)} /> }
         </div>
       )}
     </div>

@@ -169,3 +169,23 @@ export const saveMyPlanning = async (file: File, html: string, userId: string) =
     body: formData,
   }) 
 }
+
+export const deleteFiles = async (key: string) => {
+  return fetch(`http://localhost:4000/deleteFiles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ key }), 
+  });
+}
+
+export const deleteFolder = async (prefix: string) => {
+  return fetch(`http://localhost:4000/deleteFilefold`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prefix }),
+  });
+}

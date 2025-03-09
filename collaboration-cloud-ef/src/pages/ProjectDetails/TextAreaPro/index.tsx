@@ -1,16 +1,18 @@
-import * as React from 'react';
-import Box from '@mui/joy/Box';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Textarea from '@mui/joy/Textarea';
-import IconButton from '@mui/joy/IconButton';
-import Menu from '@mui/joy/Menu';
-import MenuItem from '@mui/joy/MenuItem';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import FormatBold from '@mui/icons-material/FormatBold';
-import FormatItalic from '@mui/icons-material/FormatItalic';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Check from '@mui/icons-material/Check';
+import React, { useState } from "react";
+import Box from "@mui/joy/Box";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Textarea from "@mui/joy/Textarea";
+import IconButton from "@mui/joy/IconButton";
+import Menu from "@mui/joy/Menu";
+import MenuItem from "@mui/joy/MenuItem";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import FormatBold from "@mui/icons-material/FormatBold";
+import FormatItalic from "@mui/icons-material/FormatItalic";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import Check from "@mui/icons-material/Check";
+import RealRecord from "@/pages/ProjectDetails/ProjectSummery/realRecord.json";
+let realRecord: string = RealRecord.data as string;
 
 interface IProps {
   title: string;
@@ -20,30 +22,38 @@ interface IProps {
 
 export default function TextareaPro(pros: IProps) {
   const { title, placeholder, recordContent } = pros;
-  const [italic, setItalic] = React.useState(false);
-  const [fontWeight, setFontWeight] = React.useState('normal');
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [textValue, setTextValue] = React.useState(recordContent);
+  const [italic, setItalic] = useState(false);
+  const [fontWeight, setFontWeight] = useState("normal");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [textValue, setTextValue] = useState(
+    localStorage.getItem("recordData") || ""
+  );
+
+  const handleBlur = (event: any) => {
+    const newValue = event.target.value;
+    setTextValue(newValue);
+    localStorage.setItem("recordData", newValue);
+  };
 
   return (
     <FormControl>
-      <FormLabel sx={{ mb: 1, fontWeight: 'bold' }}>{title}</FormLabel>
+      <FormLabel sx={{ mb: 1, fontWeight: "bold" }}>{title}</FormLabel>
       <Textarea
         placeholder={placeholder}
         minRows={3}
         maxRows={10} // 限制最大行数
         onChange={(event: any) => setTextValue(event.target.value)}
         value={textValue}
-        onBlur={(event: any) => setTextValue(event.target.value)}
+        onBlur={handleBlur}
         endDecorator={
           <Box
             sx={{
-              display: 'flex',
-              gap: 'var(--Textarea-paddingBlock)',
-              pt: 'var(--Textarea-paddingBlock)',
-              borderTop: '1px solid',
-              borderColor: 'divider',
-              flex: 'auto',
+              display: "flex",
+              gap: "var(--Textarea-paddingBlock)",
+              pt: "var(--Textarea-paddingBlock)",
+              borderTop: "1px solid",
+              borderColor: "divider",
+              flex: "auto",
             }}
           >
             <IconButton
@@ -60,9 +70,9 @@ export default function TextareaPro(pros: IProps) {
               onClose={() => setAnchorEl(null)}
               size="sm"
               placement="bottom-start"
-              sx={{ '--ListItemDecorator-size': '24px' }}
+              sx={{ "--ListItemDecorator-size": "24px" }}
             >
-              {['200', 'normal', 'bold'].map((weight) => (
+              {["200", "normal", "bold"].map((weight) => (
                 <MenuItem
                   key={weight}
                   selected={fontWeight === weight}
@@ -75,13 +85,13 @@ export default function TextareaPro(pros: IProps) {
                   <ListItemDecorator>
                     {fontWeight === weight && <Check fontSize="small" />}
                   </ListItemDecorator>
-                  {weight === '200' ? 'lighter' : weight}
+                  {weight === "200" ? "lighter" : weight}
                 </MenuItem>
               ))}
             </Menu>
             <IconButton
-              variant={italic ? 'soft' : 'plain'}
-              color={italic ? 'primary' : 'neutral'}
+              variant={italic ? "soft" : "plain"}
+              color={italic ? "primary" : "neutral"}
               aria-pressed={italic}
               onClick={() => setItalic((bool) => !bool)}
             >
@@ -97,7 +107,7 @@ export default function TextareaPro(pros: IProps) {
             // overflowY: 'scroll', // 当内容超出时，显示滚动条
             // resize: 'vertical', // 允许用户调整高度
           },
-          italic ? { fontStyle: 'italic' } : { fontStyle: 'initial' },
+          italic ? { fontStyle: "italic" } : { fontStyle: "initial" },
         ]}
       />
     </FormControl>

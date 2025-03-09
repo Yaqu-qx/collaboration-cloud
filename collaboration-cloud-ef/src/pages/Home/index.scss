@@ -44,6 +44,7 @@
 
   .ant-layout-sider-trigger {
     background-color: #7795d2;
+    z-index: 10;
   }
 }
 //body:#f2f5ffe3  head:#c7d6f4  siderbar:#e3edff trigger:#7795d2
@@ -144,4 +145,8 @@
 
 .ant-layout-sider .ant-menu-item, .ant-layout-sider .ant-menu-submenu-title {
   margin-top: 0.5rem;
+}
+
+:where(.css-dev-only-do-not-override-161f05s).ant-layout-sider .ant-layout-sider-trigger {
+  z-index: 0;
 }

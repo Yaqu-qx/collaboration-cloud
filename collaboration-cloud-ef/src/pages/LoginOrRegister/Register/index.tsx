@@ -22,6 +22,7 @@ import {
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Vcode from "react-vcode";
 import EndAdornment from "../EndAdornment";
+import { message } from "antd";
 
 interface Props {
   onLorRChange: (newLorR: string) => void;
@@ -77,7 +78,7 @@ export default function Register(props: Props) {
       />
       {/* 设置密码 */}
       <TextField
-        label="*请确认密码"
+        label="*请输入密码"
         id="outlined-start-adornment"
         sx={{ m: 0.5, width: "42ch" }}
         size="medium"
@@ -140,7 +141,8 @@ export default function Register(props: Props) {
       <Button 
         variant="contained" 
         className="login-button"
-        onClick={() => props.onDailogShowChange(true)}>
+        /* onClick={() => props.onDailogShowChange(true)}*/
+        onClick={() => message.success("注册成功！")}>
         注册
       </Button>
 

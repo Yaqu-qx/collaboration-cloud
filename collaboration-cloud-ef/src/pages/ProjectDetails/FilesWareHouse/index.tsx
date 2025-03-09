@@ -9,6 +9,9 @@ import {
   Upload,
   Dropdown,
   message,
+  Form,
+  Input,
+  Modal,
 } from "antd";
 import { IconButton } from "@mui/material";
 import type { Key } from "react";
@@ -38,6 +41,8 @@ import {
   downloadFiles,
   downloadFileFolder,
   getFilesPreview,
+  deleteFiles,
+  deleteFolder,
 } from "@/utils/server";
 import { getUserName } from "@/utils/globalState";
 import { formatSize } from "@/utils/utils";
@@ -65,6 +70,10 @@ export default function FilesWareHouse(props: IProps) {
   const [showView, setShowView] = useState(false);
   const { projectName } = props;
   const [isLoading, setIsLoading] = useState(true);
+
+  const [renameVisible, setRenameVisible] = useState(false);
+  const [currentFile, setCurrentFile] = useState<IFile | null>(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     // 获取项目下的文件列表
@@ -116,6 +125,57 @@ export default function FilesWareHouse(props: IProps) {
     setIsMultiple(!isMultiple);
   };
 
+  const refresh = () => {
+    fetchProjectFiles(breadcrumbItems.join("/"))
+      .then((res) => res.json())
+      .then((res) => {
+        setFiles(res.data || []);
+      });
+  };
+
+  const handleCopyClick = async (key: string, isFilefolder: boolean) => {
+    try {
+      // 获取下载链接
+      const downloadF = isFilefolder ? downloadFileFolder : downloadFiles;
+      const res = await downloadF(key);
+      const data = await res.json();
+
+      if (data?.data?.downloadUrl) {
+        // 复制到剪贴板
+        await navigator.clipboard.writeText(data.data.downloadUrl);
+        message.success("链接已复制到剪贴板");
+      }
+    } catch (error) {
+      message.error("复制失败，请重试");
+    }
+  };
+
+  const handleFileDelete = async (key: string, isFilefolder: boolean) => {
+    // const key = breadcrumbItems.join("/") + "/" + fileName;
+    // console.log("key", key);
+    if (isFilefolder) {
+      console.log("key", key);
+      try {
+        await deleteFolder(key);
+        message.success("文件夹删除成功");
+        // 刷新文件列表
+      } catch (error) {
+        message.error("文件夹删除失败");
+      }
+    } else {
+      deleteFiles(key)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("删除文件成功", res);
+          message.success("删除文件成功");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    refresh();
+  };
+
   const handleUploadOnChange = (info: any) => {
     const { status } = info.file;
     if (status !== "uploading") {
@@ -137,7 +197,9 @@ export default function FilesWareHouse(props: IProps) {
         isFilefolder: false,
       };
       console.log("newFile", newFile);
-      setFiles([...files, newFile]);
+      //setFiles([...files, newFile]);
+      // 更新文件列表
+      refresh();
     } else if (status === "error") {
       message.error(`${info.file.name} 文件上传失败`);
     }
@@ -153,6 +215,7 @@ export default function FilesWareHouse(props: IProps) {
         const downloadUrl = res.data.downloadUrl;
         console.log("downloadUrl", downloadUrl);
         window.open(downloadUrl);
+        return res;
       })
       .catch((err) => {
         console.log(err);
@@ -196,24 +259,91 @@ export default function FilesWareHouse(props: IProps) {
     }
   };
 
-  const extraItems = [
-    {
-      key: "copy",
-      label: "复制",
-      icon: <CopyOutlined />,
-      onClick: () => {
-        console.log("share");
-      },
-    },
+  const handleBatchDownload = async () => {
+    try {
+      const selectedFiles = files.filter((file) =>
+        selectedRowKeys.includes(file.id)
+      );
+
+      console.log("selectedFiles", selectedFiles);
+
+      // 批量下载
+      for (const file of selectedFiles) {
+        const res = file.isFilefolder
+          ? await downloadFileFolder(file.key)
+          : await downloadFiles(file.key);
+        const data = await res.json();
+        if (data?.data?.downloadUrl) {
+          // 创建隐藏iframe实现静默下载
+          const iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.src = data.data.downloadUrl;
+          document.body.appendChild(iframe);
+          setTimeout(() => document.body.removeChild(iframe), 5000);
+        }
+      }
+      message.success("已开始批量下载");
+    } catch (error) {
+      message.error("下载过程中发生错误");
+    }
+  };
+
+  const handleBatchDelete = async () => {
+    try {
+      const selectedFiles = files.filter((file) =>
+        selectedRowKeys.includes(file.id)
+      );
+      // 区分文件和文件夹删除
+      await Promise.all(
+        selectedFiles.map((file) =>
+          file.isFilefolder ? deleteFolder(file.key) : deleteFiles(file.key)
+        )
+      );
+      message.success("批量删除成功");
+      refresh();
+      setSelectedRowKeys([]);
+    } catch (error) {
+      message.error("删除过程中发生错误");
+    }
+  };
+
+  const extraItems = (record: IFile) => [
     {
       key: "delete",
       label: "删除",
       icon: <DeleteOutlined />,
       onClick: () => {
-        console.log("delete");
+        handleFileDelete(record.key, record.isFilefolder);
       },
     },
   ];
+
+  const handleRename = async (values: { newName: string }) => {
+    if (!currentFile) return;
+
+    try {
+      const res = await fetch(`http://localhost:4000/renameFile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          oldKey: currentFile.key,
+          newName: values.newName,
+          isFolder: currentFile.isFilefolder,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        message.success("重命名成功");
+        refresh();
+        setRenameVisible(false);
+      }
+    } catch (error) {
+      message.error("重命名失败");
+    }
+  };
 
   return (
     <>
@@ -352,13 +482,23 @@ export default function FilesWareHouse(props: IProps) {
                         <DownloadOutlined />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="分享">
-                      <IconButton>
-                        <ShareAltOutlined />
+                    <Tooltip title="复制">
+                      <IconButton
+                        onClick={() =>
+                          handleCopyClick(record.key, record.isFilefolder)
+                        }
+                      >
+                        <CopyOutlined />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="重命名">
-                      <IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setCurrentFile(record);
+                          setRenameVisible(true);
+                          form.setFieldsValue({ newName: record.title });
+                        }}
+                      >
                         <DriveFileRenameOutlineIcon />
                       </IconButton>
                     </Tooltip>
@@ -371,8 +511,11 @@ export default function FilesWareHouse(props: IProps) {
                 ),
               },
               extra: {
-                render: () => (
-                  <Dropdown trigger={["click"]} menu={{ items: extraItems }}>
+                render: (_: any, record: any) => (
+                  <Dropdown
+                    trigger={["click"]}
+                    menu={{ items: extraItems(record) }}
+                  >
                     <MoreOutlined className="files-more-icon" />
                   </Dropdown>
                 ),
@@ -384,17 +527,12 @@ export default function FilesWareHouse(props: IProps) {
                 <span>已选择 {selectedRowKeys.length} 项</span>
                 <div className="select-alert-actions">
                   <Tooltip title="下载">
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={handleBatchDownload}>
                       <DownloadOutlined />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="分享">
-                    <IconButton size="small">
-                      <ShareAltOutlined />
-                    </IconButton>
-                  </Tooltip>
                   <Tooltip title="删除">
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={handleBatchDelete}>
                       <DeleteOutlined />
                     </IconButton>
                   </Tooltip>
@@ -415,6 +553,21 @@ export default function FilesWareHouse(props: IProps) {
               </div>
             </div>
           )}
+          <Modal
+            title="重命名文件"
+            open={renameVisible}
+            onCancel={() => setRenameVisible(false)}
+            onOk={() => form.submit()}
+          >
+            <Form form={form} onFinish={handleRename}>
+              <Form.Item
+                name="newName"
+                rules={[{ required: true, message: "请输入新名称" }]}
+              >
+                <Input placeholder="输入新文件名" />
+              </Form.Item>
+            </Form>
+          </Modal>
         </>
       )}
     </>
