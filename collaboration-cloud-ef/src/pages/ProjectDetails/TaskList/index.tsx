@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { AutoComplete, message } from "antd";
 import avatarExample from "@/assets/avatarExample.png";
 import "./index.scss";
-import rawData from './defaultData.json';
+import rawData from "./defaultData.json";
 
 // import request from 'umi-request';
 export const waitTimePromise = async (time: number = 100) => {
@@ -41,7 +41,7 @@ type Iprops = {
     personName?: string;
   };
   isManager?: boolean;
-}
+};
 
 let defaultData: TaskItem[] = rawData.defaultData as TaskItem[];
 
@@ -96,7 +96,7 @@ const personRenderFormItem = (
 };
 
 export default function TaskList(props: Iprops) {
-  const { filter, isManager } = props;
+  const { filter: globalFilter, isManager } = props;
   const actionRef = useRef<ActionType>(null);
   const [dataSource, setDataSource] = useState<TaskItem[]>(defaultData);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
@@ -104,23 +104,26 @@ export default function TaskList(props: Iprops) {
 
   useEffect(() => {
     let filteredData = [...defaultData];
-    console.log("filter: ", filter);
-    
+    console.log("filter: ", globalFilter);
+
     // 应用外部传入的filter
-    if (filter?.status) {
-      filteredData = filteredData.filter(item => 
-        item.state?.toLowerCase() === filter.status?.toLowerCase()
+    if (globalFilter?.status) {
+      filteredData = filteredData.filter(
+        (item) =>
+          item.state?.toLowerCase() === globalFilter.status?.toLowerCase()
       );
     }
 
-    if (filter?.personName) {
-      filteredData = filteredData.filter(item => 
-        item.responsisbleName.toLowerCase() === filter.personName?.toLowerCase()
+    if (globalFilter?.personName) {
+      filteredData = filteredData.filter(
+        (item) =>
+          item.responsisbleName.toLowerCase() ===
+          globalFilter.personName?.toLowerCase()
       );
     }
-    
+
     setDataSource(filteredData);
-  }, [filter]);
+  }, [globalFilter]);
 
   const handleReload = () => {
     setIsLoading(true);
@@ -262,33 +265,36 @@ export default function TaskList(props: Iprops) {
       valueType: "option",
       align: "center",
       width: 150,
-      render: (text, record, _, action) => (
-        isManager && <div className="action-buttons">
-          <a
-            key="editable"
-            onClick={() => {
-              action?.startEditable?.(record.id);
-            }}
-          >
-            编辑
-          </a>
-          <a
-            key="delete"
-            onClick={() => {
-              setDataSource(dataSource.filter((item) => item.id !== record.id));
-              // 服务端数据更新
-            }}
-          >
-            删除
-          </a>
-        </div>
-      ),
+      render: (text, record, _, action) =>
+        isManager && (
+          <div className="action-buttons">
+            <a
+              key="editable"
+              onClick={() => {
+                action?.startEditable?.(record.id);
+              }}
+            >
+              编辑
+            </a>
+            <a
+              key="delete"
+              onClick={() => {
+                setDataSource(
+                  dataSource.filter((item) => item.id !== record.id)
+                );
+                // 服务端数据更新
+              }}
+            >
+              删除
+            </a>
+          </div>
+        ),
     },
   ];
 
   return (
     <EditableProTable<TaskItem>
-    scroll={{ y: 400, x: 1500 }}
+      scroll={{ y: 400, x: 1500 }}
       columns={columns}
       actionRef={actionRef}
       defaultValue={defaultData}
@@ -335,20 +341,24 @@ export default function TaskList(props: Iprops) {
           console.log("value: ", value);
         },
       }}
-      recordCreatorProps={isManager ? {
-        position: "bottom", // 可以设置为 'top' 或 'bottom'
-        record: () => ({
-          id: Date.now(),
-          title: "",
-          decs: "",
-          responsisbleAvatar: "",
-          responsisbleName: "",
-          state: "TODO",
-          due_to_finish: new Date().toISOString(),
-          update_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-        }), // 初始化新行数据
-      } : false}
+      recordCreatorProps={
+        isManager
+          ? {
+              position: "bottom", // 可以设置为 'top' 或 'bottom'
+              record: () => ({
+                id: Date.now(),
+                title: "",
+                decs: "",
+                responsisbleAvatar: "",
+                responsisbleName: "",
+                state: "TODO",
+                due_to_finish: new Date().toISOString(),
+                update_at: new Date().toISOString(),
+                created_at: new Date().toISOString(),
+              }), // 初始化新行数据
+            }
+          : false
+      }
       rowKey="id"
       search={{
         labelWidth: "auto",
@@ -364,9 +374,6 @@ export default function TaskList(props: Iprops) {
       dateFormatter="string"
       tableLayout="auto"
       request={async (params, sorter, filter) => {
-        // 确保在这里处理搜索参数
-        console.log("query params: ", "1:", params, "2:", sorter, "3:", filter);
-
         const filteredData = defaultData.filter((item) => {
           const created_at = new Date(item.created_at).getTime();
           const startTime = params.startTime
@@ -375,9 +382,11 @@ export default function TaskList(props: Iprops) {
           const endTime = params.endTime
             ? new Date(params.endTime).getTime()
             : Infinity;
-         
+
           return Object.keys(params).every((key) => {
-            if (!params[key]) return true; // 如果参数为空，跳过过滤
+            if (!params[key]) {
+              return true; // 如果参数为空，跳过过滤
+            }
             if (
               key === "responsisbleName" &&
               item.responsisbleName.includes(params[key])

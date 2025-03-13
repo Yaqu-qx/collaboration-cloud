@@ -19,10 +19,10 @@ import {
   Lock,
   LockTwoTone,
 } from "@mui/icons-material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Vcode from "react-vcode";
 import EndAdornment from "../EndAdornment";
 import { message } from "antd";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 interface Props {
   onLorRChange: (newLorR: string) => void;
@@ -32,6 +32,8 @@ interface Props {
 export default function Register(props: Props) {
   const [showPasswordF, setShowPasswordF] = useState(false);
   const [showPasswordS, setShowPasswordS] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(60);
 
   const handleClickShowPasswordF = () => {
     setShowPasswordF(!showPasswordF);
@@ -40,6 +42,20 @@ export default function Register(props: Props) {
   const handleClickShowPasswordS = () => {
     setShowPasswordS(!showPasswordS);
   };
+
+  const handleCodeSend = () => {
+    setLoading(true);
+    const timer = setInterval(() => {
+      setCount((prev) => {
+        if (prev === 1) {
+          clearInterval(timer);
+          setLoading(false);
+          return 60;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
 
   return (
     <div className="register-block">
@@ -91,7 +107,10 @@ export default function Register(props: Props) {
               </InputAdornment>
             ),
             endAdornment: (
-              <EndAdornment showPassword={showPasswordF} handleClickShowPassword={handleClickShowPasswordF} />
+              <EndAdornment
+                showPassword={showPasswordF}
+                handleClickShowPassword={handleClickShowPasswordF}
+              />
             ),
           },
         }}
@@ -111,7 +130,10 @@ export default function Register(props: Props) {
               </InputAdornment>
             ),
             endAdornment: (
-              <EndAdornment showPassword={showPasswordS} handleClickShowPassword={handleClickShowPasswordS} />
+              <EndAdornment
+                showPassword={showPasswordS}
+                handleClickShowPassword={handleClickShowPasswordS}
+              />
             ),
           },
         }}
@@ -126,7 +148,7 @@ export default function Register(props: Props) {
       </div>
 
       {/* 选择身份 */}
-      <div className="identity-selection">
+      {/* <div className="identity-selection">
         <span style={{ padding: "0.7rem 0" }}>您注册的身份是：</span>
         <RadioGroup
           row
@@ -137,12 +159,31 @@ export default function Register(props: Props) {
           <FormControlLabel value="female" control={<Radio />} label="学生" />
           <FormControlLabel value="male" control={<Radio />} label="教师" />
         </RadioGroup>
+      </div> */}
+      {/* 手机验证码 */}
+      <div className="phone-vcode-block">
+        <Lock />
+        <Input placeholder="请输入短信验证码" />
+        <LoadingButton
+          onClick={() => {
+            handleCodeSend();  // 调用倒计时方法
+            message.success("验证码已发送！");
+          }}
+          loading={loading}
+          loadingIndicator={count}  // 显示倒计时文字
+          variant="outlined"
+          sx={{ ml: "auto" }}
+          disabled={loading}  // 禁用按钮防止重复点击
+        >
+          发送验证码
+        </LoadingButton>
       </div>
-      <Button 
-        variant="contained" 
+      <Button
+        variant="contained"
         className="login-button"
         /* onClick={() => props.onDailogShowChange(true)}*/
-        onClick={() => message.success("注册成功！")}>
+        onClick={() => message.success("注册成功！")}
+      >
         注册
       </Button>
 

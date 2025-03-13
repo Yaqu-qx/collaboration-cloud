@@ -13,8 +13,8 @@ const twoColors: ProgressProps["strokeColor"] = {
 interface IProps {
   totalTasks: number;
   progressInfos: personalTasksInfo[];
-  onTaskList: (filter: Record<string, any>) => void;
-  onInvite: (value:boolean) => void;
+  onTaskList?: (filter: Record<string, any>) => void;
+  onInvite?: (value:boolean) => void;
 }
 
 const progressItem = (item: personalTasksInfo, totalTasks: number, onTaskList: any) => {
@@ -23,7 +23,7 @@ const progressItem = (item: personalTasksInfo, totalTasks: number, onTaskList: a
   
   const handleProgressClick = () => {
     // 跳转到任务列表
-    onTaskList({ 
+    onTaskList?.({ 
       personName: name, 
     });
   };
@@ -63,7 +63,7 @@ export default function ProgressPanel(props: IProps) {
       <div className="progress-list">
         {progressInfos.map((item, index) => progressItem(item, totalTasks, onTaskList))}
       </div>
-      <div className="add-member" onClick={() => onInvite(true)}>
+      <div className="add-member" onClick={() => onInvite?.(true)}>
         <UserAddOutlined className="add-icon" />
         <span>邀请新成员</span>
       </div>

@@ -8,7 +8,7 @@ const getChannelMessages = (req: Request, res: Response) => {
   // 读取消息数据
   const filePath = path.join(__dirname, "../data/channelMessages.json");
   const rawData = fs.readFileSync(filePath, "utf8");
-  const messageData = JSON.parse(rawData);
+  const messageData = JSON.parse(rawData)[channelId];
 
   res.status(200).json({
     message: "success",

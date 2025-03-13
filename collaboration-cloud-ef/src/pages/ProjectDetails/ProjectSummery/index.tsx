@@ -11,7 +11,7 @@ import reportIcon from "@/assets/report.png";
 import ProjectIntroduce from "../ProjectIntroduce";
 import MembersIntroPanel from "../MembersIntroPanel";
 import { peopleInfoType } from "@/typings/type";
-import AddNewMember from "../MembersIntroPanel/AddNewMember";
+import AddNewMember from "../../../component/AddNewMember";
 import { message } from "antd";
 // const data = [
 //   { type: "计划中", value: 27 },

@@ -1,0 +1,92 @@
+.mail-card {
+  padding: 0.5rem;
+  border: 1.5px solid #999;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease; // 新增过渡动画
+  position: relative; // 为z-index生效
+
+  &-time {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    font-size: 0.7rem;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0 0.3rem;
+    border-radius: 0.3rem;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    transform: translateY(-2px);
+    z-index: 1;
+    border-color: transparent;
+  }
+
+  &-head {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+
+    .mail-card-head-name {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #333;
+    }
+  }
+  .mail-card-img {
+    height: 2rem;
+    width: 2rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+  }
+
+  .mail-content {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mail-card-opration {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+  }
+
+  .mail-tag {
+    font-size: 0.6rem;
+    font-weight: bold;
+  }
+}
+
+.mail-detail-content {
+  height: 15rem;
+  overflow-y: auto;
+}
+
+.mail-divider {
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.mail-editor {
+  flex: 1;
+  margin-top: 1rem;
+  position: relative;
+  border: 1px solid #999; // 添加边框
+  border-radius: 0.5rem; // 圆角效果
+  overflow: hidden;
+}
+
+.toPeople-info-block {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-end;
+}

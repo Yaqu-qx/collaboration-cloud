@@ -60,3 +60,21 @@
     background-color: #b03519;
   }
 }
+
+.channel-member {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 
+              0 3px 6px -4px rgba(0, 0, 0, 0.12),
+              0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+  border: 1px solid #f0f0f0;
+  position: absolute;
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

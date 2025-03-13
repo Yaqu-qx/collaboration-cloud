@@ -36,7 +36,7 @@ const centerDisplay = (index: number) => {
 };
 
 type Props = {
-  onTaskList: (filter: Record<string, any>) => void;
+  onTaskList?: (filter: Record<string, any>) => void;
 };
 
 export default function PieChartPanel(props: Props) {
@@ -53,7 +53,7 @@ export default function PieChartPanel(props: Props) {
     const clickedLabel = statusLabels[value.dataIndex];
     console.log("pie jeep", clickedLabel);
     // 触发父组件标签切换
-    props.onTaskList({ 
+    props?.onTaskList?.({ 
       status: clickedLabel, 
     });
   };

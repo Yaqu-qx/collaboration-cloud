@@ -22,7 +22,7 @@ export const getGlobalUserInfo = (): UserInfo | null => {
 };
 
 export const getUserPortrait = (): string | undefined => {
-  return globalUserInfo?.portrait;
+  return globalUserInfo?.portrait ?? 'https://img2.woyaogexing.com/2022/10/21/f963f2d3645ca738!400x400.jpg';
 };
 
 export const getUserAccount = (): string | undefined => {

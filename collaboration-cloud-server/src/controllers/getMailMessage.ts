@@ -1,0 +1,102 @@
+import { Request, Response } from "express";
+
+const getMailMessage = async (req: Request, res: Response) => {
+  //   const groups: GroupInfo[] = [];
+  //   const result = await connection.query("SELECT * FROM groups");
+  res.status(200).json({
+    message: "获取成功",
+    success: true,
+    code: 200,
+    have_no_read: true,
+    data: [
+      {
+        messageId: "00000001",
+        fromName: "张三",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar2.png",
+        fromId: "20212123123",
+        content: "申请加入您负责的项目1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        description: "xxx同学您好，我对您负责的xxx项目很感兴趣，希望能够有机会加入项目跟团队一起协作开发！我是xxxx,能够xxxxx",
+        tagType: 0, // 0 审批 1 邀请 2 私信 3 已拒绝 4 已通过 5 已同意
+        time: "2021-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000002",
+        fromName: "李四",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar3.png",
+        fromId: "20212123123",
+        content: "诚邀您加入xxxx项目组！这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 1,
+        time: "2022-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000003",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "这是一条普通私信。。。。",
+        description: "这里是普通私信的内容。。。。这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 2,
+        time: "2023-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000004",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "这是一条普通私信。。。。",
+        description: "这里是普通私信的内容。。。。这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 2,
+        time: "2023-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000005",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "王二申请加入您负责的xxx项目",
+        description: "王二申请加入您负责的xxx项目。。。。这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 3,
+        time: "2023-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000006",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "王二申请加入您负责的xxx项目",
+        description: "王二申请加入您负责的xxx项目。。。这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 5,
+        time: "2023-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000007",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "王二邀请您加入xxx项目",
+        description: "王二邀请您加入xxx项目。。。。这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容",
+        tagType: 4,
+        time: "2023-09-01",
+        isRead: false,
+      },
+      {
+        messageId: "00000008",
+        fromName: "王二",
+        fromAvater: "https://cc-bucket-1338630949.cos.ap-shanghai.myqcloud.com/user_avatar/group-avatar/group_avatar1.png",
+        fromId: "20212123123",
+        content: "王二邀请您加入xxx项目。。。。",
+        description: "王二邀请您加入xxx项目王二邀请您加入xxx项目王二邀请您加入xxx项目王二邀请您加入xxx项目。。。。",
+        tagType: 6,
+        time: "2023-09-01",
+        isRead: false,
+      },
+    ],
+  });
+};
+export default getMailMessage;

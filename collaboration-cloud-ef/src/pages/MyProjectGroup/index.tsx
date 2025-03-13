@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./index.scss";
-import { Button, Row, Col, Input, Tooltip } from "antd";
+import { Button, Row, Col, Input, Tooltip, Modal } from "antd";
 import type { SearchProps } from "antd/lib/input";
 import { SnippetsOutlined } from "@ant-design/icons";
 import { projectInfo, groupInfo } from "@/typings/api/project_info";
@@ -16,6 +16,9 @@ import Loading from "@/component/Loading";
 import IconButton from "@mui/material/IconButton";
 import MyPlanning from "./MyPlanning";
 import CreateGroup from "@/component/CreateGroup";
+import GroupVisible from "./GroupVisible";
+import { personalTasksInfo } from "@/typings/type";
+import { group } from "console";
 
 const sortIcon: string[] = [sort, rise, decline];
 const { Search } = Input;
@@ -38,6 +41,8 @@ export default function MyProjectGroup() {
   const [selectedManagedGroups, setSelectedManagedGroups] = useState(managedGroups);
   const [selectedProjects, setSelectedProjects] = useState(projectList);
 
+  const [showPieChart, setShowPieChart] = useState(false);
+  const [selectedGroup, setSelecedGroup] = useState("");
   const handleOpenSchedule = () => {
     setOpenSchedule(true);
   };
@@ -49,7 +54,7 @@ export default function MyProjectGroup() {
   };
 
   const handleManagedGroupSearch: SearchProps["onSearch"] = (value, _e, info) => {
-setManagedGroupInputValue(value);
+    setManagedGroupInputValue(value);
     // todo 搜索项目组逻辑
   };
 
@@ -61,6 +66,11 @@ setManagedGroupInputValue(value);
     console.log(info?.source, value);
     setProjectInputValue(value);
     // todo 搜索项目逻辑
+  };
+
+  const handleMore = (groupId: string) => {
+    setSelecedGroup(groupId);
+    setShowPieChart(true);
   };
 
   const getGreeting = () => {
@@ -169,6 +179,23 @@ setManagedGroupInputValue(value);
 
   return (
     <>
+      <Modal 
+        title={`${selectedGroup}项目组`}
+        open={showPieChart}
+        onCancel={() => setShowPieChart(false)}
+        centered
+        footer={null}
+        width={900}
+        styles={
+          {
+            body: {
+              height: '27rem'
+            },
+          }
+        }
+      >
+        <GroupVisible groupId={selectedGroup} />
+      </Modal>
       {loading ? (
         <Loading />
       ) : (
@@ -253,7 +280,7 @@ setManagedGroupInputValue(value);
                   key={`group-${index}-${group.group_id}`}
                   className="group-col"
                 >
-                  <GroupCard group={group} onLeave={() => handleManagedDelete(group.group_id)} type={'managedGroup'} />
+                  <GroupCard group={group} onLeave={() => handleManagedDelete(group.group_id)} type={'managedGroup'} onMore={(groupId: string) => handleMore(groupId)} />
                 </Col>
               ))}
             </Row>

@@ -142,7 +142,8 @@ const addNewMessages = async (req: Request, res: Response) => {
   // 读取消息数据
   const filePath = path.join(__dirname, "../data/channelMessages.json");
   const rawData = fs.readFileSync(filePath, "utf8");
-  const messageData = JSON.parse(rawData) as MessageList[];
+  const allMessages = JSON.parse(rawData);
+  const messageData = allMessages[channelId] as MessageList[];
   // 上传文件并获取文件信息
   const fileInfoPromises = files.map((file) =>
     processFileUpload(channelId, file)
@@ -238,8 +239,13 @@ const addNewMessages = async (req: Request, res: Response) => {
 
   userMessageGroup.messages.push(...newMessages);
   console.log("newMessageList", newMessageList);
+  const updatedData = {
+    ...allMessages,
+    [channelId]: newMessageList // 只更新当前频道数据
+  };
+
   // 保存更新后的消息数据
-  fs.writeFileSync(filePath, JSON.stringify(newMessageList, null, 2));
+  fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2));
   res
     .status(200)
     .json({

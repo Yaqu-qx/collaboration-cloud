@@ -36,6 +36,14 @@ export type personalTasksInfo = {
   taskNum: number;
 };
 
+export type itemsProgressInfo = {
+  name: string;
+  avatar: string;
+  finishedNum: number;
+  taskNum: number;
+  manager: string;
+};
+
 export type peopleInfoType = {
   name: string;
   avatar: string;
@@ -57,6 +65,18 @@ export type IChannelState = {
   channelId?: string;
   projectId?: string;
 };
+
+export interface MailInfo {
+  messageId: string;
+  fromName: string;
+  fromAvater: string;
+  fromId: string;
+  content: string;
+  description?:string;
+  tagType: number; // 0 审批 1 邀请 2 私信
+  time: string;
+  isRead: boolean;
+}
 
 // export interface sendMessageInfo {
 //   userName: string;

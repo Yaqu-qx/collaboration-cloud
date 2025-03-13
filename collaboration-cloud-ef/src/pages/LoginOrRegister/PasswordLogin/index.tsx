@@ -139,7 +139,7 @@ export default function PassageLogin(props: Props) {
           onChange={handlePasswordChange}
         />
       </FormControl>
-      <div className="identity-selection">
+      {/* <div className="identity-selection">
         <span style={{ padding: "0.7rem 0" }}>请选择您的登录身份：</span>
         <FormControl variant="filled" sx={{ minWidth: 140 }}>
           <InputLabel id="demo-simple-select-filled-label">identity</InputLabel>
@@ -153,7 +153,7 @@ export default function PassageLogin(props: Props) {
             <MenuItem value={1}>教师</MenuItem>
           </Select>
         </FormControl>
-      </div>
+      </div> */}
 
       {/* 复选框和忘记密码 */}
       <div className="login-help">

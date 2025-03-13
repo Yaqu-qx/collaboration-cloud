@@ -9,9 +9,10 @@ import {
   Input,
 } from "@mui/material";
 import { Smartphone, GppGood, Lock } from "@mui/icons-material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Vcode from "react-vcode";
 import LoadingButton from '@mui/lab/LoadingButton';
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onLorRChange: (newLorR: string) => void,
@@ -20,20 +21,33 @@ interface Props {
 export default function PhoneLogin(props: Props) {
   const [identity, setIdentity] = useState("");
   const [loading, setLoading] = useState(false);
-  const [count, setCount] = useState('60');
+  const [count, setCount] = useState(60); // 改为数字类型
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  function handleClick() {
+  const Navigate = useNavigate(); // 路由导航
+  
+  // 新增倒计时处理方法
+  const handleCodeSend = () => {
     setLoading(true);
+    const timer = setInterval(() => {
+      setCount((prev) => {
+        if (prev === 1) {
+          clearInterval(timer);
+          setLoading(false);
+          return 60;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }
 
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setIdentity(event.target.value);
-    console.log("身份：",identity);
-  };
+  // const handleSelectChange = (event: SelectChangeEvent) => {
+  //   setIdentity(event.target.value);
+  //   console.log("身份：",identity);
+  // };
 
   const handleLoginSubmit = () => {
-
+    Navigate("/home", { state: { loginAlert: true } });
   }
 
   return (
@@ -63,17 +77,21 @@ export default function PhoneLogin(props: Props) {
         <Lock />
         <Input placeholder="请输入短信验证码" />
         <LoadingButton
-          onClick={handleClick}
+          onClick={() => {
+            handleCodeSend();  // 调用新的处理方法
+            message.success("验证码已发送！");
+          }}
           loading={loading}
-          loadingIndicator= {count}
+          loadingIndicator={count} // 修改显示格式
           variant="outlined"
           sx={{ ml: "auto" }}
+          disabled={loading} // 添加禁用状态
         >
           发送验证码
         </LoadingButton>
       </div>
 
-      <div className="identity-selection">
+      {/* <div className="identity-selection">
         <span style={{ padding: "0.7rem 0" }}>请选择您的登录身份：</span>
         <FormControl variant="filled" sx={{ minWidth: 140, ml: "auto" }}>
           <InputLabel id="demo-simple-select-filled-label">identity</InputLabel>
@@ -87,9 +105,10 @@ export default function PhoneLogin(props: Props) {
             <MenuItem value={20}>教师</MenuItem>
           </Select>
         </FormControl>
-      </div>
+      </div> */}
       <Button 
         variant="contained" 
+        onClick={handleLoginSubmit}
         className="login-button">
         登录
       </Button>

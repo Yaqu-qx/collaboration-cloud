@@ -189,3 +189,22 @@ export const deleteFolder = async (prefix: string) => {
     body: JSON.stringify({ prefix }),
   });
 }
+
+export const getMailMessage = async (userId: string) => {
+  return fetch(`http://localhost:4000/getMailMessage?userId=${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+}
+
+export const addChannel = async (channeInfo: any) => {
+  return fetch(`http://localhost:4000/addChannel`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ channeInfo }),
+  }).then(res => res.json());;
+}

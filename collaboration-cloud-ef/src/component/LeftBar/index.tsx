@@ -1,15 +1,23 @@
 import React, {useState} from "react";
 import "./index.scss";
-import { HomeFilled, SettingFilled, BellFilled, QuestionCircleFilled } from "@ant-design/icons";
+import { HomeFilled, SettingFilled, MailFilled, QuestionCircleFilled } from "@ant-design/icons";
 
-const iconList = [
+
+interface Iprops {
+  onDrawerOpen: () => void; 
+}
+
+export default function LeftBar(props:Iprops) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const iconList = [
   {
     name: "Home",
     icon: <HomeFilled className='menu-icon' id='Home'/>,
   },
   {
     name: "Bell",
-    icon: <BellFilled className='menu-icon' id='Bell'/>,
+    icon: <MailFilled className='menu-icon' id='Bell' onClick={props.onDrawerOpen}/>,
   },
   {
     name: "Settings",
@@ -21,8 +29,6 @@ const iconList = [
   }
 ];
 
-export default function LeftBar() {
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const handleOnClick = (index: number) => {
     setActiveIndex(index);

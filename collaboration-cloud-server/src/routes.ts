@@ -21,6 +21,9 @@ import deleteFilefold from "./controllers/deleteFilefold";
 
 import deleteFiles from "./controllers/deleteFiles";
 import renameFile from "./controllers/renameFile";
+import getMailMessage from "./controllers/getMailMessage";
+
+import addChannel from "./controllers/addChannel";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -56,4 +59,7 @@ export const attachPublicRoutes = (app: any): void => {
   app.post("/deleteFiles", deleteFiles);
   app.post("/deleteFilefold", deleteFilefold);
   app.post("/renameFile", renameFile);
+
+  app.get("/getMailMessage", getMailMessage);
+  app.post("/addChannel", addChannel);
 };

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import "./index.scss";
 import SelectInput from "@/component/SelectInput";
 import type { SelectProps } from "antd";
-import allMembers from "./allMembers.json";
+import allMembers from "@/constant/allMembers.json";
 import { Button } from "antd";
 import defaultAvater from "@/assets/defaultAvater.png";
 
 type Iprops = {
   onClose: () => void;
-  onInvite: (members: string[]) => void;
+  onInvite?: (members: string[]) => void;
 };
 
 const options: SelectProps["options"] = allMembers.map((member) => ({

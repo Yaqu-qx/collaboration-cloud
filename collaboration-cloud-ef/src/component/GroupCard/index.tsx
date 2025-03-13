@@ -10,10 +10,11 @@ interface Props {
   group: groupInfo;
   onLeave: () => void;
   type?: "joinedGroup" | "managedGroup";
+  onMore?: (groupId: string) => void;
 }
 
 export default function GroupCard(props: Props) {
-  const { group, onLeave, type } = props;
+  const { group, onLeave, type, onMore } = props;
   const [openLeaveModal, setOpenLeaveModal] = useState(false);
 
   const handleLeave = () => {
@@ -91,9 +92,18 @@ export default function GroupCard(props: Props) {
           />
         </Avatar.Group>
         {type === "managedGroup" && (
-          <Button type="dashed" className="more-details-btn">
-            ...
-          </Button>
+          <Tooltip title={"查看整组项目进展"}>
+            <Button
+              type="dashed"
+              className="more-details-btn"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                onMore?.(group.group_id);
+              }}
+            >
+              ...
+            </Button>
+          </Tooltip>
         )}
       </div>
     </>

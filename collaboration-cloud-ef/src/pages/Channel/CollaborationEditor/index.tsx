@@ -16,8 +16,6 @@ import { Button, Tooltip, message, Modal } from "antd";
 import { saveCollaborateFile, openCollaborationFile } from "@/utils/server";
 import FileList from "./FileList";
 
-
-
 interface Props {
   channelId: string;
   fileList: string[];
@@ -60,6 +58,17 @@ export default function CollaborationEditor(props: Props) {
   // 编辑器配置
   const editorConfig: Partial<IEditorConfig> = {
     placeholder: "请输入内容...",
+    scroll: true,
+    EXTEND_CONF: {
+      // 修复 Slate DOM 解析问题
+      useCreated: true,
+      // 添加空段落保护
+      hoverbarKeys: {
+        text: {
+          menuKeys: [],
+        },
+      },
+    },
   };
 
   const handleSave = async () => {
@@ -145,16 +154,6 @@ export default function CollaborationEditor(props: Props) {
           </Tooltip>
         )}
 
-        {/* {isFileOpened && (
-          <Button
-            icon={<SaveFilled />}
-            className="save-button"
-            onClick={handleSave}
-          >
-            保存
-          </Button>
-        )} */}
-
         {showToolbar && (
           <Toolbar
             key={tabMode}
@@ -185,34 +184,38 @@ export default function CollaborationEditor(props: Props) {
             </div>
 
             {/** 新建文件对话框 */}
-{         isModalOpen&&   <div
+            {isModalOpen && (
+              <div
                 className="start-modal-mask"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowFileList(false);
                 }}
               >
-            <Modal
-              title={"新文件名"}
-              open={isModalOpen}
-              onOk={handleCreateNewFile}
-              onCancel={handleCancel}
-              okText={"创建"}
-              cancelText={"取消"}
-              getContainer={() => document.querySelector(".not-open-default")!}
-              className="new-create-modal"
-              // centered
-              mask={false}
-            >
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="create-input"
-                placeholder="请输入文件名"
-              />
-            </Modal>
-            </div>}
+                <Modal
+                  title={"新文件名"}
+                  open={isModalOpen}
+                  onOk={handleCreateNewFile}
+                  onCancel={handleCancel}
+                  okText={"创建"}
+                  cancelText={"取消"}
+                  getContainer={() =>
+                    document.querySelector(".not-open-default")!
+                  }
+                  className="new-create-modal"
+                  // centered
+                  mask={false}
+                >
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    className="create-input"
+                    placeholder="请输入文件名"
+                  />
+                </Modal>
+              </div>
+            )}
 
             {/**文件列表对话框 */}
             {showFileList && (
@@ -247,10 +250,7 @@ export default function CollaborationEditor(props: Props) {
               >
                 保存
               </Button>
-              <Tooltip
-                title="关闭文件，系统将自动保存文件内容"
-                zIndex={999999}
-              >
+              <Tooltip title="关闭文件，系统将自动保存文件内容" zIndex={999999}>
                 <Button
                   type="text"
                   icon={<LogoutOutlined />}
@@ -260,6 +260,7 @@ export default function CollaborationEditor(props: Props) {
               </Tooltip>
             </div>
           </div>
+
           <Editor
             className="editor-content"
             defaultConfig={editorConfig}

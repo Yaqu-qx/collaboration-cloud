@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import defaultAvatar from "@/assets/defaultAvater.png";
 import "./index.scss";
 import { peopleInfoType } from "@/typings/type";
-import { Chip, Avatar, colors } from "@mui/material";
+import { Chip, Avatar } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+import EmailIcon from '@mui/icons-material/Email';
 import TextAreaPro from "../TextAreaPro";
-import AddNewMember from "./AddNewMember";
-import { message } from "antd";
+import MailSendPanel from "@/component/MailSendPanel";
 import { useNavigate } from "react-router-dom";
+import DefaultAvatar from "@/assets/avatarExample.png";
 
 interface IProps {
   teachers: peopleInfoType[];
@@ -32,10 +32,15 @@ const chipStyle = {
 export default function MembersIntroPanel(prop: IProps) {
   const { teachers, members, recordContent, onInvite } = prop;
   const navigate = useNavigate();
+  const [showSendPanel, setShowSendPanel] = useState(false); // 初始状态改为关闭
+  const [clickName, setClickName] = useState("");
+  const [clickAvatar, setClickAvatar] = useState("");
 
-  const handleCommunicte = () => {
+  const handleCommunicte = (name: string, avatar: string) => {
     console.log("handleCommunicte");
-    // 跳转到聊天页面
+    setShowSendPanel(true);
+    setClickName(name);
+    setClickAvatar(avatar ?? DefaultAvatar);
   };
 
   const handleChipClick = (name:string, avatar:string) => {
@@ -61,9 +66,9 @@ export default function MembersIntroPanel(prop: IProps) {
         variant="outlined"
         avatar={getAvatar(avatar)}
         label={name}
-        onDelete={handleCommunicte}
+        onDelete={() => handleCommunicte(name, avatar)}
         onClick={() => handleChipClick(name, avatar)}
-        deleteIcon={<ChatRoundedIcon />}
+        deleteIcon={<EmailIcon  />}
         color={color as any}
         sx={chipStyle}
       />
@@ -72,6 +77,7 @@ export default function MembersIntroPanel(prop: IProps) {
 
   return (
     <>
+    <MailSendPanel isSomeOne={true} showSendPanel={showSendPanel} setShowSendPanel={setShowSendPanel} toPersonName={clickName} toPersonAvater={clickAvatar} />
     <div className="panel-container">
       <div className="record-board">
         <TextAreaPro
