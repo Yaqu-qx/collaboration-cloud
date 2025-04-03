@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import "./index.scss";
 import { TextListData } from "@/constant/const";
-import { Box, Tab, Dialog, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { FiberManualRecord } from "@mui/icons-material";
 import PassageLogin from "./PasswordLogin";
@@ -43,11 +50,13 @@ export default function Start() {
   return (
     <div className="login-page">
       <div className="branding-section">
-        <img alt="logo" src={Logo} className="logo" />
+        <div className="logo-block">
+          <img alt="logo" src={Logo} className="logo" />
+          <span style={{marginTop: '6rem'}}>欢迎来到协作云平台！</span>
+        </div>
+
         <div className="intro-list">
-          <ul style={{ listStyleType: "none" }}>
-            {TextListData.items.map((item, index) => listItem(item, index))}
-          </ul>
+          {TextListData.introduction}
         </div>
       </div>
 
@@ -108,11 +117,16 @@ export default function Start() {
             已发送验证码至您的手机，请注意查收。
             输入验证码以完成注册。（*5分钟后验证码自动失效！）
           </DialogContentText>
-          <div className="test" style={{ display: "flex", justifyContent: "center", padding: "1rem" }}>
+          <div
+            className="test"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "1rem",
+            }}
+          >
             {/* https://gitcode.com/gh_mirrors/re/react-verification-input?utm_source=artical_gitcode&index=top&type=href&&isLogin=1 */}
-            <VerificationInput
-              autoFocus={true}
-            />
+            <VerificationInput autoFocus={true} />
           </div>
         </DialogContent>
       </Dialog>

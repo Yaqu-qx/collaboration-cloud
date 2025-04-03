@@ -1,16 +1,10 @@
-interface TextList {
-  items: string[];
-}
+
 
 export const SystemIntroduce = "欢迎使用协同云，协同云是一款基于云端";
 
-export const TextListData: TextList = {
-  items: [
-    "欢迎使用协同云，协同云是一款基于云端",
-    "欢迎使用协同云，协同云是一款基于云端",
-    "欢迎使用协同云，协同云是一款基于云端",
-    "欢迎使用协同云，协同云是一款基于云端"
-  ]
+export const TextListData: any = {
+  greet: "欢迎来到协作云！",
+  introduction:"    在这里，您可以轻松创建项目、分配任务、共享文件，并与小组成员实时沟通，打破时空限制。平台支持多格式文件云端存储与一键预览，确保资料安全可追溯；任务看板与进度追踪功能，让团队目标一目了然。无论是课程设计还是毕设攻坚，我们为您提供从规划到交付的全流程支持。立即注册/登录，开启高效协作新体验！",
 }
 
 export const menuTitleList = ['项目中心', '我的项目组', '交流中心', '个人中心'];

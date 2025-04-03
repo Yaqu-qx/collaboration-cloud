@@ -15,11 +15,8 @@ export const login = async (req: Request, res: Response) => {
   // } });
   try {
     console.log(account, password, identity);
-    const [rows]: any = identity === '0' ? await connection.query(
+    const [rows]: any = await connection.query(
       "SELECT * FROM user_students WHERE account = ? AND password = ?",
-      [account, password]
-    ) : await connection.query(
-      "SELECT * FROM user_teachers WHERE account = ? AND password = ?",
       [account, password]
     );
     if (rows.length > 0) {

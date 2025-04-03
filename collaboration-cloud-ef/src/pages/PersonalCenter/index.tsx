@@ -12,7 +12,7 @@ import { Button, Dropdown } from "antd";
 import BackgroundSwitcher from "@/component/BackgroundSwitcher";
 // import { getUserPortrait } from '@/utils/globalState';
 interface IProps {
-  name?: string;
+  pname?: string;
   avatarUrl?: string;
   isOwner?: boolean;
 }
@@ -26,7 +26,7 @@ export default function PersonalCenter(props: IProps) {
     isOwner: stateIsOwner,
   } = stateParams;
   console.log("stateParams", stateParams, "props", props);
-  const name = stateName ?? props.name ?? "未知用户";
+  const name = stateName ?? props.pname ?? "Yaqu";
   const avatarUrl = stateAvatar ?? props.avatarUrl;
   const isOwner = stateIsOwner ?? props.isOwner ?? false;
 
@@ -100,7 +100,7 @@ export default function PersonalCenter(props: IProps) {
           </Box>
           <TabPanel value="1">
             {" "}
-            <PersonalInfoPanel isOwner={isOwner ?? true} />{" "}
+            <PersonalInfoPanel pname={name} isOwner={isOwner ?? true} />{" "}
           </TabPanel>
           <TabPanel value="2">
             {" "}

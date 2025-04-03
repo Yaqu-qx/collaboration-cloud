@@ -112,7 +112,10 @@ const getItem = (
           <Dropdown menu={{ items }}>{Visiable[visiableMode]}</Dropdown>
         </>
       ) : (
-        uVisiable()
+        <>
+          <span style={{marginLeft:'1.8rem'}}>{value}</span>
+          {uVisiable()}
+        </>
       )}
     </div>
   );
@@ -189,7 +192,7 @@ const uVisiable = () => {
   );
 };
 
-export default function PersonalInfoPanel(props: { isOwner: boolean }) {
+export default function PersonalInfoPanel(props: {pname:string, isOwner: boolean }) {
   const { isOwner } = props;
   const [name, setName] = useState({} as infoItemType);
   const [nickname, setNickname] = useState({} as infoItemType);

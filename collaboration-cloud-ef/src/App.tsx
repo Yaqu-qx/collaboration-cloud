@@ -52,7 +52,7 @@ function App() {
             path="personal-center"
             element={
               <PersonalCenter
-                name={UserName}
+                pname={UserName}
                 avatarUrl={UserPortrait}
                 isOwner={true}
               />

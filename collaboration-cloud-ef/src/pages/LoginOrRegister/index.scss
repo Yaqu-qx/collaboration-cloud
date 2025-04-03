@@ -7,7 +7,7 @@
 }
 
 .login-page {
-  background-image: url('../../assets/background.png');
+  background-image: url("../../assets/background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -50,30 +50,29 @@
     height: 35rem;
     width: 40rem;
     margin-top: 3rem;
-
-    .logo {
-      width: 10rem;
-      height: 10rem;
+    .logo-block {
+      display: flex;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2b2a2a;
+      .logo {
+        width: 10rem;
+        height: 10rem;
+      }
     }
 
     .intro-list {
-      width: 85%;
+      width: 80%;
       margin-left: 1.5rem;
-    }
-
-    ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
+      color: #5c4b9a;
     }
 
     .intro-item {
       font-size: 1.2rem;
       font-weight: 500;
       color: #2b2a2a;
-      display: flex; 
+      display: flex;
       align-items: center;
       gap: 0.5rem;
     }
